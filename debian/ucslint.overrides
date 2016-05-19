@@ -1,0 +1,4 @@
+0004-13: conffiles/zarafa-cfg.py
+0010-2: conffiles/etc/zarafa/userscripts/createuser.d/00createstore
+0010-2: scripts/db-upgrade-addressbook-entryids.pl
+0010-2: scripts/db-upgrade-addressbook-entryids-delegate.pl

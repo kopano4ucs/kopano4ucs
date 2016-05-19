@@ -1,0 +1,6 @@
+[zarafa/createzarafauserswithvalidemail]
+Description[de]=Ist diese Option auf true gesetzt, werden neue Benutzer mit einer gültigen E-Mailadresse automatisch zu Zarafa Benutzern (default=true)
+Description[en]=If this option is set to true, new users with a valid email address will be made zarafa users automatically (default=true)
+Type=bool
+Categories=zarafa
+

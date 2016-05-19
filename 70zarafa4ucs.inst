@@ -1,0 +1,447 @@
+#!/bin/sh
+#
+# zarafa4ucs
+#  join script
+#
+# Copyright 2012-2016 Univention GmbH
+#
+# http://www.univention.de/
+#
+# All rights reserved.
+#
+# The source code of this program is made available
+# under the terms of the GNU Affero General Public License version 3
+# (GNU AGPL V3) as published by the Free Software Foundation.
+#
+# Binary versions of this program provided by Univention to you as
+# well as other copyrighted, protected or trademarked materials like
+# Logos, graphics, fonts, specific documentations and configurations,
+# cryptographic keys etc. are subject to a license agreement between
+# you and Univention and not subject to the GNU AGPL V3.
+#
+# In the case you use this program under the terms of the GNU AGPL V3,
+# the program is provided in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public
+# License with the Debian GNU/Linux or Univention distribution in file
+# /usr/share/common-licenses/AGPL-3; if not, see
+# <http://www.gnu.org/licenses/>.
+
+VERSION=5
+
+. /usr/share/univention-join/joinscripthelper.lib
+. /usr/share/univention-lib/all.sh
+. /usr/share/univention-lib/zarafa4ucs.sh
+
+joinscript_init
+
+eval "$(univention-config-registry shell)"
+
+# copy certificate
+mkdir -p /etc/zarafa/ssl
+cp "/etc/univention/ssl/$hostname.$domainname/cert.pem" /etc/zarafa/ssl/
+cp "/etc/univention/ssl/$hostname.$domainname/private.key" /etc/zarafa/ssl/
+cat /etc/zarafa/ssl/cert.pem /etc/zarafa/ssl/private.key > /etc/zarafa/ssl/server.pem
+chmod 600 /etc/zarafa/ssl/private.key
+chmod 600 /etc/zarafa/ssl/server.pem
+
+# add service to my host object
+ucs_addServiceToLocalhost "SMTP" "$@"
+ucs_addServiceToLocalhost "Zarafa" "$@"
+
+# folder
+univention-directory-manager container/ou create "$@" --ignore_exists \
+	--set name="Zarafa Addresslists" \
+	--set description="Zarafa Adresslists" || die
+
+univention-directory-manager container/cn create "$@" --ignore_exists \
+	--position="cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="zarafa" \
+	--set description="Attributes for Zarafa configuration" || die
+
+# zarafa container
+univention-directory-manager container/cn create "$@" --ignore_exists \
+	--position="$ldap_base" \
+	--set name="zarafa" \
+	--set description="Container for Zarafa objects" || die
+# contacts
+univention-directory-manager container/cn create "$@" --ignore_exists \
+	--position="cn=zarafa,$ldap_base" \
+	--set name="contacts" \
+	--set description="Zarafa Contacts" || die
+
+# sharedstores or non-active users
+univention-directory-manager container/cn create "$@" --ignore_exists \
+	--position="cn=zarafa,$ldap_base" \
+	--set name="non-active" \
+	--set description="Zarafa sharedstores or non-active users" || die
+# groups
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=zarafa,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="zarafa-group" \
+	--set module=groups/group \
+	--set tabName="Zarafa" \
+	--set tabPosition=1 \
+	--set shortDescription="Zarafa group" \
+	--set longDescription="Make group available in Zarafa" \
+	--set translationShortDescription='"de_DE" "Zarafa Gruppe"' \
+	--set translationLongDescription='"de_DE" "Gruppe in Zarafa verfügbar machen"' \
+	--set objectClass=zarafa-group  \
+	--set syntax=boolean \
+	--set mayChange=1 \
+	--set ldapMapping=zarafaAccount \
+	--set multivalue=0 \
+	--set default="0" || die
+
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=zarafa,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="zarafa-group-hidden" \
+	--set module=groups/group \
+	--set tabName="Zarafa" \
+	--set tabPosition=2 \
+	--set shortDescription="Hide group from addressbook" \
+	--set longDescription="Hide this group from the global zarafa addressbook" \
+	--set translationShortDescription='"de_DE" "Gruppe aus dem Adressbuch ausblenden"' \
+	--set translationLongDescription='"de_DE" "Gruppe aus dem globalen Zarafa Adressbuch ausblenden"' \
+	--set objectClass=zarafa-group  \
+	--set syntax=boolean \
+	--set mayChange=1 \
+	--set ldapMapping=zarafaHidden \
+	--set multivalue=0 \
+	--set default="0" || die
+
+# sendas-attribute for groups
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=zarafa,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="zarafa-group-sendas" \
+	--set module=groups/group \
+	--set tabName="Zarafa" \
+	--set tabPosition=3 \
+	--set shortDescription="Delegates" \
+	--set longDescription="List of users that may send emails with the identity of the group" \
+	--set translationShortDescription='"de_DE" "Stellvertreter"' \
+	--set translationLongDescription='"de_DE" "Liste mit Benutzern, die E-Mails mit der Identität der Gruppe versenden dürfen"' \
+	--set objectClass=zarafa-group  \
+	--set mayChange=1 \
+	--set syntax=z4uUserSendAsPrivilege \
+	--set ldapMapping=zarafaSendAsPrivilege \
+	--set multivalue=1 || die
+
+# users
+
+# formerly known as zarafa-user, zarafa-contact, zarafa-admin and sharedStore
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=zarafa,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="zarafa-role" \
+	--set module=users/user \
+	--set module=settings/usertemplate \
+	--set tabName="Zarafa" \
+	--set tabPosition=1 \
+	--set shortDescription="Zarafa Role (Warning: 'None' will delete Zarafa user data)" \
+	--set longDescription="Select the Zarafa role for this user. Warning: by changing the role to 'None' all zarafa-related user data will get deleted." \
+	--set translationShortDescription='"de_DE" "Zarafa-Rolle (Warnung: '"'Keine'"' löscht Zarafa-Benutzerdaten)"' \
+	--set translationLongDescription='"de_DE" "Zarafa-Rolle für dieses Benutzerobjekt wählen. Warnung: Beim Wechsel auf die Rolle '"'Keine'"' werden alle zarafaspezifischen Daten des Benutzers gelöscht.' \
+	--set objectClass="zarafa-user" \
+	--set syntax="zarafa4ucsRole" \
+	--set mayChange=1 \
+	--set ldapMapping="zarafa4ucsRole" \
+	--set multivalue=0 \
+	--set hook="zarafa4ucsRole" \
+	--set default="user" || die
+
+univention-directory-manager settings/syntax create "$@" --ignore_exists \
+	--position "cn=zarafa,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name=z4uUserSendAsPrivilege \
+	--set description="Zarafa User for SendAsPrivilege" \
+	--set filter="(&(zarafaAccount=1)(uidNumber=*)(!(objectClass=zarafa-contact)))" \
+	--set ldapattribute="uid" \
+	--set ldapvalue=uidNumber \
+	--set viewonly=FALSE || die
+
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=zarafa,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="SendAsPrivilege" \
+	--set module=users/user \
+	--set module=settings/usertemplate \
+	--set tabName="Zarafa" \
+	--set tabPosition=3 \
+	--set shortDescription="Delegates" \
+	--set longDescription="List of users that may send emails with the identity of the actual users" \
+	--set translationShortDescription='"de_DE" "Stellvertreter"' \
+	--set translationLongDescription='"de_DE" "Liste mit Benutzern, die E-Mails mit der Identität des aktuellen Benutzers versenden dürfen"' \
+	--set objectClass=zarafa-user \
+	--set syntax=z4uUserSendAsPrivilege \
+	--set mayChange=1 \
+	--set ldapMapping=zarafaSendAsPrivilege \
+	--set multivalue=1 || die
+
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=zarafa,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="zarafa-user-hidden" \
+	--set module=users/user \
+	--set module=settings/usertemplate \
+	--set tabName="Zarafa" \
+	--set tabPosition=5 \
+	--set shortDescription="Hide entry from Zarafa addressbook" \
+	--set longDescription="Hide this entry from the global Zarafa addressbook" \
+	--set translationShortDescription='"de_DE" "Objekt aus dem Zarafa Adressbuch ausblenden"' \
+	--set translationLongDescription='"de_DE" "Objekt aus dem globalen Zarafa Adressbuch ausblenden"' \
+	--set objectClass=zarafa-user \
+	--set syntax=boolean \
+	--set mayChange=1 \
+	--set ldapMapping=zarafaHidden \
+	--set multivalue=0 \
+	--set default="0" || die
+
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=zarafa,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="MRAccept" \
+	--set module=users/user \
+	--set module=settings/usertemplate \
+	--set tabName="Zarafa" \
+	--set tabPosition=7 \
+	--set shortDescription="Auto accept meeting requests" \
+	--set longDescription="Accept meeting request (resource) automatically" \
+	--set translationShortDescription='"de_DE" "Besprechungsanfragen automatisch annehmen"' \
+	--set translationLongDescription='"de_DE" "Besprechungsanfragen automatisch annehmen"' \
+	--set objectClass=zarafa-user \
+	--set syntax=boolean \
+	--set mayChange=1 \
+	--set ldapMapping=zarafaMrAccept \
+	--set multivalue=0 || die
+
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=zarafa,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="MRDeclineConflictingTimes" \
+	--set module=users/user \
+	--set module=settings/usertemplate \
+	--set tabName="Zarafa" \
+	--set tabPosition=9 \
+	--set shortDescription="Auto decline meetings requests with conflicting times" \
+	--set longDescription="Decline meeting requests with conflicting times (resource) automatically" \
+	--set translationShortDescription='"de_DE" "Besprechungsanfragen bei Konflikten automatisch ablehnen"' \
+	--set translationLongDescription='"de_DE" "Besprechungsanfragen bei Konflikten automatisch ablehnen"' \
+	--set objectClass=zarafa-user \
+	--set syntax=boolean \
+	--set mayChange=1 \
+	--set ldapMapping=zarafaMrDeclineConflict \
+	--set multivalue=0 || die
+
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=zarafa,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="MRDeclineRecurringItems" \
+	--set module=users/user \
+	--set module=settings/usertemplate \
+	--set tabName="Zarafa" \
+	--set tabPosition=11 \
+	--set shortDescription="Auto decline recurring meeting requests" \
+	--set longDescription="Decline recurring items (resource) automatically" \
+	--set translationShortDescription='"de_DE" "Wiederkehrende Besprechungsanfragen automatisch ablehnen"' \
+	--set translationLongDescription='"de_DE" "Wiederkehrende Besprechungsanfragen automatisch ablehnen"' \
+	--set objectClass=zarafa-user \
+	--set syntax=boolean \
+	--set mayChange=1 \
+	--set ldapMapping=zarafaMrDeclineRecurring \
+	--set multivalue=0 || die
+
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=zarafa,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="quotaOverride" \
+	--set module=users/user \
+	--set module=settings/usertemplate \
+	--set tabName="Zarafa" \
+	--set shortDescription="Override global quota settings" \
+	--set longDescription="Override global quota settings with users warning, soft and hard quota size" \
+	--set translationShortDescription='"de_DE" "Globale Quota-Einstellungen überschreiben"' \
+	--set translationLongDescription='"de_DE" "Globale Quota-Einstellungen mit den benutzerspezifischen Quota-Einstellungen überschreiben"' \
+	--set objectClass=zarafa-user \
+	--set syntax=boolean \
+	--set mayChange=1 \
+	--set ldapMapping=zarafaQuotaOverride \
+	--set multivalue=0 \
+	--set tabPosition=13 \
+	--set default="0" || die
+
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=zarafa,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="quotaWarn" \
+	--set module=users/user \
+	--set module=settings/usertemplate \
+	--set tabName="Zarafa" \
+	--set shortDescription="Warning quota size in MB" \
+	--set longDescription="Warning quota size in MB" \
+	--set translationShortDescription='"de_DE" "Warnung-Quota Größe in MB"' \
+	--set translationLongDescription='"de_DE" "Warnung-Quota Größe in MB"' \
+	--set objectClass=zarafa-user \
+	--set syntax=integer \
+	--set mayChange=1 \
+	--set ldapMapping=zarafaQuotaWarn \
+	--set tabPosition=15 \
+	--set multivalue=0 || die
+
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=zarafa,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="quotaSoft" \
+	--set module=users/user \
+	--set module=settings/usertemplate \
+	--set tabName="Zarafa" \
+	--set shortDescription="Soft quota size in MB" \
+	--set longDescription="Soft quota size in MB" \
+	--set translationShortDescription='"de_DE" "Soft-Quota Größe in MB"' \
+	--set translationLongDescription='"de_DE" "Soft-Quota Größe in MB"' \
+	--set objectClass=zarafa-user \
+	--set syntax=integer \
+	--set mayChange=1 \
+	--set ldapMapping=zarafaQuotaSoft \
+	--set tabPosition=17 \
+	--set multivalue=0 || die
+
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=zarafa,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="quotaHard" \
+	--set module=users/user \
+	--set module=settings/usertemplate \
+	--set tabName="Zarafa" \
+	--set shortDescription="Hard quota size in MB" \
+	--set longDescription="Hard quota size in MB" \
+	--set translationShortDescription='"de_DE" "Hard-Quota Größe in MB"' \
+	--set translationLongDescription='"de_DE" "Hard-Quota Größe in MB"' \
+	--set objectClass=zarafa-user \
+	--set syntax=integer \
+	--set mayChange=1 \
+	--set ldapMapping=zarafaQuotaHard \
+	--set tabPosition=19 \
+	--set multivalue=0 || die
+
+# restart UDM CLI server
+stop_udm_cli_server
+
+# user template
+univention-directory-manager settings/usertemplate create "$@" --ignore_exists \
+	--position "cn=templates,cn=univention,$ldap_base" \
+	--set name="Zarafa Account" \
+	--set mailPrimaryAddress="<username>@$domainname" \
+	--set zarafa-role="user" \
+	--set unixhome="/home/<username>" || die
+
+# create initial mail domain object(s) if missing
+if ! udm mail/domain list "$@" | grep -q "^DN:" ; then
+	# no mail domain object found
+
+	# Default; create new object with $domainname as mail domain
+	# can be overridden by mail/default/domains
+	domain_list="$domainname"
+	if [ "$mail_default_domains" ] ; then
+		domain_list="$mail_default_domains"
+	fi
+
+	# create required containers
+	udm container/cn create "$@" --ignore_exists --position "$ldap_base" --set name="mail" || die
+	udm container/cn create "$@" --ignore_exists --position "cn=mail,$ldap_base" --set name="domain" || die
+
+	# create new object
+	for domain in $domain_list ; do
+		udm mail/domain create "$@" --ignore_exists \
+			--position "cn=domain,cn=mail,$ldap_base" \
+			--set name="$domain" || die
+	done
+fi
+
+# if updating from previous version. 3 is the previous version in ucs 3.2
+if joinscript_check_specific_version_executed "3"; then
+	# update extended attributes
+	univention-directory-manager settings/extended_attribute modify "$@" \
+		--dn "cn=zarafa-role,cn=zarafa,cn=custom attributes,cn=univention,$ldap_base" \
+		--set shortDescription="Zarafa Role (Warning: 'None' will delete Zarafa user data)" \
+		--set longDescription="Select the Zarafa role for this user. Warning: by changing the role to 'None' all zarafa-related user data will get deleted." \
+		--set translationShortDescription='"de_DE" "Zarafa-Rolle (Warnung: '"'Keine'"' löscht Zarafa-Benutzerdaten)"' \
+		--set translationLongDescription='"de_DE" "Zarafa-Rolle für dieses Benutzerobjekt wählen. Warnung: Beim Wechsel auf die Rolle '"'Keine'"' werden alle zarafaspezifischen Daten des Benutzers gelöscht.' \
+	
+	univention-directory-manager settings/extended_attribute modify "$@" \
+		--dn "cn=zarafa-user-hidden,cn=zarafa,cn=custom attributes,cn=univention,$ldap_base" \
+		--set shortDescription="Hide entry from Zarafa addressbook" \
+		--set longDescription="Hide this entry from the global Zarafa addressbook" \
+		--set translationShortDescription='"de_DE" "Objekt aus dem Zarafa Adressbuch ausblenden"' \
+		--set translationLongDescription='"de_DE" "Objekt aus dem globalen Zarafa Adressbuch ausblenden"'
+
+	univention-directory-manager settings/extended_attribute modify "$@" \
+		--dn "cn=SendAsPrivilege,cn=zarafa,cn=custom attributes,cn=univention,$ldap_base" \
+		--set syntax=zarafa4ucsSendAsPrivilege
+
+	# Fix typos
+	univention-directory-manager settings/extended_attribute modify "$@" \
+		--dn "cn=MRAccept,cn=zarafa,cn=custom attributes,cn=univention,$ldap_base" \
+		--set longDescription="Accept meeting request (resource) automatically"
+
+	univention-directory-manager settings/extended_attribute modify "$@" \
+		--dn "cn=MRDeclineConflictingTimes,cn=zarafa,cn=custom attributes,cn=univention,$ldap_base" \
+		--set longDescription="Decline meeting requests with conflicting times (resource) automatically"
+
+	univention-directory-manager settings/extended_attribute modify "$@" \
+		--dn "cn=MRDeclineRecurringItems,cn=zarafa,cn=custom attributes,cn=univention,$ldap_base" \
+		--set longDescription="Decline recurring items (resource) automatically"
+
+	# delete user template
+	univention-directory-manager settings/usertemplate remove "$@" --ignore_exists \
+		--dn "cn=Zarafa Shared Store,cn=templates,cn=univention,$ldap_base"
+
+	#####
+	## Migrate users
+	
+	# Stop Zarafa service
+	for PROC in /etc/init.d/zarafa-*; do $PROC stop; done
+
+	# Test with a dry-run
+	/usr/share/zarafa4ucs/zarafa4ucs-migrate-to-separate-udm-modules "$@" -d
+	if [ $? -ne 0 ]; then
+		echo "ERROR: Dry run for migration script did not complete successfully, aborting."
+		echo "       Check for logged errors and call the joinscript again."
+		echo "       Run /usr/share/zarafa4ucs/zarafa4ucs-migrate-to-separate-udm-modules -dv"
+		echo "       for more debug output."
+		die
+	fi
+
+	# Migrate users/contacts/non-active
+	/usr/share/zarafa4ucs/zarafa4ucs-migrate-to-separate-udm-modules "$@" -v
+
+	# Restart Zarafa and sync users
+	for PROC in /etc/init.d/zarafa-*; do $PROC start; done
+	wait_for_zarafa_server_startup
+	zarafa-admin --sync
+fi
+
+# When upgrading zarafa installation, activate new zarafa-webapp
+# App repository, as it is a separate app with Zarafa 7.2.1
+if joinscript_check_version_in_range_executed "1" "4"; then
+	echo "Adding zarafa-webapp app installation information"
+	# univention-add-app zarafa-webapp -l --all || die
+	univention-app register --do-it zarafa-webapp
+fi
+
+# call server password change script
+/usr/lib/univention-server/server_password_change.d/50univention-mail-server prechange
+/usr/lib/univention-server/server_password_change.d/50univention-mail-server postchange
+/usr/lib/univention-server/server_password_change.d/70zarafa postchange
+
+# zarafa-server was just restarted in server_password_change.d/70zarafa postchange (Bug #31709, #34011)
+wait_for_zarafa_server_startup
+
+invoke-rc.d zarafa-spooler restart
+invoke-rc.d zarafa-monitor restart
+invoke-rc.d zarafa-ical restart
+invoke-rc.d zarafa-gateway restart
+invoke-rc.d zarafa-dagent restart
+invoke-rc.d zarafa-search restart
+invoke-rc.d zarafa-licensed restart
+
+# give zarafa server some time to settle
+sleep 3s
+# create public store if missing
+zarafa-admin -s
+
+joinscript_save_current_version
+
+exit 0

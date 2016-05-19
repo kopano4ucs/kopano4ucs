@@ -1,0 +1,114 @@
+Source: zarafa4ucs
+Section: univention
+Priority: optional
+Maintainer: Univention GmbH <packages@univention.de>
+Standards-Version: 3.8.2
+Build-Depends: debhelper (>= 7.0.50),
+ ucslint,
+ python-support,
+ univention-config-dev,
+ python-all,
+ python-support (>= 0.90),
+ gettext
+XS-Python-Version: 2.6, 2.7
+
+Package: zarafa4ucs-lib
+Architecture: all
+Depends: ${misc:Depends},
+ shell-univention-lib (>> 2.0.17-1.125)
+Description: Library package for common Zarafa4ucs functions
+ This package contains common modules and functions for zarafa4ucs
+ integration packages
+
+Package: zarafa4ucs-schema
+Architecture: all
+Depends: ${misc:Depends},
+ ${python:Depends},
+ shell-univention-lib (>> 2.0.17-1.125)
+Breaks: univention-ldap-server (<< 9.0.20-1.580.201303211526)
+Description: LDAP schema for the Zarafa4ucs integration
+ OpenLDAP schema extension for the Zarafa4ucs integration
+
+Package: zarafa4ucs-udm
+Architecture: all
+Depends: ${misc:Depends},
+ ${python:Depends},
+ shell-univention-lib,
+ zarafa4ucs-schema (= ${binary:Version}),
+ zarafa4ucs-lib
+Provides: ${python:Provides}
+Description: UDM extensions for the Zarafa4ucs integration
+ Univention Directory Manager extensions for the Zarafa4ucs integration 
+
+Package: zarafa4ucs
+Architecture: all
+Depends: ${misc:Depends}, 
+ ${python:Depends},
+ zarafa4ucs-udm (= ${binary:Version}),
+ zarafa4ucs-schema (= ${binary:Version}),
+ univention-join (>> 5.0.20-1.436),
+ shell-univention-lib (>> 2.0.17-1.125),
+ zarafa (>= 7.2),
+ univention-mail-postfix,
+ univention-apache,
+ mysql-server,
+ makepasswd,
+ zarafa-licensed (>= 7.2),
+ python-mysqldb,
+ python-univention-directory-manager (>=9.0.75-17),
+ libxml-dom-perl,
+ univention-sasl,
+ univention-mail-postfix,
+ zarafa-contacts,
+ zarafa4ucs-lib
+Recommends: bsd-mailx,
+ univention-spamassassin,
+ univention-antivir-mail,
+ zarafa-backup (>= 7.2)
+Conflicts: univention-mail-server,
+ univention-mail-cyrus,
+ univention-mail-dovecot,
+ dovecot-imapd,
+ cyrus-imapd,
+ cyrus-imapd-2.4,
+ cyrus-imapd-2.2,
+ cyrus-common-2.2,
+ cyrus-common-2.4,
+Description: Zarafa4ucs integration package for Univention Corporate Server
+ Integration package for installation and configuration of the Zarafa
+ groupware solution on Univention Corporate Server.
+
+Package: zarafa4ucs-multiserver
+Architecture: all
+Depends: ${misc:Depends}, 
+ ${python:Depends},
+ zarafa4ucs (= ${binary:Version}),
+ zarafa4ucs-udm (= ${binary:Version}),
+ zarafa4ucs-schema (= ${binary:Version}),
+ zarafa-multiserver,
+ univention-join (>> 5.0.20-1.436),
+ shell-univention-lib (>> 2.0.17-1.125)
+Description: Zarafa4ucs multiserver integration package for UCS
+ Integration package for installation and configuration of the Zarafa
+ groupware solution multiserver support on Univention Corporate Server.
+
+Package: zarafa4ucs-webapp
+Architecture: all
+Depends: ${misc:Depends},
+ zarafa-webapp,
+ shell-univention-lib,
+ zarafa4ucs-lib
+Recommends: zarafa-webapp-desktopnotifications,
+ zarafa-webapp-files,
+ zarafa-webapp-folderwidgets,
+ zarafa-webapp-plugins-delayeddelivery,
+ zarafa-webapp-plugins-spell,
+ zarafa-webapp-plugins-spell-de-de,
+ zarafa-webapp-plugins-spell-en,
+ zarafa-webapp-titlecounter,
+ zarafa-webapp-plugins-filepreviewer,
+ zarafa-webapp-plugins-mdm,
+ zarafa-webapp-plugins-smime
+Description: Zarafa4ucs zarafa-webapp integration package for Univention Corporate Server
+ Integration package for installation and configuration of the Zarafa
+ groupware solution WebApp interface on Univention Corporate Server.

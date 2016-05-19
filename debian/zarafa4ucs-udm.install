@@ -1,0 +1,9 @@
+univention/admin/handlers/zarafa/*.py usr/share/pyshared/univention/admin/handlers/zarafa/
+univention/admin/syntax.d/zarafa4ucs.py usr/share/pyshared/univention/admin/syntax.d/
+univention/admin/hooks.d/zarafa4ucsRole.py usr/share/pyshared/univention/admin/hooks.d/
+70zarafa4ucs-udm.inst usr/lib/univention-install/
+locale/zarafa4ucs.mo usr/share/locale/de/LC_MESSAGES/
+umc/udm-zarafa.mo usr/share/univention-management-console/i18n/de
+umc/*xml usr/share/univention-management-console/modules
+umc/icons/50x50/* usr/share/univention-management-console-frontend/js/dijit/themes/umc/icons/50x50
+umc/icons/16x16/* usr/share/univention-management-console-frontend/js/dijit/themes/umc/icons/16x16

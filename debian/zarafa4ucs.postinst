@@ -1,0 +1,384 @@
+#!/bin/bash
+#
+# zarafa4ucs
+#  postinst script
+#
+# Copyright 2012-2016 Univention GmbH
+#
+# http://www.univention.de/
+#
+# All rights reserved.
+#
+# The source code of this program is made available
+# under the terms of the GNU Affero General Public License version 3
+# (GNU AGPL V3) as published by the Free Software Foundation.
+#
+# Binary versions of this program provided by Univention to you as
+# well as other copyrighted, protected or trademarked materials like
+# Logos, graphics, fonts, specific documentations and configurations,
+# cryptographic keys etc. are subject to a license agreement between
+# you and Univention and not subject to the GNU AGPL V3.
+#
+# In the case you use this program under the terms of the GNU AGPL V3,
+# the program is provided in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public
+# License with the Debian GNU/Linux or Univention distribution in file
+# /usr/share/common-licenses/AGPL-3; if not, see
+# <http://www.gnu.org/licenses/>.
+
+#DEBHELPER#
+
+. /usr/share/univention-lib/all.sh
+. /usr/share/univention-lib/zarafa4ucs.sh
+
+eval "$(univention-config-registry shell)"
+
+if  [ "$1" = 'configure' -a -n "$2" ] && dpkg --compare-versions "$2" lt '7.1.2001-5'; then
+	mkdir -p /etc/univention/templates/removed/
+	files="en.html.d/42zarafa-webaccess.html de.html.d/42zarafa-webaccess.html"
+	for file in $files; do
+		if [ -e "/etc/univention/templates/files/var/www/ucs-overview/$file" ]; then
+			mv "/etc/univention/templates/files/var/www/ucs-overview/$file" /etc/univention/templates/removed/
+		fi
+	done
+fi
+
+
+# update to zcp 7.1
+if [ "$1" = "configure" -a -n "$2" ] && dpkg --compare-versions "$2" lt 7.1.1000-1; then
+
+	# update config
+	if [ -e /etc/default/zarafa ]; then
+		cp /etc/default/zarafa "/etc/default/zarafa.$(date +%Y%m%d-%H%M%S)"
+		sed -i s/"indexer"/"search"/g /etc/default/zarafa
+		sed -i s/"INDEXER"/"SEARCH"/g /etc/default/zarafa
+		ucr set zarafa/default/ZARAFA_LOCALE="$(ucr get zarafa/default/ZARAFA_LOCALE)"
+	fi
+
+	# update config
+	if [ -e /etc/zarafa/server.cfg ]; then
+		cp /etc/zarafa/server.cfg "/etc/zarafa/server.cfg.$(date +%Y%m%d-%H%M%S)"
+		sed -i s/"zarafa-indexer"/"zarafa-search"/g /etc/zarafa/server.cfg
+		sed -i s/"index_services_enabled"/"search_enabled"/g /etc/zarafa/server.cfg
+		sed -i s/"index_services_path"/"search_socket"/g /etc/zarafa/server.cfg
+		sed -i s/"index_services_search_timeout"/"search_timeout"/g /etc/zarafa/server.cfg
+		sed -i /"index_services_prefix_chars"/d /etc/zarafa/server.cfg
+		sed -i /"# Minimum length of a search term in characters to enable prefix searching"/d /etc/zarafa/server.cfg
+		ucr set zarafa/cfg/server/mysql_host="$(ucr get zarafa/cfg/server/mysql_host)"
+	fi
+
+	# disable global address book sync
+	ucr set zarafa/cfg/server/sync_gab_realtime='no'
+
+	# update new configuration options
+	/usr/share/zarafa4ucs/zarafa4ucs-update-configs -w
+fi
+# end update to zcp 7.1
+
+# update to zcp 7.1.12
+if [ "$1" = "configure" -a -n "$2" ] && dpkg --compare-versions "$2" lt 7.1.3001-3; then
+	# remove obsolete options
+	sed -i s/"^server_ssl_enable_v2"/"# no longer supported with 7.1.12 server_ssl_enable_v2"/g /etc/zarafa/server.cfg
+	sed -i s/"^ssl_enable_v2"/"# no longer supported with 7.1.12 ssl_enable_v2"/g /etc/zarafa/ical.cfg
+	sed -i s/"^ssl_enable_v2"/"# no longer supported with 7.1.12 ssl_enable_v2"/g /etc/zarafa/gateway.cfg
+fi
+
+# On new installation with Zarafa >= 7.1.12 we do not need
+# to execute the joinscript 70zarafa4ucs-webapp-update.inst
+if [ "$1" = "configure" -a -z "$2" ] ; then
+	echo "zarafa4ucs-webapp-update v1 successful" >> /var/univention-join/status
+fi
+
+# configure system only on package installation
+if [ "$1" = "configure" -a -z "$2" ] ; then
+	# configure postfix: 
+	# - listen on all interfaces
+	# - enable virtual tables and local delivery via LMTP
+	# - disable LDAP transport table
+	ucr set mail/postfix/inet/interfaces=all \
+			mail/postfix/virtual/enabled=true \
+			mail/postfix/transport/ldap/enabled=false
+fi
+
+# add "en_US.UTF-8" to locale list if missing
+if ! ucr get locale | grep -qF "en_US.UTF-8" ; then
+	ucr set locale="$(ucr get locale) en_US.UTF-8:UTF-8"
+	locale-gen
+fi
+
+# copy OpenLDAP example as new ldap.cfg during first package installation
+if [ "$1" = "configure" -a -z "$2" -a ! -e "/etc/zarafa/ldap.cfg" ] ; then
+	cp "/etc/zarafa/ldap.openldap.cfg" "/etc/zarafa/ldap.cfg"
+fi
+
+##
+# set ucr defaults
+##
+# admin cli
+univention-config-registry set \
+	zarafa/cfg/admin/server_socket?'file:///var/run/zarafad/server.sock' \
+	zarafa/cfg/admin/run_as_user?'zarafa' \
+	zarafa/cfg/admin/run_as_group?'zarafa'
+
+# backup
+univention-config-registry set \
+	zarafa/cfg/backup/server_socket?'file:///var/run/zarafad/server.sock' \
+	zarafa/cfg/backup/run_as_user?'zarafa' \
+	zarafa/cfg/backup/run_as_group?'zarafa'
+
+# dagent
+univention-config-registry set \
+	zarafa/cfg/dagent/server_socket?'file:///var/run/zarafad/server.sock' \
+	zarafa/cfg/dagent/run_as_user?'zarafa' \
+	zarafa/cfg/dagent/run_as_group?'zarafa' \
+	zarafa/cfg/dagent/pid_file?'/var/run/zarafad/dagent.pid'
+
+# licensed
+univention-config-registry set \
+	zarafa/cfg/licensed/server_socket?'file:///var/run/zarafad/prio.sock' \
+	zarafa/cfg/licensed/run_as_user?'zarafa' \
+	zarafa/cfg/licensed/run_as_group?'zarafa' \
+	zarafa/cfg/licensed/pid_file?'/var/run/zarafad/licensed.pid' \
+	zarafa/cfg/licensed/server_pipe_name?'/var/run/zarafad/licensed.sock' \
+
+# monitor
+univention-config-registry set \
+	zarafa/cfg/monitor/server_socket?'file:///var/run/zarafad/server.sock' \
+	zarafa/cfg/monitor/run_as_user?'zarafa' \
+	zarafa/cfg/monitor/run_as_group?'zarafa' \
+	zarafa/cfg/monitor/pid_file?'/var/run/zarafad/monitor.pid'
+
+# search
+univention-config-registry set \
+	zarafa/cfg/search/server_socket?'file:///var/run/zarafad/server.sock' \
+	zarafa/cfg/search/run_as_user?'zarafa' \
+	zarafa/cfg/search/run_as_group?'zarafa' \
+	zarafa/cfg/search/pid_file?'/var/run/zarafad/search.pid' \
+	zarafa/cfg/search/server_bind_name?'file:///var/run/zarafad/search.sock'
+
+# spooler
+univention-config-registry set \
+	zarafa/cfg/spooler/server_socket?'file:///var/run/zarafad/server.sock' \
+	zarafa/cfg/spooler/run_as_user?'zarafa' \
+	zarafa/cfg/spooler/run_as_group?'zarafa' \
+	zarafa/cfg/spooler/pid_file?'/var/run/zarafad/spooler.pid'
+
+
+# gateway
+univention-config-registry set \
+	zarafa/cfg/gateway/pop3s_enable?'yes' \
+	zarafa/cfg/gateway/imaps_enable?'yes' \
+	zarafa/cfg/gateway/ssl_private_key_file?'/etc/zarafa/ssl/private.key' \
+	zarafa/cfg/gateway/ssl_certificate_file?'/etc/zarafa/ssl/cert.pem' \
+	zarafa/cfg/gateway/ssl_protocols?'!SSLv2' \
+	zarafa/cfg/gateway/ssl_ciphers?'ALL:!LOW:!SSLv2:!EXP:!aNULL' \
+	zarafa/cfg/gateway/ssl_prefer_server_ciphers?'no' \
+	zarafa/cfg/gateway/server_socket?'file:///var/run/zarafad/server.sock' \
+	zarafa/cfg/gateway/run_as_user?'zarafa' \
+	zarafa/cfg/gateway/run_as_group?'zarafa' \
+	zarafa/cfg/gateway/pid_file?'/var/run/zarafad/gateway.pid'
+
+# ical
+univention-config-registry set \
+	zarafa/cfg/ical/icals_enable?'yes' \
+	zarafa/cfg/ical/server_timezone?'@&@/etc/timezone@&@' \
+	zarafa/cfg/ical/ssl_private_key_file?'/etc/zarafa/ssl/private.key' \
+	zarafa/cfg/ical/ssl_certificate_file?'/etc/zarafa/ssl/cert.pem' \
+	zarafa/cfg/ical/ssl_protocols?'!SSLv2' \
+	zarafa/cfg/ical/ssl_ciphers?'ALL:!LOW:!SSLv2:!EXP:!aNULL' \
+	zarafa/cfg/ical/ssl_prefer_server_ciphers?'no' \
+	zarafa/cfg/ical/server_socket?'file:///var/run/zarafad/server.sock' \
+	zarafa/cfg/ical/run_as_user?'zarafa' \
+	zarafa/cfg/ical/run_as_group?'zarafa' \
+	zarafa/cfg/ical/pid_file?'/var/run/zarafad/ical.pid'
+
+# server
+univention-config-registry set \
+	zarafa/cfg/server/mysql_host?'localhost' \
+	zarafa/cfg/server/mysql_port?'3306' \
+	zarafa/cfg/server/mysql_user?'zarafaDbUser' \
+	zarafa/cfg/server/mysql_password?'@&@/etc/zarafa-mysql.secret@&@' \
+	zarafa/cfg/server/mysql_database?'zarafa' \
+	zarafa/cfg/server/server_ssl_key_file?'/etc/zarafa/ssl/server.pem' \
+	zarafa/cfg/server/server_ssl_ca_file?'/etc/univention/ssl/ucsCA/CAcert.pem' \
+	zarafa/cfg/server/server_ssl_enabled?'yes' \
+	zarafa/cfg/server/cache_userdetails_lifetime?'5' \
+	zarafa/cfg/server/user_plugin?'ldap' \
+	zarafa/cfg/server/sync_gab_realtime?'no' \
+	zarafa/cfg/server/search_enabled?'yes' \
+	zarafa/cfg/server/owner_auto_full_access?'true' \
+	zarafa/cfg/server/server_ssl_protocols?'!SSLv2' \
+	zarafa/cfg/server/server_ssl_ciphers?'ALL:!LOW:!SSLv2:!EXP:!aNULL' \
+	zarafa/cfg/server/server_ssl_prefer_server_ciphers?'no' \
+	zarafa/cfg/server/server_name="$hostname" \
+	zarafa/cfg/server/local_admin_users?'root zarafa' \
+	zarafa/cfg/server/run_as_user?'zarafa' \
+	zarafa/cfg/server/run_as_group?'zarafa' \
+	zarafa/cfg/server/server_pipe_name?'/var/run/zarafad/server.sock' \
+	zarafa/cfg/server/server_pipe_priority?'/var/run/zarafad/prio.sock' \
+	zarafa/cfg/server/search_socket?'file:///var/run/zarafad/search.sock' \
+	zarafa/cfg/server/license_socket?'/var/run/zarafad/licensed.sock' \
+	zarafa/cfg/server/pid_file?'/var/run/zarafad/server.pid'
+
+eval "$(univention-config-registry shell)"
+# Ensure these attributes are always present in the UCR variable
+ATTRS="root zarafa"
+for attr in ${ATTRS}; do
+	if ! echo "${zarafa_cfg_server_local_admin_users}" | grep -q "${attr}"; then
+		ucr set zarafa/cfg/server/local_admin_users="$(ucr get zarafa/cfg/server/local_admin_users) '${attr}'"
+	fi
+done
+
+# ldap
+univention-config-registry set \
+	zarafa/cfg/ldap/ldap_host?'@%@ldap/server/name@%@' \
+	zarafa/cfg/ldap/ldap_port?'@%@ldap/server/port@%@' \
+	zarafa/cfg/ldap/ldap_search_base?'@%@ldap/base@%@' \
+	zarafa/cfg/ldap/ldap_bind_user?'@%@ldap/hostdn@%@' \
+	zarafa/cfg/ldap/ldap_bind_passwd?'@&@/etc/zarafa-ldap.secret@&@' \
+	zarafa/cfg/ldap/ldap_user_search_filter?'(zarafaAccount=1)' \
+	zarafa/cfg/ldap/ldap_authentication_method?'bind' \
+	zarafa/cfg/ldap/ldap_group_search_filter?'(&(zarafaAccount=1)(objectClass=zarafa-group))' \
+	zarafa/cfg/ldap/ldap_quota_multiplier?'1048576' \
+	zarafa/cfg/ldap/ldap_emailaddress_attribute?'mailPrimaryAddress' \
+	zarafa/cfg/ldap/ldap_emailaliases_attribute?'mailAlternativeAddress' \
+	zarafa/cfg/ldap/ldap_nonactive_attribute?'zarafaSharedStoreOnly' \
+	zarafa/cfg/ldap/ldap_user_type_attribute_value?'zarafa-user' \
+	zarafa/cfg/ldap/ldap_user_unique_attribute?'entryUUID' \
+	zarafa/cfg/ldap/ldap_sendas_relation_attribute?'uidNumber'
+
+# ldap mapping (addressbook)
+univention-config-registry set \
+	zarafa/cfg/ldap.propmap/0x3A18001E?'departmentNumber' \
+	zarafa/cfg/ldap.propmap/0x3A19001E?'roomNumber' \
+	zarafa/cfg/ldap.propmap/0x3A16001E?'o' \
+	zarafa/cfg/ldap.propmap/0x3A29001E?'street' \
+	zarafa/cfg/ldap.propmap/0x8005001E?'secretary' \
+	zarafa/cfg/ldap.propmap/0x3004001E?'description' \
+	zarafa/cfg/ldap.propmap/0x3A08001E?'telephoneNumber' \
+	zarafa/cfg/ldap.propmap/0x3A1C001E?'mobile' \
+	zarafa/cfg/ldap.propmap/0x3A09001E?'homePhone' \
+	zarafa/cfg/ldap.propmap/0x3A21001E?'pager' \
+	zarafa/cfg/ldap.propmap/0x3A06001E?'givenName' \
+	zarafa/cfg/ldap.propmap/0x3A11001E?'sn' \
+	zarafa/cfg/ldap.propmap/0x3A27001E?'l' \
+	zarafa/cfg/ldap.propmap/0x3A17001E?'title' \
+	zarafa/cfg/ldap.propmap/0x3A2A001E?'postalCode'
+
+# defaults
+univention-config-registry set \
+	zarafa/default/ZARAFA_USERSCRIPT_LOCALE?"$(ucr get locale/default | sed -e 's/[.:].*/.UTF-8/')" \
+	zarafa/default/ZARAFA_LOCALE?"$(ucr get locale/default | sed -e 's/[.:].*/.UTF-8/')"
+
+# disable spamassassin's cronjob for learning cyrus mails (no cyrus installed on zarafa machines)
+if [ "$1" = "configure" -a -z "$2" ]; then
+	ucr set mail/antispam/learndaily=no
+else
+	ucr set mail/antispam/learndaily?no
+fi
+
+eval "$(univention-config-registry shell)"
+
+# create mysql database/user
+mysqlPasswordFile="$(echo $zarafa_cfg_server_mysql_password | sed -se 's/@&@//g')"
+if [ ! -e "$mysqlPasswordFile" ]; then
+	password=$(makepasswd)
+	echo "$password" > "$mysqlPasswordFile"
+	chmod 600 "$mysqlPasswordFile"
+	mysqlCmd="mysql --defaults-file=/etc/mysql/debian.cnf"
+	echo "CREATE DATABASE IF NOT EXISTS $zarafa_cfg_server_mysql_database;" | $mysqlCmd
+	echo "CREATE USER '$zarafa_cfg_server_mysql_user'@'localhost';" | $mysqlCmd
+	echo "SET PASSWORD FOR '$zarafa_cfg_server_mysql_user'@'localhost' = PASSWORD('$password');" | $mysqlCmd
+	echo "GRANT ALL ON $zarafa_cfg_server_mysql_database.* TO '$zarafa_cfg_server_mysql_user'@'localhost';" | $mysqlCmd
+	echo "FLUSH PRIVILEGES;" | $mysqlCmd
+	# reset UCR variable to update zarafa config file
+	ucr set zarafa/cfg/server/mysql_password="$zarafa_cfg_server_mysql_password"
+fi
+
+# Set correct permissions for conf and socket files
+owner=$(ucr get zarafa/cfg/server/run_as_user)
+group=$(ucr get zarafa/cfg/server/run_as_group)
+
+chown -R ${owner}:${group} /etc/zarafa
+chown -R ${owner}:${group} /var/lib/zarafa
+
+if ! dpkg-statoverride --list /etc/zarafa/ldap.cfg; then
+	dpkg-statoverride --quiet --force --update --add ${owner} ${group} 660 /etc/zarafa/ldap.cfg
+fi
+if ! dpkg-statoverride --list /etc/zarafa/server.cfg; then
+	dpkg-statoverride --quiet --force --update --add ${owner} ${group} 660 /etc/zarafa/server.cfg
+fi
+if [ -e /etc/zarafa/sslkeys ]; then
+	chown root:'DC Backup Hosts' /etc/zarafa/sslkeys
+	chmod 775 /etc/zarafa/sslkeys
+fi
+
+# join script
+call_joinscript 70zarafa4ucs.inst
+
+# Mark joinscripts 00zarafa4ucs-safemode-on.inst and 99zarafa4ucs-safemode-off.inst as executed
+# They are only relevant when rejoining a UCS system
+for js in "zarafa4ucs-safemode-on" "zarafa4ucs-safemode-off"; do
+	if ! grep -q "$js" /var/univention-join/status; then
+		echo "$js v1 successful" >> /var/univention-join/status
+	fi
+done
+
+# restart listener
+/etc/init.d/univention-directory-listener crestart
+
+# if installed, restart ad-connector
+if [ -x /etc/init.d/univention-ad-connector ]; then
+	invoke-rc.d univention-ad-connector restart
+fi
+
+# reload apache
+invoke-rc.d apache2 restart
+
+# restart services
+invoke-rc.d clamav-daemon restart
+invoke-rc.d postfix restart
+invoke-rc.d zarafa-server restart
+wait_for_zarafa_server_startup
+invoke-rc.d zarafa-spooler restart
+invoke-rc.d zarafa-monitor restart
+invoke-rc.d zarafa-ical restart
+invoke-rc.d zarafa-gateway restart
+invoke-rc.d zarafa-dagent restart
+invoke-rc.d zarafa-search restart
+invoke-rc.d zarafa-licensed restart
+
+# configure firewall
+ucr set security/packetfilter/package/zarafa4ucs/tcp/25/all="ACCEPT" \
+		security/packetfilter/package/zarafa4ucs/tcp/25/all/en="SMTP" \
+		security/packetfilter/package/zarafa4ucs/tcp/465/all="ACCEPT" \
+		security/packetfilter/package/zarafa4ucs/tcp/465/all/en="SSMTP" \
+		security/packetfilter/package/zarafa4ucs/tcp/110/all/en="POP3" \
+		security/packetfilter/package/zarafa4ucs/tcp/110/all="ACCEPT" \
+		security/packetfilter/package/zarafa4ucs/tcp/143/all/en="IMAP" \
+		security/packetfilter/package/zarafa4ucs/tcp/143/all="ACCEPT" \
+		security/packetfilter/package/zarafa4ucs/tcp/993/all/en="IMAPS" \
+		security/packetfilter/package/zarafa4ucs/tcp/993/all="ACCEPT" \
+		security/packetfilter/package/zarafa4ucs/tcp/995/all/en="POP3S" \
+		security/packetfilter/package/zarafa4ucs/tcp/995/all="ACCEPT" \
+		security/packetfilter/package/zarafa4ucs/tcp/8443/all/en="ICALS" \
+		security/packetfilter/package/zarafa4ucs/tcp/8443/all="ACCEPT" \
+		security/packetfilter/package/zarafa4ucs/tcp/8080/all/en="ICAL" \
+		security/packetfilter/package/zarafa4ucs/tcp/8080/all="ACCEPT" \
+		security/packetfilter/package/zarafa4ucs/tcp/236/all/en="ZARAFA" \
+		security/packetfilter/package/zarafa4ucs/tcp/236/all="ACCEPT" \
+		security/packetfilter/package/zarafa4ucs/tcp/237/all/en="ZARAFA encrypted" \
+		security/packetfilter/package/zarafa4ucs/tcp/237/all="ACCEPT"
+[ -x "/etc/init.d/univention-firewall" ] && invoke-rc.d univention-firewall restart
+
+# create public store on installation
+if [ "$1" = "configure" -a -z "$2" ]; then
+	sleep 3s
+	zarafa-admin -s
+fi
+
+exit 0

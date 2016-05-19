@@ -1,0 +1,100 @@
+#!/bin/bash
+#
+# zarafa4ucs-multiserver
+#  postinst script
+#
+# Copyright 2015-2016 Univention GmbH
+#
+# http://www.univention.de/
+#
+# All rights reserved.
+#
+# The source code of this program is made available
+# under the terms of the GNU Affero General Public License version 3
+# (GNU AGPL V3) as published by the Free Software Foundation.
+#
+# Binary versions of this program provided by Univention to you as
+# well as other copyrighted, protected or trademarked materials like
+# Logos, graphics, fonts, specific documentations and configurations,
+# cryptographic keys etc. are subject to a license agreement between
+# you and Univention and not subject to the GNU AGPL V3.
+#
+# In the case you use this program under the terms of the GNU AGPL V3,
+# the program is provided in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public
+# License with the Debian GNU/Linux or Univention distribution in file
+# /usr/share/common-licenses/AGPL-3; if not, see
+# <http://www.gnu.org/licenses/>.
+
+#DEBHELPER#
+
+. /usr/share/univention-lib/all.sh
+. /usr/share/univention-lib/zarafa4ucs.sh
+
+eval "$(univention-config-registry shell)"
+
+# copy OpenLDAP multiserver example as new ldapms.cfg during first package installation
+if [ "$1" = "configure" -a -z "$2" -a ! -e "/etc/zarafa/ldapms.cfg" ] ; then
+	cp "/etc/zarafa/ldapms.openldap.cfg" "/etc/zarafa/ldapms.cfg"
+fi
+
+if ! dpkg-statoverride --list /etc/zarafa/ldapms.cfg; then
+	dpkg-statoverride --quiet --force --update --add root root 660 /etc/zarafa/ldapms.cfg
+fi
+
+# ldapms multiserver
+univention-config-registry set \
+	zarafa/cfg/ldapms/ldap_host?'@%@ldap/server/name@%@' \
+	zarafa/cfg/ldapms/ldap_port?'@%@ldap/server/port@%@' \
+	zarafa/cfg/ldapms/ldap_search_base?'@%@ldap/base@%@' \
+	zarafa/cfg/ldapms/ldap_bind_user?'@%@ldap/hostdn@%@' \
+	zarafa/cfg/ldapms/ldap_bind_passwd?'@&@/etc/zarafa-ldap.secret@&@' \
+	zarafa/cfg/ldapms/ldap_user_search_filter?'(zarafaAccount=1)' \
+	zarafa/cfg/ldapms/ldap_authentication_method?'bind' \
+	zarafa/cfg/ldapms/ldap_group_search_filter?'(&(zarafaAccount=1)(objectClass=zarafa-group))' \
+	zarafa/cfg/ldapms/ldap_quota_multiplier?'1048576' \
+	zarafa/cfg/ldapms/ldap_emailaddress_attribute?'mailPrimaryAddress' \
+	zarafa/cfg/ldapms/ldap_emailaliases_attribute?'mailAlternativeAddress' \
+	zarafa/cfg/ldapms/ldap_nonactive_attribute?'zarafaSharedStoreOnly' \
+	zarafa/cfg/ldapms/ldap_user_type_attribute_value?'zarafa-user' \
+	zarafa/cfg/ldapms/ldap_user_unique_attribute?'entryUUID' \
+	zarafa/cfg/ldapms/ldap_sendas_relation_attribute?'uidNumber' \
+	zarafa/cfg/ldapms/ldap_server_type_attribute_value?'zarafa-server' \
+	zarafa/cfg/ldapms/ldap_user_server_attribute?'zarafaUserServer' \
+	zarafa/cfg/ldapms/ldap_server_address_attribute?'zarafa4ucsFqdn' \
+	zarafa/cfg/ldapms/ldap_server_http_port_attribute?'zarafaHttpPort' \
+	zarafa/cfg/ldapms/ldap_server_ssl_port_attribute?'zarafaSslPort' \
+	zarafa/cfg/ldapms/ldap_server_file_path_attribute?'zarafaFilePath' \
+	zarafa/cfg/ldapms/ldap_server_search_filter?'' \
+	zarafa/cfg/ldapms/ldap_server_unique_attribute?'cn'
+
+if [ ! -e "/etc/zarafa/admin.cfg" ]; then
+	touch /etc/zarafa/admin.cfg
+fi
+
+# restart listener
+/etc/init.d/univention-directory-listener crestart
+
+call_joinscript 71zarafa4ucs-multiserver.inst
+
+# reload apache
+invoke-rc.d apache2 restart
+
+# restart services
+#invoke-rc.d clamav-daemon restart
+#invoke-rc.d postfix restart
+invoke-rc.d zarafa-server restart
+wait_for_zarafa_server_startup
+#invoke-rc.d zarafa-spooler restart
+#invoke-rc.d zarafa-monitor restart
+#invoke-rc.d zarafa-ical restart
+#invoke-rc.d zarafa-gateway restart
+#invoke-rc.d zarafa-dagent restart
+#invoke-rc.d zarafa-search restart
+#invoke-rc.d zarafa-licensed restart
+
+exit 0

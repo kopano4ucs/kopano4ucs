@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<umc version="2.0">
+	<module id="udm" icon="udm-zarafa-contact" version="1.0" translationId="udm-zarafa">
+		<name/>
+		<description/>
+		<keywords/>
+		<flavor icon="udm-zarafa-contact" id="zarafa/contact">
+			<name>Zarafa Contacts</name>
+			<description>Management of Zarafa Contacts</description>
+			<keywords>zarafa,contacts</keywords>
+		</flavor>
+		<flavor icon="udm-zarafa-non-active" id="zarafa/non-active">
+			<name>Zarafa Non-Active Accounts</name>
+			<description>Management of Zarafa non-active accounts, resources and shared stores</description>
+			<keywords>zarafa,non-active,nonactive,sharedstore,resource</keywords>
+		</flavor>
+		<categories>
+			<category name="domain"/>
+		</categories>
+	</module>
+</umc>

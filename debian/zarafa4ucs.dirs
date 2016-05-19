@@ -1,0 +1,6 @@
+usr/lib/univention-install
+etc/zarafa/ssl
+usr/lib/univention-server/server_password_change.d
+usr/share/zarafa4ucs
+var/www/icon
+etc/zarafa/sslkeys

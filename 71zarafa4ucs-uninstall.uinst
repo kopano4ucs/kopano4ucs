@@ -1,0 +1,72 @@
+#!/bin/sh
+#
+# zarafa4ucs
+#  unjoin script
+#
+# Copyright 2013-2016 Univention GmbH
+#
+# http://www.univention.de/
+#
+# All rights reserved.
+#
+# The source code of this program is made available
+# under the terms of the GNU Affero General Public License version 3
+# (GNU AGPL V3) as published by the Free Software Foundation.
+#
+# Binary versions of this program provided by Univention to you as
+# well as other copyrighted, protected or trademarked materials like
+# Logos, graphics, fonts, specific documentations and configurations,
+# cryptographic keys etc. are subject to a license agreement between
+# you and Univention and not subject to the GNU AGPL V3.
+#
+# In the case you use this program under the terms of the GNU AGPL V3,
+# the program is provided in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public
+# License with the Debian GNU/Linux or Univention distribution in file
+# /usr/share/common-licenses/AGPL-3; if not, see
+# <http://www.gnu.org/licenses/>.
+
+VERSION=1
+
+. /usr/share/univention-lib/base.sh
+. /usr/share/univention-lib/ldap.sh
+. /usr/share/univention-join/joinscripthelper.lib
+
+joinscript_init
+
+eval "$(univention-config-registry shell)"
+
+SERVICE="Zarafa"
+EXTENDED_ATTR_CONTAINER="cn=zarafa,cn=custom attributes,cn=univention,$ldap_base"
+
+ucs_removeServiceFromLocalhost "${SERVICE}" "$@"
+
+if ucs_isServiceUnused "${SERVICE}" "$@"; then
+	univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=zarafa-group,$EXTENDED_ATTR_CONTAINER"
+	univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=zarafa-group-hidden,$EXTENDED_ATTR_CONTAINER"
+	univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=zarafa-role,$EXTENDED_ATTR_CONTAINER"
+	univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=z4uUserSendAsPrivilege,$EXTENDED_ATTR_CONTAINER"
+	univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=SendAsPrivilege,$EXTENDED_ATTR_CONTAINER"
+	univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=zarafa-user-hidden,$EXTENDED_ATTR_CONTAINER"
+	univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=MRAccept,$EXTENDED_ATTR_CONTAINER"
+	univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=MRDeclineConflictingTimes,$EXTENDED_ATTR_CONTAINER"
+	univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=MRDeclineRecurringItems,$EXTENDED_ATTR_CONTAINER"
+	univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=quotaOverride,$EXTENDED_ATTR_CONTAINER"
+	univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=quotaWarn,$EXTENDED_ATTR_CONTAINER"
+	univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=quotaSoft,$EXTENDED_ATTR_CONTAINER"
+	univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=quotaHard,$EXTENDED_ATTR_CONTAINER"
+
+	# usertemplate is also unneeded
+	univention-directory-manager settings/usertemplate remove "$@" --dn "cn=Zarafa Account,cn=templates,cn=univention,$ldap_base"
+
+	stop_udm_cli_server
+fi
+
+# Remove old join script from index file otherwise the re-installation will not work
+joinscript_remove_script_from_status_file zarafa4ucs
+
+exit 0
