@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# zarafa4ucs postinst
+# kopano4ucs postinst
 #
 # Copyright 2012-2016 Univention GmbH
 #
@@ -35,6 +35,6 @@ eval "$(univention-config-registry shell)"
 . /usr/share/univention-lib/all.sh
 
 stop_udm_cli_server
-call_joinscript 70zarafa4ucs-udm.inst
+call_joinscript 70kopano4ucs-udm.inst
 
 exit 0

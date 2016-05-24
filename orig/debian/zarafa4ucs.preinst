@@ -1,6 +1,6 @@
 #! /bin/sh
 #
-# zarafa4ucs
+# kopano4ucs
 #  preinst script
 #
 # Copyright 2013-2016 Univention GmbH
@@ -35,7 +35,7 @@
 . /usr/share/univention-lib/all.sh
 
 if [ "$1" = "install" ]; then
-	test -e /usr/lib/univention-install/71zarafa-uninstall.uinst && rm /usr/lib/univention-install/71zarafa-uninstall.uinst
+	test -e /usr/lib/univention-install/71kopano-uninstall.uinst && rm /usr/lib/univention-install/71kopano-uninstall.uinst
 fi
 
 exit 0

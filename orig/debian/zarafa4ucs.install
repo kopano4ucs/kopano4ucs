@@ -1,9 +1,9 @@
-00zarafa4ucs-safemode-on.inst usr/lib/univention-install/
-99zarafa4ucs-safemode-off.inst usr/lib/univention-install/
-70zarafa4ucs.inst usr/lib/univention-install/
-71zarafa4ucs-uninstall.uinst usr/lib/univention-uninstall/
-70zarafa4ucs-webapp-update.inst usr/lib/univention-install/
-server_password_change.d/70zarafa usr/lib/univention-server/server_password_change.d/
-listener/zarafa.py usr/lib/univention-directory-listener/system/
-scripts/* usr/share/zarafa4ucs
+00kopano4ucs-safemode-on.inst usr/lib/univention-install/
+99kopano4ucs-safemode-off.inst usr/lib/univention-install/
+70kopano4ucs.inst usr/lib/univention-install/
+71kopano4ucs-uninstall.uinst usr/lib/univention-uninstall/
+70kopano4ucs-webapp-update.inst usr/lib/univention-install/
+server_password_change.d/70kopano usr/lib/univention-server/server_password_change.d/
+listener/kopano.py usr/lib/univention-directory-listener/system/
+scripts/* usr/share/kopano4ucs
 lib/*.sh usr/share/univention-lib/

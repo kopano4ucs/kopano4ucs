@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# zarafa4ucs-webapp
+# kopano4ucs-webapp
 #  join script
 #
 # Copyright 2016 Univention GmbH
@@ -40,29 +40,29 @@ joinscript_init
 eval "$(univention-config-registry shell)"
 
 # copy certificate
-mkdir -p /etc/zarafa/ssl
-cp "/etc/univention/ssl/$hostname.$domainname/cert.pem" /etc/zarafa/ssl/
-cp "/etc/univention/ssl/$hostname.$domainname/private.key" /etc/zarafa/ssl/
-cat /etc/zarafa/ssl/cert.pem /etc/zarafa/ssl/private.key > /etc/zarafa/ssl/server.pem
-chmod 600 /etc/zarafa/ssl/private.key
-chmod 600 /etc/zarafa/ssl/server.pem
+mkdir -p /etc/kopano/ssl
+cp "/etc/univention/ssl/$hostname.$domainname/cert.pem" /etc/kopano/ssl/
+cp "/etc/univention/ssl/$hostname.$domainname/private.key" /etc/kopano/ssl/
+cat /etc/kopano/ssl/cert.pem /etc/kopano/ssl/private.key > /etc/kopano/ssl/server.pem
+chmod 600 /etc/kopano/ssl/private.key
+chmod 600 /etc/kopano/ssl/server.pem
 
 # add service to my host object
-ucs_addServiceToLocalhost "Zarafa-WebApp" "$@"
+ucs_addServiceToLocalhost "Kopano-WebApp" "$@"
 
-# Find and configure zarafa mailserver.
-# Assumption: Since zarafa-multiserver has to be configured manually anyway,
-# we can take the first zarafa server in the domain and use that
-find_first_zarafa_server ()
+# Find and configure kopano mailserver.
+# Assumption: Since kopano-multiserver has to be configured manually anyway,
+# we can take the first kopano server in the domain and use that
+find_first_kopano_server ()
 {
-	univention-ldapsearch -xLLL univentionService=Zarafa cn | grep "^cn: " | sed s/"^cn: "// | head -n1
+	univention-ldapsearch -xLLL univentionService=Kopano cn | grep "^cn: " | sed s/"^cn: "// | head -n1
 }
 
-zarafa_server=$(find_first_zarafa_server)
-if [ -n $zarafa_server ]; then
-	ucr set zarafa/webapp/config/DEFAULT_SERVER=\"https://${zarafa_server}.${domainname}:237/zarafa\"
+kopano_server=$(find_first_kopano_server)
+if [ -n $kopano_server ]; then
+	ucr set kopano/webapp/config/DEFAULT_SERVER=\"https://${kopano_server}.${domainname}:237/kopano\"
 else
-	echo "ERROR: No zarafa server found in domain!" && die
+	echo "ERROR: No kopano server found in domain!" && die
 fi
 
 joinscript_save_current_version

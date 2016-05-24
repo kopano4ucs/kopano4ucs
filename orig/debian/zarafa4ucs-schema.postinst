@@ -1,6 +1,6 @@
 #! /bin/sh
 #
-# zarafa4ucs
+# kopano4ucs
 #  postinst script
 #
 # Copyright 2012-2016 Univention GmbH
@@ -34,7 +34,7 @@
 
 . /usr/share/univention-lib/all.sh
 
-ucs_registerLDAPSchema /usr/share/zarafa4ucs-schema/zarafa4ucs.schema
+ucs_registerLDAPSchema /usr/share/kopano4ucs-schema/kopano.schema
 
 # from univention-ldap-server.postinst
 merge_csv_unique_sorted() {
@@ -48,9 +48,9 @@ merge_csv_unique_sorted() {
 
 
 if is_ucr_true "ldap/index/autorebuild" ; then
-	# register zarafa attributes
-	zarafa_attributes="zarafaAccount,zarafaAliases,zarafaViewPrivilege"
-	merged_ldap_index_eq="$(merge_csv_unique_sorted "$(ucr get ldap/index/eq)" "$zarafa_attributes")"
+	# register kopano attributes
+	kopano_attributes="kopanoAccount,kopanoAliases,kopanoViewPrivilege"
+	merged_ldap_index_eq="$(merge_csv_unique_sorted "$(ucr get ldap/index/eq)" "$kopano_attributes")"
 	ucr set ldap/index/eq="$merged_ldap_index_eq"
 
 	invoke-rc.d slapd stop

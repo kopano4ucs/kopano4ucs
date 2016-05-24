@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# zarafa4ucs - turn user_safe_mode on
+# kopano4ucs - turn user_safe_mode on
 #  join script 
 #
 # Copyright 2012-2016 Univention GmbH
@@ -33,22 +33,22 @@
 VERSION=1
 
 . /usr/share/univention-join/joinscripthelper.lib
-. /usr/share/univention-lib/zarafa4ucs.sh
+. /usr/share/univention-lib/kopano4ucs.sh
 
 joinscript_init
 
 # save old value
 eval "$(ucr shell)"
-if [ ! -e /etc/zarafa/.join_safe_mode_status ] ; then
-	sed -nre 's/^\s*user_safe_mode\s*=\s*(.*)\s*$/\1/p' /etc/zarafa/server.cfg > /etc/zarafa/.join_safe_mode_status
+if [ ! -e /etc/kopano/.join_safe_mode_status ] ; then
+	sed -nre 's/^\s*user_safe_mode\s*=\s*(.*)\s*$/\1/p' /etc/kopano/server.cfg > /etc/kopano/.join_safe_mode_status
 fi
 
-# enable Zarafa's user safe mode
-ucr set zarafa/cfg/server/user_safe_mode=yes
+# enable Kopano's user safe mode
+ucr set kopano/cfg/server/user_safe_mode=yes
 
-# restart zarafa
-invoke-rc.d zarafa-server restart
-wait_for_zarafa_server_startup
+# restart kopano
+invoke-rc.d kopano-server restart
+wait_for_kopano_server_startup
 
 joinscript_save_current_version
 

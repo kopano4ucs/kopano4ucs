@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# zarafa4ucs
+# kopano4ucs
 #  postrm script
 #
 # Copyright 2013-2016 Univention GmbH
@@ -36,8 +36,8 @@
 . /usr/share/univention-join/joinscripthelper.lib
 
 if [ "$1" = "remove" ]; then
-	call_unjoinscript 71zarafa4ucs-uninstall.uinst
-	joinscript_remove_script_from_status_file zarafa4ucs
+	call_unjoinscript 71kopano4ucs-uninstall.uinst
+	joinscript_remove_script_from_status_file kopano4ucs
 fi
 
 exit 0

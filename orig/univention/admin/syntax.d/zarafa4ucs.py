@@ -1,4 +1,4 @@
-# zarafa4ucsRole UDM syntax
+# kopano4ucsRole UDM syntax
 #
 # Copyright 2012-2016 Univention GmbH
 #
@@ -30,22 +30,22 @@
 import univention.admin.localization
 import univention.admin.syntax
 
-translation = univention.admin.localization.translation('zarafa4ucs')
+translation = univention.admin.localization.translation('kopano4ucs')
 _ = translation.translate
 
-class zarafa4ucsRole(select):
+class kopano4ucsRole(select):
 	choices=[
 		('none', _('None')),
-		('user', _('Zarafa User')),
-		('admin', _('Zarafa Admin')),
-		('store', _('Zarafa Shared Store/Non-active')),
-		('contact', _('Zarafa Contact')),
+		('user', _('Kopano User')),
+		('admin', _('Kopano Admin')),
+		('store', _('Kopano Shared Store/Non-active')),
+		('contact', _('Kopano Contact')),
 	]
 
-class zarafa4ucsSendAsPrivilege(univention.admin.syntax.UDM_Objects):
+class kopano4ucsSendAsPrivilege(univention.admin.syntax.UDM_Objects):
 	udm_modules = ('users/user', )
 	key = '%(uidNumber)s'
 	label = '%(username)s'
-	udm_filter = '(&(zarafaAccount=1)(!(univentionObjectFlag=functional)))'
+	udm_filter = '(&(kopanoAccount=1)(!(univentionObjectFlag=functional)))'
 	simple = True
 	regex = None

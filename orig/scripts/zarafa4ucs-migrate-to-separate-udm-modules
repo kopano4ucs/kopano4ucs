@@ -41,9 +41,9 @@ import univention.admin.config
 import univention.admin.uldap
 try:
 	import imp
-	ucs_zarafa_cfg = imp.load_source('zarafa-cfg', '/etc/univention/templates/modules/zarafa-cfg.py')
+	ucs_kopano_cfg = imp.load_source('kopano-cfg', '/etc/univention/templates/modules/kopano-cfg.py')
 except:
-	print 'Could not load /etc/univention/modules/zarafa-cfg.py'
+	print 'Could not load /etc/univention/modules/kopano-cfg.py'
 	sys.exit(1)
 
 
@@ -59,14 +59,14 @@ def get_value(configRegistry, value):
 	"""
 	this function loads the correct UCR value by replacing
 	UCR placeholders with its current value.
-	RE_UCRVAR and RE_FILENAME are defined in the UCR module zarafa-cfg.py
-	The function is adapted from the zarafa-cfg module get_line function
+	RE_UCRVAR and RE_FILENAME are defined in the UCR module kopano-cfg.py
+	The function is adapted from the kopano-cfg module get_line function
 	"""
-	matches = ucs_zarafa_cfg.RE_UCRVAR.findall(value)
+	matches = ucs_kopano_cfg.RE_UCRVAR.findall(value)
 	ucr_value = "error:notfound"
 	for key in matches:
 		ucr_value = value.replace('@%%@%s@%%@' % key, configRegistry.get(key, ''))
-	matches = ucs_zarafa_cfg.RE_FILENAME.findall(value)
+	matches = ucs_kopano_cfg.RE_FILENAME.findall(value)
 	for key in matches:
 		try:
 			content = open(key, 'r').read()
@@ -76,7 +76,7 @@ def get_value(configRegistry, value):
 	return ucr_value
 
 
-class ZarafaMigration(object):
+class KopanoMigration(object):
 	def debug(self, msg):
 		if self.options.verbose:
 			print >> sys.stderr, msg
@@ -122,7 +122,7 @@ class ZarafaMigration(object):
 
 	def main(self):
 		self.ucr.load()
-		if self.ucr.is_true('zarafa/migrateusers', True):
+		if self.ucr.is_true('kopano/migrateusers', True):
 			try:
 				self.parse_cmdline()
 				self.precheck()
@@ -130,7 +130,7 @@ class ZarafaMigration(object):
 				self.get_mysql_connection()
 				self.migrate()
 				if not self.options.dry_run:
-					subprocess.call(['/usr/share/zarafa4ucs/db-upgrade-addressbook-entryids-delegate.pl'])
+					subprocess.call(['/usr/share/kopano4ucs/db-upgrade-addressbook-entryids-delegate.pl'])
 			except (ldap.LDAPError), e:
 				if 'info' in e:
 					self.error(e.info)
@@ -141,24 +141,24 @@ class ZarafaMigration(object):
 			except PreCheckError:
 				self.error('\nError encountered during precheck, exiting')
 		else:
-			self.debug('zarafa/migrateusers is set to False, exiting')
+			self.debug('kopano/migrateusers is set to False, exiting')
 
 		return self.ret
 
 	def precheck(self):
-		# Check if zarafa is stopped
+		# Check if kopano is stopped
 		try:
-			self.debug('Check if Zarafa is running')
+			self.debug('Check if Kopano is running')
 			with open(os.devnull, 'w') as devnull:
-				retcode = subprocess.call(['/usr/bin/zarafa-stats', '--system'], stdout=devnull, stderr=subprocess.STDOUT)
+				retcode = subprocess.call(['/usr/bin/kopano-stats', '--system'], stdout=devnull, stderr=subprocess.STDOUT)
 		except subprocess.CalledProcessError:
-			self.error('CalledProcessError while checking if zarafa is running')
+			self.error('CalledProcessError while checking if kopano is running')
 			raise PreCheckError()
 
 		if retcode is 0:
-			self.error('Zarafa is still running. Stop Zarafa services before continuing')
-			self.error('Stop Zarafa services with e.g.')
-			self.error('for PROC in /etc/init.d/zarafa-*; do $PROC stop; done')
+			self.error('Kopano is still running. Stop Kopano services before continuing')
+			self.error('Stop Kopano services with e.g.')
+			self.error('for PROC in /etc/init.d/kopano-*; do $PROC stop; done')
 			raise PreCheckError()
 
 	def get_ldap_connection(self):
@@ -177,11 +177,11 @@ class ZarafaMigration(object):
 		self.debug('ldap connection established')
 
 	def get_mysql_connection(self):
-		mysql_host = self.ucr.get('zarafa/cfg/server/mysql_host')
-		mysql_port = self.ucr.get('zarafa/cfg/server/mysql_port')
-		mysql_user = self.ucr.get('zarafa/cfg/server/mysql_user')
-		mysql_password = get_value(self.ucr, self.ucr.get('zarafa/cfg/server/mysql_password')).strip()
-		mysql_db = self.ucr.get('zarafa/cfg/server/mysql_database')
+		mysql_host = self.ucr.get('kopano/cfg/server/mysql_host')
+		mysql_port = self.ucr.get('kopano/cfg/server/mysql_port')
+		mysql_user = self.ucr.get('kopano/cfg/server/mysql_user')
+		mysql_password = get_value(self.ucr, self.ucr.get('kopano/cfg/server/mysql_password')).strip()
+		mysql_db = self.ucr.get('kopano/cfg/server/mysql_database')
 		self.dbconn = MySQLdb.connect(user=mysql_user, passwd=mysql_password, db=mysql_db, host=mysql_host, port=int(mysql_port))
 		self.cursor = self.dbconn.cursor()
 
@@ -193,13 +193,13 @@ class ZarafaMigration(object):
 
 	def migrate_contacts(self):
 		self.debug('\nMigrating contacts:')
-		contacts_container = "cn=contacts,cn=zarafa,%s" % self.ucr.get('ldap/base')
+		contacts_container = "cn=contacts,cn=kopano,%s" % self.ucr.get('ldap/base')
 		for dn, attrs in self.access.search(
-			filter='(&(zarafa4ucsRole=contact)(!(univentionObjectFlag=functional)))',
+			filter='(&(kopano4ucsRole=contact)(!(univentionObjectFlag=functional)))',
 		):
 			classes_updated = attrs.get('objectClass', [])
-			classes_updated = [x for x in classes_updated if x != 'zarafa-user']
-			for objclass in ['zarafa-contact', 'zarafa4ucsObject']:
+			classes_updated = [x for x in classes_updated if x != 'kopano-user']
+			for objclass in ['kopano-contact', 'kopano4ucsObject']:
 				if objclass not in classes_updated:
 					classes_updated.append(objclass)
 
@@ -209,10 +209,10 @@ class ZarafaMigration(object):
 			changes = [
 				('objectClass', attrs.get('objectClass', []), classes_updated),
 				('univentionObjectFlag', attrs.get('univentionObjectFlag', []), flag_updated),
-				('univentionObjectType', attrs.get('univentionObjectType', []), ['zarafa/contact']),
-				('zarafa4ucsRole', attrs.get('zarafa4ucsRole', []), []),
-				('zarafaAdmin', attrs.get('zarafaAdmin', []), []),
-				('zarafaSharedStoreOnly', attrs.get('zarafaSharedStoreOnly', []), []),
+				('univentionObjectType', attrs.get('univentionObjectType', []), ['kopano/contact']),
+				('kopano4ucsRole', attrs.get('kopano4ucsRole', []), []),
+				('kopanoAdmin', attrs.get('kopanoAdmin', []), []),
+				('kopanoSharedStoreOnly', attrs.get('kopanoSharedStoreOnly', []), []),
 			]
 			try:
 				self.debug('Updating %s' % dn)
@@ -230,14 +230,14 @@ class ZarafaMigration(object):
 
 	def migrate_non_active(self):
 		self.debug('\nMigrating shared stores and non-active users:')
-		nonactive_container = "cn=non-active,cn=zarafa,%s" % self.ucr.get('ldap/base')
+		nonactive_container = "cn=non-active,cn=kopano,%s" % self.ucr.get('ldap/base')
 
 		for dn, attrs in self.access.search(
-			filter='(&(zarafa4ucsRole=store)(!(univentionObjectFlag=functional)))',
+			filter='(&(kopano4ucsRole=store)(!(univentionObjectFlag=functional)))',
 		):
 
 			classes_updated = copy.copy(attrs.get('objectClass', []))
-			for objclass in ['zarafa-user', 'zarafa4ucsObject']:
+			for objclass in ['kopano-user', 'kopano4ucsObject']:
 				if objclass not in classes_updated:
 					classes_updated.append(objclass)
 
@@ -247,9 +247,9 @@ class ZarafaMigration(object):
 			changes = [
 				('objectClass', attrs.get('objectClass', []), classes_updated),
 				('univentionObjectFlag', attrs.get('univentionObjectFlag', []), flag_updated),
-				('univentionObjectType', attrs.get('univentionObjectType', []), ['zarafa/non-active']),
-				('zarafa4ucsRole', attrs.get('zarafa4ucsRole', []), []),
-				('zarafaAdmin', attrs.get('zarafaAdmin', []), []),
+				('univentionObjectType', attrs.get('univentionObjectType', []), ['kopano/non-active']),
+				('kopano4ucsRole', attrs.get('kopano4ucsRole', []), []),
+				('kopanoAdmin', attrs.get('kopanoAdmin', []), []),
 			]
 			try:
 				self.debug('Updating %s' % dn)
@@ -265,12 +265,12 @@ class ZarafaMigration(object):
 			except Exception as ex:
 				self.error('Failed to modify %s: %s' % (dn, ex))
 
-	# change in mysql: zarafa.users.externid from uidNumber to entryUUID
+	# change in mysql: kopano.users.externid from uidNumber to entryUUID
 	def migrate_users(self):
-		self.debug('\nMigrating zarafa mysql database:')
+		self.debug('\nMigrating kopano mysql database:')
 		for dn, attrs in self.access.search(
 				filter=('(&'
-					  '(|(zarafa4ucsRole=user)(zarafa4ucsRole=admin)(zarafa4ucsRole=store))'
+					  '(|(kopano4ucsRole=user)(kopano4ucsRole=admin)(kopano4ucsRole=store))'
 					  '(!(objectClass=univentionUserTemplate))'
 					  '(!(univentionObjectFlag=functional)))'),
 			attr=['uid', 'uidNumber', 'entryUUID'],
@@ -297,7 +297,7 @@ class ZarafaMigration(object):
 
 
 def main():
-	m = ZarafaMigration()
+	m = KopanoMigration()
 	m.main()
 	sys.exit(m.ret)
 

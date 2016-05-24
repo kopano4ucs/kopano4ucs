@@ -33,22 +33,22 @@ import univention.admin.filter
 import univention.admin.handlers
 import univention.admin.syntax
 
-translation = univention.admin.localization.translation('zarafa4ucs')
+translation = univention.admin.localization.translation('kopano4ucs')
 _ = translation.translate
 
-module = 'zarafa/contact'
+module = 'kopano/contact'
 childs = 0
-short_description = _(u'Zarafa Contact')
-long_description = _(u'Management of Zarafa Contact accounts.')
+short_description = _(u'Kopano Contact')
+long_description = _(u'Management of Kopano Contact accounts.')
 operations = ['add', 'edit', 'remove', 'search', 'move']
-default_containers=["cn=contacts,cn=zarafa"]
+default_containers=["cn=contacts,cn=kopano"]
 
 options = {}
 
 property_descriptions = {
-	'zarafaAccount': univention.admin.property(
-		short_description = _(u'Recognized by Zarafa'),
-		long_description = _(u'If set to 1, the account is recognized by zarafa'),
+	'kopanoAccount': univention.admin.property(
+		short_description = _(u'Recognized by Kopano'),
+		long_description = _(u'If set to 1, the account is recognized by kopano'),
 		syntax = univention.admin.syntax.string,
 		multivalue = False,
 		options = [],
@@ -208,9 +208,9 @@ property_descriptions = {
 		may_change=1,
 		identifies=0
 	),
-	'zarafaHidden': univention.admin.property(
-		short_description=_('Hide entry from Zarafa addressbook'),
-		long_description=_('Hide this entry from the global Zarafa addressbook'),
+	'kopanoHidden': univention.admin.property(
+		short_description=_('Hide entry from Kopano addressbook'),
+		long_description=_('Hide this entry from the global Kopano addressbook'),
 		syntax=univention.admin.syntax.boolean,
 		default=False,
 		multivalue=0,
@@ -221,9 +221,9 @@ property_descriptions = {
 }
 
 layout = [
-	Tab(_(u'General'), _(u'Zarafa Contact'), layout=[
+	Tab(_(u'General'), _(u'Kopano Contact'), layout=[
 		Group( _( 'General Contact information' ), layout = [
-			[ 'zarafaHidden', ],
+			[ 'kopanoHidden', ],
 			[ 'title', 'firstname', 'lastname'],
 			[ 'displayName', ],
 			[ 'phone', ],
@@ -240,7 +240,7 @@ layout = [
 ]
 
 mapping = univention.admin.mapping.mapping()
-mapping.register('zarafaAccount', 'zarafaAccount', None, univention.admin.mapping.ListToString)
+mapping.register('kopanoAccount', 'kopanoAccount', None, univention.admin.mapping.ListToString)
 mapping.register('title', 'title', None, univention.admin.mapping.ListToString)
 mapping.register('firstname', 'givenName', None, univention.admin.mapping.ListToString)
 mapping.register('lastname', 'sn', None, univention.admin.mapping.ListToString)
@@ -256,7 +256,7 @@ mapping.register('homeTelephoneNumber', 'homePhone', None, univention.admin.mapp
 mapping.register('displayName', 'cn', None, univention.admin.mapping.ListToString)
 mapping.register('departmentNumber', 'departmentNumber', None, univention.admin.mapping.ListToString)
 mapping.register('roomNumber', 'roomNumber', None, univention.admin.mapping.ListToString)
-mapping.register('zarafaHidden', 'zarafaHidden', None, univention.admin.mapping.ListToString)
+mapping.register('kopanoHidden', 'kopanoHidden', None, univention.admin.mapping.ListToString)
 
 class object(univention.admin.handlers.simpleLdap):
 	module = module
@@ -297,11 +297,11 @@ class object(univention.admin.handlers.simpleLdap):
 		pass
 
 	def _ldap_addlist(self):
-		return [('objectClass', ['top', 'zarafa-contact', 'person', 'inetOrgPerson', 'univentionObject', 'zarafa4ucsObject']),('univentionObjectFlag', ['functional'])]
+		return [('objectClass', ['top', 'kopano-contact', 'person', 'inetOrgPerson', 'univentionObject', 'kopano4ucsObject']),('univentionObjectFlag', ['functional'])]
 
 def lookup(co, lo, filter_s, base='', superordinate=None, scope='sub', unique=0, required=0, timeout=-1, sizelimit=0):
 	searchfilter = univention.admin.filter.conjunction('&', [
-				univention.admin.filter.expression('objectClass', 'zarafa-contact'),
+				univention.admin.filter.expression('objectClass', 'kopano-contact'),
 				univention.admin.filter.expression('univentionObjectFlag', 'functional')
 				])
 
@@ -316,4 +316,4 @@ def lookup(co, lo, filter_s, base='', superordinate=None, scope='sub', unique=0,
 	return res
 
 def identify(distinguished_name, attributes, canonical=False):
-	return 'zarafa-contact' in attributes.get('objectClass', []) and 'functional' in attributes.get('univentionObjectFlag', [])
+	return 'kopano-contact' in attributes.get('objectClass', []) and 'functional' in attributes.get('univentionObjectFlag', [])

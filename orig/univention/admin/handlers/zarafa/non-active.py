@@ -36,22 +36,22 @@ import univention.admin.password
 
 import univention.password
 
-translation = univention.admin.localization.translation('zarafa4ucs')
+translation = univention.admin.localization.translation('kopano4ucs')
 _ = translation.translate
 
-module = 'zarafa/non-active'
+module = 'kopano/non-active'
 childs = 0
-short_description = _(u'Zarafa non-active and shared store account')
-long_description = _(u'Management of Zarafa non-active user accounts, shared stores and resources.')
+short_description = _(u'Kopano non-active and shared store account')
+long_description = _(u'Management of Kopano non-active user accounts, shared stores and resources.')
 operations = ['add', 'edit', 'remove', 'search', 'move']
-default_containers=["cn=non-active,cn=zarafa"]
+default_containers=["cn=non-active,cn=kopano"]
 
 options = {}
 
 property_descriptions = {
-	'zarafaAccount': univention.admin.property(
-		short_description = _(u'Recognized by Zarafa'),
-		long_description = _(u'If set to 1, the account is synced to Zarafa'),
+	'kopanoAccount': univention.admin.property(
+		short_description = _(u'Recognized by Kopano'),
+		long_description = _(u'If set to 1, the account is synced to Kopano'),
 		syntax = univention.admin.syntax.string,
 		multivalue = False,
 		options = [],
@@ -201,9 +201,9 @@ property_descriptions = {
 		may_change=1,
 		identifies=0
 	),
-	'zarafaHidden': univention.admin.property(
-		short_description=_('Hide entry from Zarafa addressbook'),
-		long_description=_('Hide this entry from the global Zarafa addressbook'),
+	'kopanoHidden': univention.admin.property(
+		short_description=_('Hide entry from Kopano addressbook'),
+		long_description=_('Hide this entry from the global Kopano addressbook'),
 		syntax=univention.admin.syntax.boolean,
 		multivalue=0,
 		required=0,
@@ -234,7 +234,7 @@ property_descriptions = {
 		identifies=0,
 	),
 	'logindenied': univention.admin.property(
-		short_description=_('Deny zarafa login for this account. Login is only required for configuration. If not denied, this account counts against the total zarafa user count'),
+		short_description=_('Deny kopano login for this account. Login is only required for configuration. If not denied, this account counts against the total kopano user count'),
 		long_description='',
 		syntax=univention.admin.syntax.boolean,
 		multivalue=0,
@@ -263,11 +263,11 @@ property_descriptions = {
 		identifies=0,
 		dontsearch=1
 	),
-	# zarafa attributes start here
+	# kopano attributes start here
 	'SendAsPrivilege': univention.admin.property(
 		short_description=_('Delegates'),
 		long_description=_('List of users that may send emails with the identity of the current account'),
-		syntax=univention.admin.syntax.zarafa4ucsSendAsPrivilege,
+		syntax=univention.admin.syntax.kopano4ucsSendAsPrivilege,
 		multivalue=1,
 		required=0,
 		may_change=1,
@@ -343,8 +343,8 @@ property_descriptions = {
 }
 
 layout = [
-	Tab(_(u'General'), _(u'Zarafa non-active account'), layout=[
-		Group( _('Zarafa account settings'), layout = [
+	Tab(_(u'General'), _(u'Kopano non-active account'), layout=[
+		Group( _('Kopano account settings'), layout = [
 			[ 'logindenied', ],
 			[ 'username', 'mailPrimaryAddress', ],
 			[ 'password', ],
@@ -359,9 +359,9 @@ layout = [
 			[ 'quotaHard', ],
 		]),
 	]),
-	Tab(_(u'Contact information'), _(u'Zarafa non-active account'), layout=[
+	Tab(_(u'Contact information'), _(u'Kopano non-active account'), layout=[
 		Group( _( 'General Contact information' ), layout = [
-			[ 'zarafaHidden', ],
+			[ 'kopanoHidden', ],
 			[ 'title', 'firstname', 'lastname'],
 			[ 'displayName', ],
 			[ 'phone', ],
@@ -377,7 +377,7 @@ layout = [
 ]
 
 mapping = univention.admin.mapping.mapping()
-mapping.register('zarafaAccount', 'zarafaAccount', None, univention.admin.mapping.ListToString)
+mapping.register('kopanoAccount', 'kopanoAccount', None, univention.admin.mapping.ListToString)
 mapping.register('title', 'title', None, univention.admin.mapping.ListToString)
 mapping.register('firstname', 'givenName', None, univention.admin.mapping.ListToString)
 mapping.register('lastname', 'sn', None, univention.admin.mapping.ListToString)
@@ -394,18 +394,18 @@ mapping.register('homeTelephoneNumber', 'homePhone', None, univention.admin.mapp
 mapping.register('displayName', 'cn', None, univention.admin.mapping.ListToString)
 mapping.register('departmentNumber', 'departmentNumber', None, univention.admin.mapping.ListToString)
 mapping.register('roomNumber', 'roomNumber', None, univention.admin.mapping.ListToString)
-mapping.register('zarafaHidden', 'zarafaHidden', None, univention.admin.mapping.ListToString)
+mapping.register('kopanoHidden', 'kopanoHidden', None, univention.admin.mapping.ListToString)
 
-mapping.register('logindenied', 'zarafaSharedStoreOnly', None, univention.admin.mapping.ListToString)
+mapping.register('logindenied', 'kopanoSharedStoreOnly', None, univention.admin.mapping.ListToString)
 mapping.register('username', 'uid', None, univention.admin.mapping.ListToString)
-mapping.register('SendAsPrivilege', 'zarafaSendAsPrivilege')
-mapping.register('MRaccept', 'zarafaMrAccept', None, univention.admin.mapping.ListToString)
-mapping.register('MRDeclineConflictingTimes', 'zarafaMrDeclineConflict', None, univention.admin.mapping.ListToString)
-mapping.register('MRDeclineRecurringItems', 'zarafaMrDeclineRecurring', None, univention.admin.mapping.ListToString)
-mapping.register('quotaOverride', 'zarafaQuotaOverride', None, univention.admin.mapping.ListToString)
-mapping.register('quotaWarn', 'zarafaQuotaWarn', None, univention.admin.mapping.ListToString)
-mapping.register('quotaSoft', 'zarafaQuotaSoft', None, univention.admin.mapping.ListToString)
-mapping.register('quotaHard', 'zarafaQuotaHard', None, univention.admin.mapping.ListToString)
+mapping.register('SendAsPrivilege', 'kopanoSendAsPrivilege')
+mapping.register('MRaccept', 'kopanoMrAccept', None, univention.admin.mapping.ListToString)
+mapping.register('MRDeclineConflictingTimes', 'kopanoMrDeclineConflict', None, univention.admin.mapping.ListToString)
+mapping.register('MRDeclineRecurringItems', 'kopanoMrDeclineRecurring', None, univention.admin.mapping.ListToString)
+mapping.register('quotaOverride', 'kopanoQuotaOverride', None, univention.admin.mapping.ListToString)
+mapping.register('quotaWarn', 'kopanoQuotaWarn', None, univention.admin.mapping.ListToString)
+mapping.register('quotaSoft', 'kopanoQuotaSoft', None, univention.admin.mapping.ListToString)
+mapping.register('quotaHard', 'kopanoQuotaHard', None, univention.admin.mapping.ListToString)
 
 class object(univention.admin.handlers.simpleLdap):
 	module = module
@@ -500,7 +500,7 @@ class object(univention.admin.handlers.simpleLdap):
 
 		al.append(('univentionObjectFlag', ['functional']))
 
-		ocs = ('objectClass', ['top', 'zarafa-user', 'person', 'inetOrgPerson', 'univentionObject', 'zarafa4ucsObject', 'univentionMail'])
+		ocs = ('objectClass', ['top', 'kopano-user', 'person', 'inetOrgPerson', 'univentionObject', 'kopano4ucsObject', 'univentionMail'])
 		al.insert(0, ocs)
 
 		return al
@@ -533,8 +533,8 @@ class object(univention.admin.handlers.simpleLdap):
 
 def lookup(co, lo, filter_s, base='', superordinate=None, scope='sub', unique=0, required=0, timeout=-1, sizelimit=0):
 	searchfilter = univention.admin.filter.conjunction('&', [
-				univention.admin.filter.expression('objectClass', 'zarafa-user'),
-				univention.admin.filter.expression('objectClass', 'zarafa4ucsObject'),
+				univention.admin.filter.expression('objectClass', 'kopano-user'),
+				univention.admin.filter.expression('objectClass', 'kopano4ucsObject'),
 				])
 
 	if filter_s:
@@ -548,4 +548,4 @@ def lookup(co, lo, filter_s, base='', superordinate=None, scope='sub', unique=0,
 	return res
 
 def identify(distinguished_name, attributes, canonical=False):
-	return 'zarafa-user' in attributes.get('objectClass', []) and 'zarafa4ucsObject' in attributes.get('objectClass', [])
+	return 'kopano-user' in attributes.get('objectClass', []) and 'kopano4ucsObject' in attributes.get('objectClass', [])

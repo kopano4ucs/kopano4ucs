@@ -27,7 +27,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: zarafa4ucs\n"
+"Project-Id-Version: kopano4ucs\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-03-28 14:11+0100\n"
 "PO-Revision-Date: 2012-03-29 11:51+0200\n"
@@ -38,15 +38,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: unicode\n"
 
-msgid "Zarafa Contacts"
-msgstr "Zarafa Kontakte"
+msgid "Kopano Contacts"
+msgstr "Kopano Kontakte"
 
 
-msgid "Management of Zarafa Contacts"
-msgstr "Verwaltung von Zarafa Kontakten"
+msgid "Management of Kopano Contacts"
+msgstr "Verwaltung von Kopano Kontakten"
 
-msgid "Zarafa Non-Active Accounts"
-msgstr "Zarafa Non-Active Konten"
+msgid "Kopano Non-Active Accounts"
+msgstr "Kopano Non-Active Konten"
 
-msgid "Management of Zarafa non-active accounts, resources and shared stores"
-msgstr "Verwaltung von Zarafa non-active Konten, Ressourcen und Shared Stores"
+msgid "Management of Kopano non-active accounts, resources and shared stores"
+msgstr "Verwaltung von Kopano non-active Konten, Ressourcen und Shared Stores"

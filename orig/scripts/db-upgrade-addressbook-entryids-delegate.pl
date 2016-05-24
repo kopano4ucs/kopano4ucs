@@ -128,7 +128,7 @@ sub upgrade_rules {
 
 
 my $servercfg = $ARGV[0];
-$servercfg = "/etc/zarafa/server.cfg" if (!defined($servercfg));
+$servercfg = "/etc/kopano/server.cfg" if (!defined($servercfg));
 
 my %serveropt = readconfig($servercfg);
 
@@ -261,7 +261,7 @@ while(@row = $sth->fetchrow_array()) {
 }
 
 # Enable multi server operation
-$dbh->do("DELETE FROM settings WHERE name='lock_distributed_zarafa' AND value='upgrade'")
+$dbh->do("DELETE FROM settings WHERE name='lock_distributed_kopano' AND value='upgrade'")
 	or die $DBI::errstr;
 	
 print "Committing changes to database\n";

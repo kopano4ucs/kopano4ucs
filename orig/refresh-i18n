@@ -27,7 +27,7 @@
 # /usr/share/common-licenses/AGPL-3; if not, see
 # <http://www.gnu.org/licenses/>.
 
-po=locale/zarafa4ucs.po
+po=locale/kopano4ucs.po
 pot=${po}t
 pox=${po}x
 

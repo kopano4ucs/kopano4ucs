@@ -1,6 +1,6 @@
 usr/lib/univention-install
-etc/zarafa/ssl
+etc/kopano/ssl
 usr/lib/univention-server/server_password_change.d
-usr/share/zarafa4ucs
+usr/share/kopano4ucs
 var/www/icon
-etc/zarafa/sslkeys
+etc/kopano/sslkeys

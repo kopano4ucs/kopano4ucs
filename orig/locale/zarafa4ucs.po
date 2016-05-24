@@ -25,10 +25,10 @@
 # /usr/share/common-licenses/AGPL-3; if not, see
 # <http://www.gnu.org/licenses/>.
 #
-#: univention/admin/handlers/zarafa/non-active.py:227
+#: univention/admin/handlers/kopano/non-active.py:227
 msgid ""
 msgstr ""
-"Project-Id-Version: zarafa4ucs\n"
+"Project-Id-Version: kopano4ucs\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2014-03-28 14:11+0100\n"
 "PO-Revision-Date: 2012-03-29 11:51+0200\n"
@@ -39,242 +39,242 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: unicode\n"
 
-#: univention/admin/handlers/zarafa/contact.py:41
-#: univention/admin/handlers/zarafa/contact.py:224
-msgid "Zarafa Contact"
-msgstr "Zarafa-Kontakt"
+#: univention/admin/handlers/kopano/contact.py:41
+#: univention/admin/handlers/kopano/contact.py:224
+msgid "Kopano Contact"
+msgstr "Kopano-Kontakt"
 
-#: univention/admin/handlers/zarafa/contact.py:42
-msgid "Management of Zarafa Contact accounts."
-msgstr "Verwaltung von Zarafa Kontakten"
+#: univention/admin/handlers/kopano/contact.py:42
+msgid "Management of Kopano Contact accounts."
+msgstr "Verwaltung von Kopano Kontakten"
 
-#: univention/admin/handlers/zarafa/contact.py:50
-#: univention/admin/handlers/zarafa/non-active.py:53
-msgid "Recognized by Zarafa"
-msgstr "Von Zarafa erkannt"
+#: univention/admin/handlers/kopano/contact.py:50
+#: univention/admin/handlers/kopano/non-active.py:53
+msgid "Recognized by Kopano"
+msgstr "Von Kopano erkannt"
 
-#: univention/admin/handlers/zarafa/contact.py:51
-msgid "If set to 1, the account is recognized by zarafa"
-msgstr "Wenn der Wert auf 1 gesetzt ist, wird das Objekt von Zarafa erkannt"
+#: univention/admin/handlers/kopano/contact.py:51
+msgid "If set to 1, the account is recognized by kopano"
+msgstr "Wenn der Wert auf 1 gesetzt ist, wird das Objekt von Kopano erkannt"
 
-#: univention/admin/handlers/zarafa/contact.py:61
-#: univention/admin/handlers/zarafa/non-active.py:64
+#: univention/admin/handlers/kopano/contact.py:61
+#: univention/admin/handlers/kopano/non-active.py:64
 msgid "First name"
 msgstr "Vorname"
 
-#: univention/admin/handlers/zarafa/contact.py:72
-#: univention/admin/handlers/zarafa/non-active.py:75
+#: univention/admin/handlers/kopano/contact.py:72
+#: univention/admin/handlers/kopano/non-active.py:75
 msgid "Last name"
 msgstr "Nachname"
 
-#: univention/admin/handlers/zarafa/contact.py:82
-#: univention/admin/handlers/zarafa/non-active.py:86
+#: univention/admin/handlers/kopano/contact.py:82
+#: univention/admin/handlers/kopano/non-active.py:86
 msgid "Display name"
 msgstr "Anzeigename"
 
-#: univention/admin/handlers/zarafa/contact.py:93
-#: univention/admin/handlers/zarafa/non-active.py:97
+#: univention/admin/handlers/kopano/contact.py:93
+#: univention/admin/handlers/kopano/non-active.py:97
 msgid "Title"
 msgstr "Titel"
 
-#: univention/admin/handlers/zarafa/contact.py:103
-#: univention/admin/handlers/zarafa/non-active.py:107
+#: univention/admin/handlers/kopano/contact.py:103
+#: univention/admin/handlers/kopano/non-active.py:107
 msgid "Organisation"
 msgstr "Organisation"
 
-#: univention/admin/handlers/zarafa/contact.py:113
-#: univention/admin/handlers/zarafa/non-active.py:117
+#: univention/admin/handlers/kopano/contact.py:113
+#: univention/admin/handlers/kopano/non-active.py:117
 msgid "Street"
 msgstr "Straße"
 
-#: univention/admin/handlers/zarafa/contact.py:123
-#: univention/admin/handlers/zarafa/non-active.py:215
+#: univention/admin/handlers/kopano/contact.py:123
+#: univention/admin/handlers/kopano/non-active.py:215
 msgid "E-mail address"
 msgstr "E-Mail Adresse"
 
-#: univention/admin/handlers/zarafa/contact.py:134
-#: univention/admin/handlers/zarafa/non-active.py:127
+#: univention/admin/handlers/kopano/contact.py:134
+#: univention/admin/handlers/kopano/non-active.py:127
 msgid "Postal code"
 msgstr "Postleitzahl"
 
-#: univention/admin/handlers/zarafa/contact.py:144
-#: univention/admin/handlers/zarafa/non-active.py:137
+#: univention/admin/handlers/kopano/contact.py:144
+#: univention/admin/handlers/kopano/non-active.py:137
 msgid "City"
 msgstr "Stadt"
 
-#: univention/admin/handlers/zarafa/contact.py:154
-#: univention/admin/handlers/zarafa/non-active.py:147
+#: univention/admin/handlers/kopano/contact.py:154
+#: univention/admin/handlers/kopano/non-active.py:147
 msgid "Telephone number"
 msgstr "Telefonnummer Festnetz"
 
-#: univention/admin/handlers/zarafa/contact.py:164
-#: univention/admin/handlers/zarafa/non-active.py:157
+#: univention/admin/handlers/kopano/contact.py:164
+#: univention/admin/handlers/kopano/non-active.py:157
 msgid "Mobile phone number"
 msgstr "Telefonnummer Mobil"
 
-#: univention/admin/handlers/zarafa/contact.py:174
-#: univention/admin/handlers/zarafa/non-active.py:167
+#: univention/admin/handlers/kopano/contact.py:174
+#: univention/admin/handlers/kopano/non-active.py:167
 msgid "Pager telephone number"
 msgstr "Rufnummer Pager"
 
-#: univention/admin/handlers/zarafa/contact.py:184
-#: univention/admin/handlers/zarafa/non-active.py:177
+#: univention/admin/handlers/kopano/contact.py:184
+#: univention/admin/handlers/kopano/non-active.py:177
 msgid "Private telephone number"
 msgstr "Telefon Privat"
 
-#: univention/admin/handlers/zarafa/contact.py:194
-#: univention/admin/handlers/zarafa/non-active.py:187
+#: univention/admin/handlers/kopano/contact.py:194
+#: univention/admin/handlers/kopano/non-active.py:187
 msgid "Room number"
 msgstr "Raumnummer"
 
-#: univention/admin/handlers/zarafa/contact.py:203
-#: univention/admin/handlers/zarafa/non-active.py:196
+#: univention/admin/handlers/kopano/contact.py:203
+#: univention/admin/handlers/kopano/non-active.py:196
 msgid "Department number"
 msgstr "Abteilungsnummer"
 
-#: univention/admin/handlers/zarafa/contact.py:212
-#: univention/admin/handlers/zarafa/non-active.py:205
-msgid "Hide entry from Zarafa addressbook"
-msgstr "Eintrag im Zarafa Adressbuch verstecken"
+#: univention/admin/handlers/kopano/contact.py:212
+#: univention/admin/handlers/kopano/non-active.py:205
+msgid "Hide entry from Kopano addressbook"
+msgstr "Eintrag im Kopano Adressbuch verstecken"
 
-#: univention/admin/handlers/zarafa/contact.py:213
-#: univention/admin/handlers/zarafa/non-active.py:206
-msgid "Hide this entry from the global Zarafa addressbook"
-msgstr "Diesen Eintrag im globalen Zarafa Adressbuch verstecken"
+#: univention/admin/handlers/kopano/contact.py:213
+#: univention/admin/handlers/kopano/non-active.py:206
+msgid "Hide this entry from the global Kopano addressbook"
+msgstr "Diesen Eintrag im globalen Kopano Adressbuch verstecken"
 
-#: univention/admin/handlers/zarafa/contact.py:224
-#: univention/admin/handlers/zarafa/non-active.py:335
+#: univention/admin/handlers/kopano/contact.py:224
+#: univention/admin/handlers/kopano/non-active.py:335
 msgid "General"
 msgstr "Allgemein"
 
-#: univention/admin/handlers/zarafa/contact.py:225
-#: univention/admin/handlers/zarafa/non-active.py:351
+#: univention/admin/handlers/kopano/contact.py:225
+#: univention/admin/handlers/kopano/non-active.py:351
 msgid "General Contact information"
 msgstr "Allgmeine Kontaktinformationen"
 
-#: univention/admin/handlers/zarafa/contact.py:232
-#: univention/admin/handlers/zarafa/non-active.py:357
+#: univention/admin/handlers/kopano/contact.py:232
+#: univention/admin/handlers/kopano/non-active.py:357
 msgid "Further Contact information"
 msgstr "Weitere Kontaktinformationen"
 
-#: univention/admin/handlers/zarafa/non-active.py:44
-msgid "Zarafa non-active and shared store account"
-msgstr "Zarafa non-active und Shared Store Konto"
+#: univention/admin/handlers/kopano/non-active.py:44
+msgid "Kopano non-active and shared store account"
+msgstr "Kopano non-active und Shared Store Konto"
 
-#: univention/admin/handlers/zarafa/non-active.py:45
+#: univention/admin/handlers/kopano/non-active.py:45
 msgid ""
-"Management of Zarafa non-active user accounts, shared stores and resources."
+"Management of Kopano non-active user accounts, shared stores and resources."
 msgstr ""
-"Verwaltung von Zarafa non-active Benutzerkonten, Shared Stores und Ressourcen"
+"Verwaltung von Kopano non-active Benutzerkonten, Shared Stores und Ressourcen"
 
-#: univention/admin/handlers/zarafa/non-active.py:54
-msgid "If set to 1, the account is synced to Zarafa"
-msgstr "Wenn der Wert auf 1 gesetzt ist, wird das Konto zu Zarafa synchronisiert"
+#: univention/admin/handlers/kopano/non-active.py:54
+msgid "If set to 1, the account is synced to Kopano"
+msgstr "Wenn der Wert auf 1 gesetzt ist, wird das Konto zu Kopano synchronisiert"
 
-#: univention/admin/handlers/zarafa/non-active.py:226
+#: univention/admin/handlers/kopano/non-active.py:226
 msgid ""
-"Deny zarafa login for this account. Login is only required for "
-"configuration. If not denied, this account counts against the total zarafa "
+"Deny kopano login for this account. Login is only required for "
+"configuration. If not denied, this account counts against the total kopano "
 "user count"
 msgstr ""
-"Verweigere Zarafa Login für dieses Konto. Login wird nur zu "
+"Verweigere Kopano Login für dieses Konto. Login wird nur zu "
 "Konfigurationszwecken benötigt. Konto wird sonst "
-"zur Zarafa Benutzerzahl hinzugezählt"
+"zur Kopano Benutzerzahl hinzugezählt"
 
-#: univention/admin/handlers/zarafa/non-active.py:236
+#: univention/admin/handlers/kopano/non-active.py:236
 msgid "User name"
 msgstr "Benutzername"
 
-#: univention/admin/handlers/zarafa/non-active.py:246
+#: univention/admin/handlers/kopano/non-active.py:246
 msgid "Password"
 msgstr "Passwort"
 
-#: univention/admin/handlers/zarafa/non-active.py:257
+#: univention/admin/handlers/kopano/non-active.py:257
 msgid "Delegates"
 msgstr "Stellvertreter"
 
-#: univention/admin/handlers/zarafa/non-active.py:258
+#: univention/admin/handlers/kopano/non-active.py:258
 msgid ""
 "List of users that may send emails with the identity of the current account"
 msgstr ""
 "Liste von Benutzern, die E-Mails mit der Identität dieses Kontos versenden dürfen"
 
-#: univention/admin/handlers/zarafa/non-active.py:266
+#: univention/admin/handlers/kopano/non-active.py:266
 msgid "Auto accept meeting requests"
 msgstr "Besprechungsanfragen automatisch annehmen"
 
-#: univention/admin/handlers/zarafa/non-active.py:267
+#: univention/admin/handlers/kopano/non-active.py:267
 msgid "Accept meeting request (ressource) automatically"
 msgstr "Besprechungsanfragen automatisch annehmen"
 
-#: univention/admin/handlers/zarafa/non-active.py:276
+#: univention/admin/handlers/kopano/non-active.py:276
 msgid "Auto decline meetings requests with conflicting times"
 msgstr "Besprechungsanfragen bei Konflikten automatisch ablehnen"
 
-#: univention/admin/handlers/zarafa/non-active.py:277
+#: univention/admin/handlers/kopano/non-active.py:277
 msgid ""
 "Decline meeting requests with conflicting times (ressource) automatically"
 msgstr ""
 "Besprechungsanfragen bei Konflikten automatisch ablehnen"
 
-#: univention/admin/handlers/zarafa/non-active.py:286
+#: univention/admin/handlers/kopano/non-active.py:286
 msgid "Auto decline recurring meeting requests"
 msgstr "Wiederkehrende Besprechungsanfragen automatisch ablehnen"
 
-#: univention/admin/handlers/zarafa/non-active.py:287
+#: univention/admin/handlers/kopano/non-active.py:287
 msgid "Decline recurring items (ressource) automatically"
 msgstr "Wiederkehrende Besprechungsanfragen automatisch ablehnen"
 
-#: univention/admin/handlers/zarafa/non-active.py:296
+#: univention/admin/handlers/kopano/non-active.py:296
 msgid "Override global quota settings"
 msgstr "Globale Quota-Einstellungen überschreiben"
 
-#: univention/admin/handlers/zarafa/non-active.py:297
+#: univention/admin/handlers/kopano/non-active.py:297
 msgid ""
 "Override global quota settings with users warning, soft and hard quota size"
 msgstr ""
 "Globale Quota-Einstellungen mit benutzerspezifischen Einstellungen überschreiben"
 
-#: univention/admin/handlers/zarafa/non-active.py:306
-#: univention/admin/handlers/zarafa/non-active.py:307
+#: univention/admin/handlers/kopano/non-active.py:306
+#: univention/admin/handlers/kopano/non-active.py:307
 msgid "Warning quota size in MB"
 msgstr "Warnung-Quota Größe in MB"
 
-#: univention/admin/handlers/zarafa/non-active.py:315
-#: univention/admin/handlers/zarafa/non-active.py:316
+#: univention/admin/handlers/kopano/non-active.py:315
+#: univention/admin/handlers/kopano/non-active.py:316
 msgid "Soft quota size in MB"
 msgstr "Soft-Quota Größe in MB"
 
-#: univention/admin/handlers/zarafa/non-active.py:324
-#: univention/admin/handlers/zarafa/non-active.py:325
+#: univention/admin/handlers/kopano/non-active.py:324
+#: univention/admin/handlers/kopano/non-active.py:325
 msgid "Hard quota size in MB"
 msgstr "Hard-Quota Größe in MB"
 
-#: univention/admin/handlers/zarafa/non-active.py:335
-#: univention/admin/handlers/zarafa/non-active.py:350
-msgid "Zarafa non-active account"
-msgstr "Zarafa non-active Konto"
+#: univention/admin/handlers/kopano/non-active.py:335
+#: univention/admin/handlers/kopano/non-active.py:350
+msgid "Kopano non-active account"
+msgstr "Kopano non-active Konto"
 
-#: univention/admin/handlers/zarafa/non-active.py:336
-msgid "Zarafa account settings"
-msgstr "Zarafa Kontoeinstellungen"
+#: univention/admin/handlers/kopano/non-active.py:336
+msgid "Kopano account settings"
+msgstr "Kopano Kontoeinstellungen"
 
-#: univention/admin/handlers/zarafa/non-active.py:350
+#: univention/admin/handlers/kopano/non-active.py:350
 msgid "Contact information"
 msgstr "Kontaktinformationen"
 
-#: univention/admin/hooks.d/zarafa4ucsRole.py:101
-msgid "Zarafa users must have a primary e-mail address specified."
-msgstr "Für Zarafa Benutzer muss eine primäre E-Mailadresse vorhanden sein"
+#: univention/admin/hooks.d/kopano4ucsRole.py:101
+msgid "Kopano users must have a primary e-mail address specified."
+msgstr "Für Kopano Benutzer muss eine primäre E-Mailadresse vorhanden sein"
 
-#: univention/admin/syntax.d/zarafa4ucs.py:38
+#: univention/admin/syntax.d/kopano4ucs.py:38
 msgid "None"
 msgstr "Keine"
 
-#: univention/admin/syntax.d/zarafa4ucs.py:39
-msgid "Zarafa User"
-msgstr "Zarafa-Benutzer"
+#: univention/admin/syntax.d/kopano4ucs.py:39
+msgid "Kopano User"
+msgstr "Kopano-Benutzer"
 
-#: univention/admin/syntax.d/zarafa4ucs.py:40
-msgid "Zarafa Admin"
-msgstr "Zarafa-Adminstrator"
+#: univention/admin/syntax.d/kopano4ucs.py:40
+msgid "Kopano Admin"
+msgstr "Kopano-Adminstrator"

@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# zarafa4ucs machine.secret
+# kopano4ucs machine.secret
 #
 # Copyright 2012-2016 Univention GmbH
 #
@@ -34,23 +34,23 @@ eval "$(univention-config-registry shell)"
 if [ "$1" = "postchange" -o "$1" = "nochange" ] ; then
 
 	# copy machine.secret
-	dest="/etc/zarafa-ldap.secret"
+	dest="/etc/kopano-ldap.secret"
 	cp /etc/machine.secret "$dest"
 	chown root:root "$dest"
 	chmod 600  "$dest"
 
 	# commit changes
-	univention-config-registry set zarafa/cfg/ldap/ldap_bind_passwd="$zarafa_cfg_ldap_ldap_bind_passwd"
+	univention-config-registry set kopano/cfg/ldap/ldap_bind_passwd="$kopano_cfg_ldap_ldap_bind_passwd"
 
 	# if multiserver support is installed, change password accordingly in ldapms.cfg
-	if dpkg-query --show --showformat='${Status}\n' "zarafa4ucs-multiserver" | grep -qs "install ok installed"; then
-		ucr set zarafa/cfg/ldapms/ldap_bind_passwd="$zarafa_cfg_ldapms_ldap_bind_passwd"
+	if dpkg-query --show --showformat='${Status}\n' "kopano4ucs-multiserver" | grep -qs "install ok installed"; then
+		ucr set kopano/cfg/ldapms/ldap_bind_passwd="$kopano_cfg_ldapms_ldap_bind_passwd"
 	fi
 
 	# according to the manual reloading is sufficient for ldap configuration changes
 	#   "After the LDAP configuration is done, the changes can 
-	#   be activated by reloading the Zarafa Server."
+	#   be activated by reloading the Kopano Server."
 	# no, see Bug #31709
-	/etc/init.d/zarafa-server restart
+	/etc/init.d/kopano-server restart
 
 fi	

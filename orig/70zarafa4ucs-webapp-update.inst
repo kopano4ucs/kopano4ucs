@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# zarafa4ucs
+# kopano4ucs
 #  join script - update to webapp 2.0
 #
 # Copyright 2015-2016 Univention GmbH
@@ -33,24 +33,24 @@
 VERSION=1
 
 ###
-# zarafa webapp 1.x has a debian package version with an epoch:
+# kopano webapp 1.x has a debian package version with an epoch:
 # e.g. 1:1.5-43703
-# zarafa-webapp 2.x has no epoch, this joinscript will "update" to webapp 2.x
+# kopano-webapp 2.x has no epoch, this joinscript will "update" to webapp 2.x
 ##
 
 . /usr/share/univention-join/joinscripthelper.lib
 . /usr/share/univention-lib/all.sh
-. /usr/share/univention-lib/zarafa4ucs.sh
+. /usr/share/univention-lib/kopano4ucs.sh
 
 joinscript_init
 
 eval "$(univention-config-registry shell)"
 
-webappversion=$(dpkg-query -W -f='${Version}' zarafa-webapp)
+webappversion=$(dpkg-query -W -f='${Version}' kopano-webapp)
 
 if [[ $webappversion = "1:"* ]]; then
 	echo "Old WebApp detected. Forcing install of version 2.x."
-	univention-install -y --force-yes --reinstall zarafa4ucs-webapp zarafa-webapp=2* || die
+	univention-install -y --force-yes --reinstall kopano4ucs-webapp kopano-webapp=2* || die
 fi
 
 joinscript_save_current_version

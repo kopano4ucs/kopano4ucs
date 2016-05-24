@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# zarafa4ucs
+# kopano4ucs
 #  unjoin script
 #
 # Copyright 2013-2016 Univention GmbH
@@ -40,18 +40,18 @@ joinscript_init
 
 eval "$(univention-config-registry shell)"
 
-SERVICE="Zarafa"
-EXTENDED_ATTR_CONTAINER="cn=zarafa,cn=custom attributes,cn=univention,$ldap_base"
+SERVICE="Kopano"
+EXTENDED_ATTR_CONTAINER="cn=kopano,cn=custom attributes,cn=univention,$ldap_base"
 
 ucs_removeServiceFromLocalhost "${SERVICE}" "$@"
 
 if ucs_isServiceUnused "${SERVICE}" "$@"; then
-	univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=zarafa-group,$EXTENDED_ATTR_CONTAINER"
-	univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=zarafa-group-hidden,$EXTENDED_ATTR_CONTAINER"
-	univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=zarafa-role,$EXTENDED_ATTR_CONTAINER"
+	univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=kopano-group,$EXTENDED_ATTR_CONTAINER"
+	univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=kopano-group-hidden,$EXTENDED_ATTR_CONTAINER"
+	univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=kopano-role,$EXTENDED_ATTR_CONTAINER"
 	univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=z4uUserSendAsPrivilege,$EXTENDED_ATTR_CONTAINER"
 	univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=SendAsPrivilege,$EXTENDED_ATTR_CONTAINER"
-	univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=zarafa-user-hidden,$EXTENDED_ATTR_CONTAINER"
+	univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=kopano-user-hidden,$EXTENDED_ATTR_CONTAINER"
 	univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=MRAccept,$EXTENDED_ATTR_CONTAINER"
 	univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=MRDeclineConflictingTimes,$EXTENDED_ATTR_CONTAINER"
 	univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=MRDeclineRecurringItems,$EXTENDED_ATTR_CONTAINER"
@@ -61,12 +61,12 @@ if ucs_isServiceUnused "${SERVICE}" "$@"; then
 	univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=quotaHard,$EXTENDED_ATTR_CONTAINER"
 
 	# usertemplate is also unneeded
-	univention-directory-manager settings/usertemplate remove "$@" --dn "cn=Zarafa Account,cn=templates,cn=univention,$ldap_base"
+	univention-directory-manager settings/usertemplate remove "$@" --dn "cn=Kopano Account,cn=templates,cn=univention,$ldap_base"
 
 	stop_udm_cli_server
 fi
 
 # Remove old join script from index file otherwise the re-installation will not work
-joinscript_remove_script_from_status_file zarafa4ucs
+joinscript_remove_script_from_status_file kopano4ucs
 
 exit 0

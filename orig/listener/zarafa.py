@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# Zarafa4UCS
+# Kopano4UCS
 #  listener module
 #
 # Copyright 2012-2016 Univention GmbH
@@ -35,9 +35,9 @@ import listener
 import subprocess
 import univention.debug
 
-name='zarafa'
-description='update database of zarafa on changes in UCS LDAP'
-filter='(|(zarafaAccount=1)(objectClass=zarafa-group))'
+name='kopano'
+description='update database of kopano on changes in UCS LDAP'
+filter='(|(kopanoAccount=1)(objectClass=kopano-group))'
 attributes=[]
 modrdn="1"
 
@@ -62,38 +62,38 @@ def handler(dn, new, old, command):
 		del changed_objects[dn]
 		event_counter += 1
 
-	# add object to list if it is a zarafa user object
-	if new and new.get('uid') and not 'zarafa-contact' in new.get('objectClass'):
-		if new.get('zarafaAccount', [''])[0] == '1' and not 'zarafa-group' in new.get('objectClass'):
+	# add object to list if it is a kopano user object
+	if new and new.get('uid') and not 'kopano-contact' in new.get('objectClass'):
+		if new.get('kopanoAccount', [''])[0] == '1' and not 'kopano-group' in new.get('objectClass'):
 			changed_objects[dn] = new
 			event_counter += 1
 
 def postrun():
 	"""
-	set zarafa options 15 seconds after last sync in a bulk action
+	set kopano options 15 seconds after last sync in a bulk action
 	"""
 
 	global changed_objects, event_counter
 
-	univention.debug.debug(univention.debug.LISTENER, univention.debug.PROCESS, 'zarafa: initiating sync')
+	univention.debug.debug(univention.debug.LISTENER, univention.debug.PROCESS, 'kopano: initiating sync')
 
 	listener.setuid(0)
 	try:
 		# initiate another sync
-		subprocess.call(['/usr/sbin/zarafa-admin', '--sync'])
+		subprocess.call(['/usr/sbin/kopano-admin', '--sync'])
 		# do a mass change for all cached objects
 		for dn, new in changed_objects.items():
-			univention.debug.debug(univention.debug.LISTENER, univention.debug.PROCESS, 'zarafa: updating %s' % dn)
+			univention.debug.debug(univention.debug.LISTENER, univention.debug.PROCESS, 'kopano: updating %s' % dn)
 			# set some options for automatic meeting request handling
-			for attr, option in [('zarafaMrAccept', '--mr-accept'),
-								 ('zarafaMrDeclineConflict', '--mr-decline-conflict'),
-								 ('zarafaMrDeclineRecurring', '--mr-decline-recurring'),
+			for attr, option in [('kopanoMrAccept', '--mr-accept'),
+								 ('kopanoMrDeclineConflict', '--mr-decline-conflict'),
+								 ('kopanoMrDeclineRecurring', '--mr-decline-recurring'),
 								 ]:
 				value = 'no'
 				if new.get(attr) and ('1' in new.get(attr)):
 					value = 'yes'
-				cmd = ['/usr/sbin/zarafa-admin', '-u', new['uid'][0], option, value]
-				univention.debug.debug(univention.debug.LISTENER, univention.debug.INFO, 'zarafa: calling %s' % str(cmd))
+				cmd = ['/usr/sbin/kopano-admin', '-u', new['uid'][0], option, value]
+				univention.debug.debug(univention.debug.LISTENER, univention.debug.INFO, 'kopano: calling %s' % str(cmd))
 				subprocess.call(cmd)
 	finally:
 		listener.unsetuid()

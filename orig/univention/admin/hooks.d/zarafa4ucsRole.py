@@ -1,4 +1,4 @@
-# zarafa4ucsRole UDM hook
+# kopano4ucsRole UDM hook
 #
 # Copyright 2012-2016 Univention GmbH
 #
@@ -32,73 +32,73 @@ from univention.admin.localization import translation
 from univention.config_registry import ConfigRegistry
 ucr = ConfigRegistry()
 
-translation = univention.admin.localization.translation('zarafa4ucs')
+translation = univention.admin.localization.translation('kopano4ucs')
 _ = translation.translate
 
 
-class zarafa4ucsRole(simpleHook):
+class kopano4ucsRole(simpleHook):
 
-	type = 'zarafa4ucsRole'
+	type = 'kopano4ucsRole'
 
 	def __isUsersUser(self, module):
 		return 'username' in module.descriptions
 
-	def __zarafaRoles(self, module, ml):
+	def __kopanoRoles(self, module, ml):
 		# if role has changed and module is not "settings/usertemplate"
-		if self.__isUsersUser(module) and module.hasChanged("zarafa-role"):
+		if self.__isUsersUser(module) and module.hasChanged("kopano-role"):
 
 			univention.debug.debug(univention.debug.ADMIN, univention.debug.INFO,
-				'zarafa4ucsRole: role has changed %s' % module["zarafa-role"])
+				'kopano4ucsRole: role has changed %s' % module["kopano-role"])
 
 			univention.debug.debug(univention.debug.ADMIN, univention.debug.INFO,
-				'zarafa4ucsRole: original modlist %s' % ml)
+				'kopano4ucsRole: original modlist %s' % ml)
 
 			univention.debug.debug(univention.debug.ADMIN, univention.debug.INFO,
-				'zarafa4ucsRole: oldattr %s' % module.oldattr)
+				'kopano4ucsRole: oldattr %s' % module.oldattr)
 
-			zarafaAccount = 0
-			zarafaAdmin = 0
-			zarafaSharedStoreOnly = 0
-			zarafaContact = 0
+			kopanoAccount = 0
+			kopanoAdmin = 0
+			kopanoSharedStoreOnly = 0
+			kopanoContact = 0
 
-			if module["zarafa-role"] == "user":
-				zarafaAccount = 1
-			elif module["zarafa-role"] == "admin":
-				zarafaAccount = 1
-				zarafaAdmin = 1
-			elif module["zarafa-role"] == "store":
-				zarafaSharedStoreOnly = 1
-				zarafaAccount = 1
-			elif module["zarafa-role"] == "contact":
-				zarafaContact = 1
-				zarafaAccount = 1
+			if module["kopano-role"] == "user":
+				kopanoAccount = 1
+			elif module["kopano-role"] == "admin":
+				kopanoAccount = 1
+				kopanoAdmin = 1
+			elif module["kopano-role"] == "store":
+				kopanoSharedStoreOnly = 1
+				kopanoAccount = 1
+			elif module["kopano-role"] == "contact":
+				kopanoContact = 1
+				kopanoAccount = 1
 			else:
 				pass
 
-			# add/remove zarafa role
+			# add/remove kopano role
 			ml.append((
-				"zarafaAccount",
-				module.oldattr.get("zarafaAccount", [""])[0],
-				"%s" % zarafaAccount))
+				"kopanoAccount",
+				module.oldattr.get("kopanoAccount", [""])[0],
+				"%s" % kopanoAccount))
 			ml.append((
-				"zarafaAdmin",
-				module.oldattr.get("zarafaAdmin", [""])[0],
-				"%s" % zarafaAdmin))
+				"kopanoAdmin",
+				module.oldattr.get("kopanoAdmin", [""])[0],
+				"%s" % kopanoAdmin))
 			ml.append((
-				"zarafaSharedStoreOnly",
-				module.oldattr.get("zarafaSharedStoreOnly", [""])[0],
-				"%s" % zarafaSharedStoreOnly))
+				"kopanoSharedStoreOnly",
+				module.oldattr.get("kopanoSharedStoreOnly", [""])[0],
+				"%s" % kopanoSharedStoreOnly))
 
-			# add/remove objectClass zarafa-contact
-			if zarafaContact:
-				if not "zarafa-contact" in module.oldattr.get("objectClass", []):
-					ml.append(("objectClass", "", "zarafa-contact"))
+			# add/remove objectClass kopano-contact
+			if kopanoContact:
+				if not "kopano-contact" in module.oldattr.get("objectClass", []):
+					ml.append(("objectClass", "", "kopano-contact"))
 			else:
-				if "zarafa-contact" in module.oldattr.get("objectClass", []):
-					ml.append(("objectClass", "zarafa-contact", ""))
+				if "kopano-contact" in module.oldattr.get("objectClass", []):
+					ml.append(("objectClass", "kopano-contact", ""))
 
 			univention.debug.debug(univention.debug.ADMIN, univention.debug.INFO,
-				'zarafa4ucsRole: changed modlist %s' % ml)
+				'kopano4ucsRole: changed modlist %s' % ml)
 
 		return ml
 
@@ -110,36 +110,36 @@ class zarafa4ucsRole(simpleHook):
 
 	def hook_ldap_pre_create(self, module):
 		if "mailPrimaryAddress" in module and not module.get("mailPrimaryAddress"):
-			module["zarafa-role"] = "none"
+			module["kopano-role"] = "none"
 
-		if "mailPrimaryAddress" in module and module.get("mailPrimaryAddress") and module["zarafa-role"] == "none":
-			module["zarafa-role"] = "user"
+		if "mailPrimaryAddress" in module and module.get("mailPrimaryAddress") and module["kopano-role"] == "none":
+			module["kopano-role"] = "user"
 		pass
 
 	def hook_ldap_addlist(self, module, al=[]):
-		al = self.__zarafaRoles(module, al)
+		al = self.__kopanoRoles(module, al)
 		return al
 
 	def hook_ldap_post_create(self, module):
 		pass
 
 	def hook_ldap_pre_modify(self, module):
-		# zarafa-role not 'none' and no mailPrimaryAddress specified
-		if "mailPrimaryAddress" in module and not module.get("mailPrimaryAddress") and module["zarafa-role"] and not module["zarafa-role"] in ["none", "contact"]:
-			raise univention.admin.uexceptions.valueError, _("Zarafa users must have a primary e-mail address specified.")
+		# kopano-role not 'none' and no mailPrimaryAddress specified
+		if "mailPrimaryAddress" in module and not module.get("mailPrimaryAddress") and module["kopano-role"] and not module["kopano-role"] in ["none", "contact"]:
+			raise univention.admin.uexceptions.valueError, _("Kopano users must have a primary e-mail address specified.")
 		pass
 
 	def hook_ldap_modlist(self, module, ml=[]):
 		ucr.load()
 		univention.debug.debug(univention.debug.ADMIN, univention.debug.INFO, "hook_ldap_modlist: ml: %s" % ml)
 
-		# email address added, but zarafa-role unchanged and "none": user probably wants that user to be a zarafa-user
-		if module.hasChanged('mailPrimaryAddress') and not module.oldattr.get("mailPrimaryAddress", [""])[0] and not module.hasChanged('zarafa-role') and module.get("zarafa-role") == "none" and ucr.is_true('zarafa/createzarafauserswithvalidemail', True):
-			module["zarafa-role"] = "user"
-			ml.append(("zarafa4ucsRole", "none", "user"))
+		# email address added, but kopano-role unchanged and "none": user probably wants that user to be a kopano-user
+		if module.hasChanged('mailPrimaryAddress') and not module.oldattr.get("mailPrimaryAddress", [""])[0] and not module.hasChanged('kopano-role') and module.get("kopano-role") == "none" and ucr.is_true('kopano/createkopanouserswithvalidemail', True):
+			module["kopano-role"] = "user"
+			ml.append(("kopano4ucsRole", "none", "user"))
 
-		# set zarafa role flags
-		ml = self.__zarafaRoles(module, ml)
+		# set kopano role flags
+		ml = self.__kopanoRoles(module, ml)
 
 		univention.debug.debug(univention.debug.ADMIN, univention.debug.INFO, "hook_ldap_modlist: ml after modification: %s" % ml)
 		return ml

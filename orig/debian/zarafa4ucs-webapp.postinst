@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# zarafa4ucs
+# kopano4ucs
 #  postinst script
 #
 # Copyright 2012-2016 Univention GmbH
@@ -37,7 +37,7 @@
 
 if  [ "$1" = 'configure' -a -n "$2" ] && dpkg --compare-versions "$2" lt '7.1.2001-5'; then
     mkdir -p /etc/univention/templates/removed/
-    files="en.html.d/45zarafa-webapp.html de.html.d/45zarafa-webapp.html"
+    files="en.html.d/45kopano-webapp.html de.html.d/45kopano-webapp.html"
     for file in $files; do
         if [ -e "/etc/univention/templates/files/var/www/ucs-overview/$file" ]; then
             mv "/etc/univention/templates/files/var/www/ucs-overview/$file" /etc/univention/templates/removed/
@@ -46,11 +46,11 @@ if  [ "$1" = 'configure' -a -n "$2" ] && dpkg --compare-versions "$2" lt '7.1.20
 fi
 
 # file permissions
-if ! dpkg-statoverride --list /var/lib/zarafa-webapp/tmp; then
-	dpkg-statoverride --quiet --force --update --add www-data root 755 /var/lib/zarafa-webapp/tmp
+if ! dpkg-statoverride --list /var/lib/kopano-webapp/tmp; then
+	dpkg-statoverride --quiet --force --update --add www-data root 755 /var/lib/kopano-webapp/tmp
 fi
 
-call_joinscript 71zarafa4ucs-webapp.inst
+call_joinscript 71kopano4ucs-webapp.inst
 
 # reload apache
 invoke-rc.d apache2 restart

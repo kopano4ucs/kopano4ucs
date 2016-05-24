@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# zarafa4ucs-multiserver
+# kopano4ucs-multiserver
 #  postinst script
 #
 # Copyright 2015-2016 Univention GmbH
@@ -33,53 +33,53 @@
 #DEBHELPER#
 
 . /usr/share/univention-lib/all.sh
-. /usr/share/univention-lib/zarafa4ucs.sh
+. /usr/share/univention-lib/kopano4ucs.sh
 
 eval "$(univention-config-registry shell)"
 
 # copy OpenLDAP multiserver example as new ldapms.cfg during first package installation
-if [ "$1" = "configure" -a -z "$2" -a ! -e "/etc/zarafa/ldapms.cfg" ] ; then
-	cp "/etc/zarafa/ldapms.openldap.cfg" "/etc/zarafa/ldapms.cfg"
+if [ "$1" = "configure" -a -z "$2" -a ! -e "/etc/kopano/ldapms.cfg" ] ; then
+	cp "/etc/kopano/ldapms.openldap.cfg" "/etc/kopano/ldapms.cfg"
 fi
 
-if ! dpkg-statoverride --list /etc/zarafa/ldapms.cfg; then
-	dpkg-statoverride --quiet --force --update --add root root 660 /etc/zarafa/ldapms.cfg
+if ! dpkg-statoverride --list /etc/kopano/ldapms.cfg; then
+	dpkg-statoverride --quiet --force --update --add root root 660 /etc/kopano/ldapms.cfg
 fi
 
 # ldapms multiserver
 univention-config-registry set \
-	zarafa/cfg/ldapms/ldap_host?'@%@ldap/server/name@%@' \
-	zarafa/cfg/ldapms/ldap_port?'@%@ldap/server/port@%@' \
-	zarafa/cfg/ldapms/ldap_search_base?'@%@ldap/base@%@' \
-	zarafa/cfg/ldapms/ldap_bind_user?'@%@ldap/hostdn@%@' \
-	zarafa/cfg/ldapms/ldap_bind_passwd?'@&@/etc/zarafa-ldap.secret@&@' \
-	zarafa/cfg/ldapms/ldap_user_search_filter?'(zarafaAccount=1)' \
-	zarafa/cfg/ldapms/ldap_authentication_method?'bind' \
-	zarafa/cfg/ldapms/ldap_group_search_filter?'(&(zarafaAccount=1)(objectClass=zarafa-group))' \
-	zarafa/cfg/ldapms/ldap_quota_multiplier?'1048576' \
-	zarafa/cfg/ldapms/ldap_emailaddress_attribute?'mailPrimaryAddress' \
-	zarafa/cfg/ldapms/ldap_emailaliases_attribute?'mailAlternativeAddress' \
-	zarafa/cfg/ldapms/ldap_nonactive_attribute?'zarafaSharedStoreOnly' \
-	zarafa/cfg/ldapms/ldap_user_type_attribute_value?'zarafa-user' \
-	zarafa/cfg/ldapms/ldap_user_unique_attribute?'entryUUID' \
-	zarafa/cfg/ldapms/ldap_sendas_relation_attribute?'uidNumber' \
-	zarafa/cfg/ldapms/ldap_server_type_attribute_value?'zarafa-server' \
-	zarafa/cfg/ldapms/ldap_user_server_attribute?'zarafaUserServer' \
-	zarafa/cfg/ldapms/ldap_server_address_attribute?'zarafa4ucsFqdn' \
-	zarafa/cfg/ldapms/ldap_server_http_port_attribute?'zarafaHttpPort' \
-	zarafa/cfg/ldapms/ldap_server_ssl_port_attribute?'zarafaSslPort' \
-	zarafa/cfg/ldapms/ldap_server_file_path_attribute?'zarafaFilePath' \
-	zarafa/cfg/ldapms/ldap_server_search_filter?'' \
-	zarafa/cfg/ldapms/ldap_server_unique_attribute?'cn'
+	kopano/cfg/ldapms/ldap_host?'@%@ldap/server/name@%@' \
+	kopano/cfg/ldapms/ldap_port?'@%@ldap/server/port@%@' \
+	kopano/cfg/ldapms/ldap_search_base?'@%@ldap/base@%@' \
+	kopano/cfg/ldapms/ldap_bind_user?'@%@ldap/hostdn@%@' \
+	kopano/cfg/ldapms/ldap_bind_passwd?'@&@/etc/kopano-ldap.secret@&@' \
+	kopano/cfg/ldapms/ldap_user_search_filter?'(kopanoAccount=1)' \
+	kopano/cfg/ldapms/ldap_authentication_method?'bind' \
+	kopano/cfg/ldapms/ldap_group_search_filter?'(&(kopanoAccount=1)(objectClass=kopano-group))' \
+	kopano/cfg/ldapms/ldap_quota_multiplier?'1048576' \
+	kopano/cfg/ldapms/ldap_emailaddress_attribute?'mailPrimaryAddress' \
+	kopano/cfg/ldapms/ldap_emailaliases_attribute?'mailAlternativeAddress' \
+	kopano/cfg/ldapms/ldap_nonactive_attribute?'kopanoSharedStoreOnly' \
+	kopano/cfg/ldapms/ldap_user_type_attribute_value?'kopano-user' \
+	kopano/cfg/ldapms/ldap_user_unique_attribute?'entryUUID' \
+	kopano/cfg/ldapms/ldap_sendas_relation_attribute?'uidNumber' \
+	kopano/cfg/ldapms/ldap_server_type_attribute_value?'kopano-server' \
+	kopano/cfg/ldapms/ldap_user_server_attribute?'kopanoUserServer' \
+	kopano/cfg/ldapms/ldap_server_address_attribute?'kopano4ucsFqdn' \
+	kopano/cfg/ldapms/ldap_server_http_port_attribute?'kopanoHttpPort' \
+	kopano/cfg/ldapms/ldap_server_ssl_port_attribute?'kopanoSslPort' \
+	kopano/cfg/ldapms/ldap_server_file_path_attribute?'kopanoFilePath' \
+	kopano/cfg/ldapms/ldap_server_search_filter?'' \
+	kopano/cfg/ldapms/ldap_server_unique_attribute?'cn'
 
-if [ ! -e "/etc/zarafa/admin.cfg" ]; then
-	touch /etc/zarafa/admin.cfg
+if [ ! -e "/etc/kopano/admin.cfg" ]; then
+	touch /etc/kopano/admin.cfg
 fi
 
 # restart listener
 /etc/init.d/univention-directory-listener crestart
 
-call_joinscript 71zarafa4ucs-multiserver.inst
+call_joinscript 71kopano4ucs-multiserver.inst
 
 # reload apache
 invoke-rc.d apache2 restart
@@ -87,14 +87,14 @@ invoke-rc.d apache2 restart
 # restart services
 #invoke-rc.d clamav-daemon restart
 #invoke-rc.d postfix restart
-invoke-rc.d zarafa-server restart
-wait_for_zarafa_server_startup
-#invoke-rc.d zarafa-spooler restart
-#invoke-rc.d zarafa-monitor restart
-#invoke-rc.d zarafa-ical restart
-#invoke-rc.d zarafa-gateway restart
-#invoke-rc.d zarafa-dagent restart
-#invoke-rc.d zarafa-search restart
-#invoke-rc.d zarafa-licensed restart
+invoke-rc.d kopano-server restart
+wait_for_kopano_server_startup
+#invoke-rc.d kopano-spooler restart
+#invoke-rc.d kopano-monitor restart
+#invoke-rc.d kopano-ical restart
+#invoke-rc.d kopano-gateway restart
+#invoke-rc.d kopano-dagent restart
+#invoke-rc.d kopano-search restart
+#invoke-rc.d kopano-licensed restart
 
 exit 0

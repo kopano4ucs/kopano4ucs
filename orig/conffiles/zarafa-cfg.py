@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
-# zarafa4ucs
-#  config registry module to update zarafa configuration
+# kopano4ucs
+#  config registry module to update kopano configuration
 #
 # Copyright 2012-2016 Univention GmbH
 #
@@ -35,16 +35,16 @@ import re
 import subprocess
 
 OPTIONS_CFG = {
-		'DIR_CONFIG': '/etc/zarafa',
+		'DIR_CONFIG': '/etc/kopano',
 		'FN_SUFFIX': '.cfg',
-		'UCR_PREFIX': 'zarafa/cfg/',
+		'UCR_PREFIX': 'kopano/cfg/',
 		'LINEFORMAT': '%s = %s\n',
 		'RE_CFGOPTION': '^#?\s*%s\s*='
 		}
 OPTIONS_PHP = {
-		'DIR_CONFIG': '/etc/zarafa/webapp',
+		'DIR_CONFIG': '/etc/kopano/webapp',
 		'FN_SUFFIX': '.php',
-		'UCR_PREFIX': 'zarafa/webapp/',
+		'UCR_PREFIX': 'kopano/webapp/',
 		'LINEFORMAT': 'define("%s",%s);\n',
 		'RE_CFGOPTION': '^\s*define\(\"%s\",\s*'
 		}
@@ -88,14 +88,14 @@ def handler(configRegistry, changes):
 	"""
 	main handler
 	"""
-	handle_files_etc_zarafa(configRegistry, changes, OPTIONS_CFG)
-	handle_files_etc_zarafa(configRegistry, changes, OPTIONS_PHP)
+	handle_files_etc_kopano(configRegistry, changes, OPTIONS_CFG)
+	handle_files_etc_kopano(configRegistry, changes, OPTIONS_PHP)
 	handle_files_etc_default(configRegistry, changes)
 
 
-def handle_files_etc_zarafa(configRegistry, changes, OPTIONS):
+def handle_files_etc_kopano(configRegistry, changes, OPTIONS):
 	"""
-	handle UCR variable changes with prefix ucr_prefix and alter zarafa
+	handle UCR variable changes with prefix ucr_prefix and alter kopano
 	config files in DIR_CONFIG if neccessary.
 	UCR config option style:  <ucr_prefix>/server/quota_warn=12345
        	                      <-PREFIX-><-FILE-><-Option->=<-Value->
@@ -109,7 +109,7 @@ def handle_files_etc_zarafa(configRegistry, changes, OPTIONS):
 	RE_CFGOPTION = OPTIONS['RE_CFGOPTION']
 
 	changed_options = {}
-	# check all zarafa UCR variables
+	# check all kopano UCR variables
 	for key in [ x for x in configRegistry.keys() if x.startswith(UCR_PREFIX) ]:
 		# find UCR placeholder in variable values (==> e.g. @%@ldap/server/name@%@)
 		matches = RE_UCRVAR.findall( configRegistry.get(key) )
@@ -139,18 +139,18 @@ def handle_files_etc_zarafa(configRegistry, changes, OPTIONS):
 
 def handle_files_etc_default(configRegistry, changes):
 	"""
-	handle UCR variable changes with prefix "zarafa/default/" and alter config file /etc/default/zarafa.
-	UCR config option style:  zarafa/default/quota_warn=12345
+	handle UCR variable changes with prefix "kopano/default/" and alter config file /etc/default/kopano.
+	UCR config option style:  kopano/default/quota_warn=12345
        	                      <----PREFIX----><-Option->=<-Value->
 	The UCR variable value may contain UCR placeholders (@%@variable/name@%@).
 	The UCR variable value may contain placeholders for files (@&@/etc/fstab@&@).
 	"""
 
-	filename = '/etc/default/zarafa'
+	filename = '/etc/default/kopano'
 	changed_options = { filename: {} }
 
-	# check all zarafa UCR variables
-	for key in [ x for x in configRegistry.keys() if x.startswith('zarafa/default/') ]:
+	# check all kopano UCR variables
+	for key in [ x for x in configRegistry.keys() if x.startswith('kopano/default/') ]:
 		# find UCR placeholder in variable values (==> e.g. @%@ldap/server/name@%@)
 		matches = RE_UCRVAR.findall( configRegistry.get(key) )
 		# if key is in list of changed UCR variables or
@@ -162,7 +162,7 @@ def handle_files_etc_default(configRegistry, changes):
 				changed_options[filename][items[2]] = [ key, configRegistry.get(key), False ]  # key, value, replaced
 
 	# check for removed UCR variables
-	for key in [ x for x in changes.keys() if x.startswith('zarafa/default/') and x not in configRegistry ]:
+	for key in [ x for x in changes.keys() if x.startswith('kopano/default/') and x not in configRegistry ]:
 		items = key.split('/')
 		if len(items) == 3:
 			changed_options[filename][items[2]] = [ key, None, False ]  # key, value, replaced
@@ -175,8 +175,8 @@ def handle_files(configRegistry, changed_options, lineformat, RE_CFGOPTION):
 	"""
     Update specified files based on data structure "changed_options":
 
-	changed_options = { '/etc/zarafa/ldap.cfg': { 'mykey':  [ 'zarafa/cfg/ldap/mykey', 'the_value', False ],
-												  'thekey': [ 'zarafa/cfg/ldap/thekey', 'some_value', False ],
+	changed_options = { '/etc/kopano/ldap.cfg': { 'mykey':  [ 'kopano/cfg/ldap/mykey', 'the_value', False ],
+												  'thekey': [ 'kopano/cfg/ldap/thekey', 'some_value', False ],
 												  },
 												  ....
 					  }
@@ -192,7 +192,7 @@ def handle_files(configRegistry, changed_options, lineformat, RE_CFGOPTION):
 		try:
 			lines = open(fn, 'r').readlines()
 		except IOError, e:
-			subprocess.call(['/usr/bin/logger', '-t', 'UCR', 'module zarafa-cfg.py: cannot read %s: %s' % (fn, e)])
+			subprocess.call(['/usr/bin/logger', '-t', 'UCR', 'module kopano-cfg.py: cannot read %s: %s' % (fn, e)])
 			continue
 
 		file_changed = False
@@ -258,4 +258,4 @@ def handle_files(configRegistry, changed_options, lineformat, RE_CFGOPTION):
 				os.rename(new_fn, fn)
 			# except IOError, e:
 			except Exception, e:
-				subprocess.call(['/usr/bin/logger', '-t', 'UCR', 'module zarafa-cfg.py: cannot write %s: %s' % (fn, e)])
+				subprocess.call(['/usr/bin/logger', '-t', 'UCR', 'module kopano-cfg.py: cannot write %s: %s' % (fn, e)])

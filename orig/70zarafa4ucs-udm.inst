@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# zarafa4ucs-udm
+# kopano4ucs-udm
 #  join script
 #
 # Copyright 2012-2016 Univention GmbH
@@ -39,17 +39,17 @@ joinscript_init
 eval "$(univention-config-registry shell)"
 
 # test
-#univention-directory-manager container/cn remove "$@" --dn "cn=zarafa,cn=custom attributes,cn=univention,$ldap_base"
+#univention-directory-manager container/cn remove "$@" --dn "cn=kopano,cn=custom attributes,cn=univention,$ldap_base"
 
-# modify zarafa broken usertemplate from VERSION=1
+# modify kopano broken usertemplate from VERSION=1
 if [ $JS_LAST_EXECUTED_VERSION -lt 2 ] && [ $JS_LAST_EXECUTED_VERSION -gt 0 ]; then
-	oldHome=$(univention-directory-manager settings/usertemplate list "$@" --filter name="Zarafa Account" | \
+	oldHome=$(univention-directory-manager settings/usertemplate list "$@" --filter name="Kopano Account" | \
 		grep unixhome | \
 		awk -F ": " '{print $2}'| \
 		sed 's|/||g')
 	if [ -z "$oldHome" -o "$oldHome" = "home" ]; then
 		univention-directory-manager settings/usertemplate modify "$@" --ignore_exists \
-			--dn "cn=Zarafa Account,cn=templates,cn=univention,$ldap_base" \
+			--dn "cn=Kopano Account,cn=templates,cn=univention,$ldap_base" \
 			--set unixhome="/home/<username>"
 	fi
 fi

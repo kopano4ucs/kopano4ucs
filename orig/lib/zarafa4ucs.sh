@@ -1,4 +1,4 @@
-# Univention zarafa4ucs Shell Library
+# Univention kopano4ucs Shell Library
 #
 # Copyright 2014-2016 Univention GmbH
 #
@@ -27,15 +27,15 @@
 # /usr/share/common-licenses/AGPL-3; if not, see
 # <http://www.gnu.org/licenses/>.
 
-is_zarafa_server_running () {
-	/usr/bin/zarafa-stats --system
+is_kopano_server_running () {
+	/usr/bin/kopano-stats --system
 	return $?
 }
 
-wait_for_zarafa_server_startup () {
-	echo -n "Waiting for zarafa-server startup"
+wait_for_kopano_server_startup () {
+	echo -n "Waiting for kopano-server startup"
 	for i in $(seq 1 10) ; do
-		is_zarafa_server_running >/dev/null 2>&1 && break
+		is_kopano_server_running >/dev/null 2>&1 && break
 		echo -n "."
 		sleep 1
 	done; echo
