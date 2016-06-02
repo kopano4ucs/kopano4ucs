@@ -120,9 +120,7 @@ fi
 ##
 # admin cli
 univention-config-registry set \
-	kopano/cfg/admin/server_socket?'file:///var/run/kopanod/server.sock' \
-	kopano/cfg/admin/run_as_user?'kopano' \
-	kopano/cfg/admin/run_as_group?'kopano'
+	kopano/cfg/admin/server_socket?'file:///var/run/kopanod/server.sock'
 
 # backup
 univention-config-registry set \
