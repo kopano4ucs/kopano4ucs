@@ -25,12 +25,11 @@
 # /usr/share/common-licenses/AGPL-3; if not, see
 # <http://www.gnu.org/licenses/>.
 #
-#: univention/admin/handlers/kopano/non-active.py:227
 msgid ""
 msgstr ""
 "Project-Id-Version: kopano4ucs\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-03-28 14:11+0100\n"
+"POT-Creation-Date: 2016-06-17 12:14+0200\n"
 "PO-Revision-Date: 2012-03-29 11:51+0200\n"
 "Last-Translator: packages@univention.de\n"
 "Language-Team: German <de@li.org>\n"
@@ -41,6 +40,7 @@ msgstr ""
 
 #: univention/admin/handlers/kopano/contact.py:41
 #: univention/admin/handlers/kopano/contact.py:224
+#: univention/admin/syntax.d/kopano4ucs.py:42
 msgid "Kopano Contact"
 msgstr "Kopano Kontakt"
 
@@ -143,17 +143,17 @@ msgid "Hide this entry from the global Kopano addressbook"
 msgstr "Diesen Eintrag im globalen Kopano Adressbuch verstecken"
 
 #: univention/admin/handlers/kopano/contact.py:224
-#: univention/admin/handlers/kopano/non-active.py:335
+#: univention/admin/handlers/kopano/non-active.py:346
 msgid "General"
 msgstr "Allgemein"
 
 #: univention/admin/handlers/kopano/contact.py:225
-#: univention/admin/handlers/kopano/non-active.py:351
+#: univention/admin/handlers/kopano/non-active.py:363
 msgid "General Contact information"
 msgstr "Allgmeine Kontaktinformationen"
 
 #: univention/admin/handlers/kopano/contact.py:232
-#: univention/admin/handlers/kopano/non-active.py:357
+#: univention/admin/handlers/kopano/non-active.py:369
 msgid "Further Contact information"
 msgstr "Weitere Kontaktinformationen"
 
@@ -169,101 +169,108 @@ msgstr ""
 
 #: univention/admin/handlers/kopano/non-active.py:54
 msgid "If set to 1, the account is synced to Kopano"
-msgstr "Wenn der Wert auf 1 gesetzt ist, wird das Konto zu Kopano synchronisiert"
+msgstr ""
+"Wenn der Wert auf 1 gesetzt ist, wird das Konto zu Kopano synchronisiert"
 
 #: univention/admin/handlers/kopano/non-active.py:226
+#, fuzzy
+msgid "Alternative E-mail address"
+msgstr "E-Mail Adresse"
+
+#: univention/admin/handlers/kopano/non-active.py:237
 msgid ""
 "Deny kopano login for this account. Login is only required for "
 "configuration. If not denied, this account counts against the total kopano "
 "user count"
 msgstr ""
 "Verweigere Kopano Login für dieses Konto. Login wird nur zu "
-"Konfigurationszwecken benötigt. Konto wird sonst "
-"zur Kopano Benutzerzahl hinzugezählt"
+"Konfigurationszwecken benötigt. Konto wird sonst zur Kopano Benutzerzahl "
+"hinzugezählt"
 
-#: univention/admin/handlers/kopano/non-active.py:236
+#: univention/admin/handlers/kopano/non-active.py:247
 msgid "User name"
 msgstr "Benutzername"
 
-#: univention/admin/handlers/kopano/non-active.py:246
+#: univention/admin/handlers/kopano/non-active.py:257
 msgid "Password"
 msgstr "Passwort"
 
-#: univention/admin/handlers/kopano/non-active.py:257
+#: univention/admin/handlers/kopano/non-active.py:268
 msgid "Delegates"
 msgstr "Stellvertreter"
 
-#: univention/admin/handlers/kopano/non-active.py:258
+#: univention/admin/handlers/kopano/non-active.py:269
 msgid ""
 "List of users that may send emails with the identity of the current account"
 msgstr ""
-"Liste von Benutzern, die E-Mails mit der Identität dieses Kontos versenden dürfen"
+"Liste von Benutzern, die E-Mails mit der Identität dieses Kontos versenden "
+"dürfen"
 
-#: univention/admin/handlers/kopano/non-active.py:266
+#: univention/admin/handlers/kopano/non-active.py:277
 msgid "Auto accept meeting requests"
 msgstr "Besprechungsanfragen automatisch annehmen"
 
-#: univention/admin/handlers/kopano/non-active.py:267
+#: univention/admin/handlers/kopano/non-active.py:278
 msgid "Accept meeting request (ressource) automatically"
 msgstr "Besprechungsanfragen automatisch annehmen"
 
-#: univention/admin/handlers/kopano/non-active.py:276
+#: univention/admin/handlers/kopano/non-active.py:287
 msgid "Auto decline meetings requests with conflicting times"
 msgstr "Besprechungsanfragen bei Konflikten automatisch ablehnen"
 
-#: univention/admin/handlers/kopano/non-active.py:277
+#: univention/admin/handlers/kopano/non-active.py:288
 msgid ""
 "Decline meeting requests with conflicting times (ressource) automatically"
-msgstr ""
-"Besprechungsanfragen bei Konflikten automatisch ablehnen"
+msgstr "Besprechungsanfragen bei Konflikten automatisch ablehnen"
 
-#: univention/admin/handlers/kopano/non-active.py:286
+#: univention/admin/handlers/kopano/non-active.py:297
 msgid "Auto decline recurring meeting requests"
 msgstr "Wiederkehrende Besprechungsanfragen automatisch ablehnen"
 
-#: univention/admin/handlers/kopano/non-active.py:287
+#: univention/admin/handlers/kopano/non-active.py:298
 msgid "Decline recurring items (ressource) automatically"
 msgstr "Wiederkehrende Besprechungsanfragen automatisch ablehnen"
 
-#: univention/admin/handlers/kopano/non-active.py:296
+#: univention/admin/handlers/kopano/non-active.py:307
 msgid "Override global quota settings"
 msgstr "Globale Quota-Einstellungen überschreiben"
 
-#: univention/admin/handlers/kopano/non-active.py:297
+#: univention/admin/handlers/kopano/non-active.py:308
 msgid ""
 "Override global quota settings with users warning, soft and hard quota size"
 msgstr ""
-"Globale Quota-Einstellungen mit benutzerspezifischen Einstellungen überschreiben"
+"Globale Quota-Einstellungen mit benutzerspezifischen Einstellungen "
+"überschreiben"
 
-#: univention/admin/handlers/kopano/non-active.py:306
-#: univention/admin/handlers/kopano/non-active.py:307
+#: univention/admin/handlers/kopano/non-active.py:317
+#: univention/admin/handlers/kopano/non-active.py:318
 msgid "Warning quota size in MB"
 msgstr "Warnung-Quota Größe in MB"
 
-#: univention/admin/handlers/kopano/non-active.py:315
-#: univention/admin/handlers/kopano/non-active.py:316
+#: univention/admin/handlers/kopano/non-active.py:326
+#: univention/admin/handlers/kopano/non-active.py:327
 msgid "Soft quota size in MB"
 msgstr "Soft-Quota Größe in MB"
 
-#: univention/admin/handlers/kopano/non-active.py:324
-#: univention/admin/handlers/kopano/non-active.py:325
+#: univention/admin/handlers/kopano/non-active.py:335
+#: univention/admin/handlers/kopano/non-active.py:336
 msgid "Hard quota size in MB"
 msgstr "Hard-Quota Größe in MB"
 
-#: univention/admin/handlers/kopano/non-active.py:335
-#: univention/admin/handlers/kopano/non-active.py:350
+#: univention/admin/handlers/kopano/non-active.py:346
+#: univention/admin/handlers/kopano/non-active.py:362
 msgid "Kopano non-active account"
 msgstr "Kopano non-active Konto"
 
-#: univention/admin/handlers/kopano/non-active.py:336
+#: univention/admin/handlers/kopano/non-active.py:347
 msgid "Kopano account settings"
 msgstr "Kopano Kontoeinstellungen"
 
-#: univention/admin/handlers/kopano/non-active.py:350
+#: univention/admin/handlers/kopano/non-active.py:362
 msgid "Contact information"
 msgstr "Kontaktinformationen"
 
-#: univention/admin/hooks.d/kopano4ucsRole.py:101
+#: univention/admin/hooks.d/kopano4ucsRole.py:129
 msgid "Kopano users must have a primary e-mail address specified."
 msgstr "Für Kopano Benutzer muss eine primäre E-Mailadresse vorhanden sein"
 
@@ -278,3 +285,7 @@ msgstr "Kopano-Benutzer"
 #: univention/admin/syntax.d/kopano4ucs.py:40
 msgid "Kopano Admin"
 msgstr "Kopano-Adminstrator"
+
+#: univention/admin/syntax.d/kopano4ucs.py:41
+msgid "Kopano Shared Store/Non-active"
+msgstr "Kopano Shared Store/Inaktiver Nutzer"
