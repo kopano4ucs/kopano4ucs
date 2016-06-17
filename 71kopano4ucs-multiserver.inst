@@ -246,15 +246,6 @@ stop_udm_cli_server
 # kopano-server was just restarted in server_password_change.d/70kopano postchange (Bug #31709, #34011)
 wait_for_kopano_server_startup
 
-invoke-rc.d kopano-licensed restart
-invoke-rc.d kopano-server restart
-invoke-rc.d kopano-spooler restart
-invoke-rc.d kopano-monitor restart
-invoke-rc.d kopano-ical restart
-invoke-rc.d kopano-gateway restart
-invoke-rc.d kopano-dagent restart
-invoke-rc.d kopano-search restart
-
 # give kopano server some time to settle
 sleep 3s
 # create public store if missing
