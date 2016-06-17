@@ -87,12 +87,6 @@ if [ "$1" = "configure" -a -n "$2" ] && dpkg --compare-versions "$2" lt 7.1.3001
 	sed -i s/"^ssl_enable_v2"/"# no longer supported with 7.1.12 ssl_enable_v2"/g /etc/kopano/gateway.cfg
 fi
 
-# On new installation with Kopano >= 7.1.12 we do not need
-# to execute the joinscript 70kopano4ucs-webapp-update.inst
-if [ "$1" = "configure" -a -z "$2" ] ; then
-	echo "kopano4ucs-webapp-update v1 successful" >> /var/univention-join/status
-fi
-
 # configure system only on package installation
 if [ "$1" = "configure" -a -z "$2" ] ; then
 	# configure postfix: 
