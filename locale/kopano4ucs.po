@@ -173,9 +173,8 @@ msgstr ""
 "Wenn der Wert auf 1 gesetzt ist, wird das Konto zu Kopano synchronisiert"
 
 #: univention/admin/handlers/kopano/non-active.py:226
-#, fuzzy
 msgid "Alternative E-mail address"
-msgstr "E-Mail Adresse"
+msgstr "Alternative E-Mail Adresse"
 
 #: univention/admin/handlers/kopano/non-active.py:237
 msgid ""
