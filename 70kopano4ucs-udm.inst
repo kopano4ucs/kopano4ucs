@@ -30,29 +30,13 @@
 # /usr/share/common-licenses/AGPL-3; if not, see
 # <http://www.gnu.org/licenses/>.
 
-VERSION=3
+VERSION=1
 
 . /usr/share/univention-join/joinscripthelper.lib
 . /usr/share/univention-lib/all.sh
 joinscript_init
 
 eval "$(univention-config-registry shell)"
-
-# test
-#univention-directory-manager container/cn remove "$@" --dn "cn=kopano,cn=custom attributes,cn=univention,$ldap_base"
-
-# modify kopano broken usertemplate from VERSION=1
-if [ $JS_LAST_EXECUTED_VERSION -lt 2 ] && [ $JS_LAST_EXECUTED_VERSION -gt 0 ]; then
-	oldHome=$(univention-directory-manager settings/usertemplate list "$@" --filter name="Kopano Account" | \
-		grep unixhome | \
-		awk -F ": " '{print $2}'| \
-		sed 's|/||g')
-	if [ -z "$oldHome" -o "$oldHome" = "home" ]; then
-		univention-directory-manager settings/usertemplate modify "$@" --ignore_exists \
-			--dn "cn=Kopano Account,cn=templates,cn=univention,$ldap_base" \
-			--set unixhome="/home/<username>"
-	fi
-fi
 
 joinscript_save_current_version
 
