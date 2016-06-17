@@ -46,8 +46,8 @@ fi
 # enable Kopano's user safe mode
 ucr set kopano/cfg/server/user_safe_mode=yes
 
-# restart kopano
-invoke-rc.d kopano-server restart
+# reload kopano
+invoke-rc.d kopano-server reload
 wait_for_kopano_server_startup
 
 joinscript_save_current_version

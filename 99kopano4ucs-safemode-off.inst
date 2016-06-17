@@ -52,8 +52,8 @@ else
 	ucr set kopano/cfg/server/user_safe_mode="$OLD"
 fi
 
-# restart kopano
-invoke-rc.d kopano-server restart
+# reload kopano
+invoke-rc.d kopano-server reload
 wait_for_kopano_server_startup
 
 joinscript_save_current_version
