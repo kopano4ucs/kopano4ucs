@@ -42,11 +42,11 @@ msgstr ""
 #: univention/admin/handlers/kopano/contact.py:41
 #: univention/admin/handlers/kopano/contact.py:224
 msgid "Kopano Contact"
-msgstr "Kopano-Kontakt"
+msgstr "Kopano Kontakt"
 
 #: univention/admin/handlers/kopano/contact.py:42
 msgid "Management of Kopano Contact accounts."
-msgstr "Verwaltung von Kopano Kontakten"
+msgstr "Verwaltung von Kopano Kontakten."
 
 #: univention/admin/handlers/kopano/contact.py:50
 #: univention/admin/handlers/kopano/non-active.py:53
