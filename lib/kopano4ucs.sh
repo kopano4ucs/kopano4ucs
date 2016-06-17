@@ -1,6 +1,7 @@
 # Univention kopano4ucs Shell Library
 #
 # Copyright 2014-2016 Univention GmbH
+# Copyright 2016 Kopano b.v.
 #
 # http://www.univention.de/
 #
@@ -28,7 +29,7 @@
 # <http://www.gnu.org/licenses/>.
 
 is_kopano_server_running () {
-	/usr/bin/kopano-stats --system
+	$(which kopano-stats) --system
 	return $?
 }
 
