@@ -1,0 +1,33 @@
+156a157,173
+> attributetype ( 1.3.6.1.4.1.47732.2.1.1.1
+>     NAME 'kopano4ucsRole'
+>     DESC 'KOPANO4UCS: role (user, admin, ...) of user object'
+>     EQUALITY caseIgnoreMatch
+>     SUBSTR caseIgnoreSubstringsMatch
+>     SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+> 
+> objectclass ( 1.3.6.1.4.1.47732.2.1.1.2
+> 	NAME 'kopano4ucsObject'
+> 	DESC 'Kopano4UCS: this objectClass provides additional attributes for kopano objects'
+> 	SUP top AUXILIARY
+> 	MUST ( cn )
+> 	MAY (
+> 		mailPrimaryAddress $ gidNumber
+> 	    )
+> 	)
+> 
+167a185
+> 		kopano4ucsRole $ kopanoMrAccept $ kopanoMrDeclineConflict $ kopanoMrDeclineRecurring $
+293a312,318
+> attributetype ( 1.3.6.1.4.1.47732.2.4.4.1
+> 	NAME 'kopano4ucsFqdn'
+> 	DESC 'KOPANO4UCS: FQDN of kopano server'
+> 	EQUALITY caseIgnoreMatch
+> 	SUBSTR caseIgnoreSubstringsMatch
+> 	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
+> 
+300c325,326
+< 		kopanoAccount $ kopanoHidden $ kopanoHttpPort $ kopanoSslPort $ kopanoFilePath $ kopanoContainsPublic $ kopanoProxyURL
+---
+> 		kopanoAccount $ kopanoHidden $ kopanoHttpPort $ kopanoSslPort $ kopanoFilePath $ kopanoContainsPublic $ kopanoProxyURL $
+> 		kopano4ucsFqdn

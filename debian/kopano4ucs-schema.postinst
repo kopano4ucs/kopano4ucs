@@ -34,7 +34,7 @@
 
 . /usr/share/univention-lib/all.sh
 
-ucs_registerLDAPSchema /usr/share/kopano4ucs-schema/kopano.schema
+ucs_registerLDAPSchema /usr/share/kopano4ucs-schema/kopano4ucs.schema
 
 # from univention-ldap-server.postinst
 merge_csv_unique_sorted() {
