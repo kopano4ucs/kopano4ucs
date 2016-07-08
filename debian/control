@@ -95,18 +95,22 @@ Architecture: all
 Depends: ${misc:Depends},
  kopano-webapp,
  shell-univention-lib,
- kopano4ucs-lib
-Recommends: kopano-webapp-desktopnotifications,
- kopano-webapp-files,
- kopano-webapp-folderwidgets,
- kopano-webapp-plugins-delayeddelivery,
- kopano-webapp-plugins-spell,
- kopano-webapp-plugins-spell-de-de,
- kopano-webapp-plugins-spell-en,
- kopano-webapp-titlecounter,
- kopano-webapp-plugins-filepreviewer,
- kopano-webapp-plugins-mdm,
- kopano-webapp-plugins-smime
+ kopano4ucs-lib,
+ kopano-webapp-plugin-files,
+ kopano-webapp-plugin-filesbackend-owncloud,
+ kopano-webapp-plugin-filesbackend-smb,
+ kopano-webapp-plugin-mdm,
+ kopano-webapp-plugin-smime,
+ kopano-webapp-plugin-delayeddelivery,
+ kopano-webapp-plugin-desktopnotifications,
+ kopano-webapp-plugin-filepreviewer,
+ kopano-webapp-plugin-folderwidgets,
+ kopano-webapp-plugin-spell,
+ kopano-webapp-plugin-spell-de-de,
+ kopano-webapp-plugin-spell-en,
+ kopano-webapp-plugin-spell-nl,
+ kopano-webapp-plugin-titlecounter,
+ kopano-webapp-plugin-webappmanual
 Description: Kopano4ucs kopano-webapp integration package for Univention Corporate Server
  Integration package for installation and configuration of the Kopano
  groupware solution WebApp interface on Univention Corporate Server.

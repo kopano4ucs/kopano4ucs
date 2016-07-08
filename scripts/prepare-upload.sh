@@ -44,6 +44,8 @@ osc_get files:final kopano-webapp-plugin-filesbackend-smb $outdir/webapp
 
 osc_get mdm:final kopano-webapp-plugin-mdm $outdir/webapp
 
+osc_get smime:final kopano-webapp-plugin-smime $outdir/webapp
+
 deps="php5-mapi"
 echo "webapp dependencies - $outdir/webapp-dependencies"
 mkdir -p $outdir/webapp-dependencies
