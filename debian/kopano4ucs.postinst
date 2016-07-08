@@ -129,14 +129,6 @@ univention-config-registry set \
 	kopano/cfg/dagent/run_as_group?'kopano' \
 	kopano/cfg/dagent/pid_file?'/var/run/kopano/dagent.pid'
 
-# licensed
-univention-config-registry set \
-	kopano/cfg/licensed/server_socket?'file:///var/run/kopano/prio.sock' \
-	kopano/cfg/licensed/run_as_user?'kopano' \
-	kopano/cfg/licensed/run_as_group?'kopano' \
-	kopano/cfg/licensed/pid_file?'/var/run/kopano/licensed.pid' \
-	kopano/cfg/licensed/server_pipe_name?'/var/run/kopano/licensed.sock' \
-
 # monitor
 univention-config-registry set \
 	kopano/cfg/monitor/server_socket?'file:///var/run/kopano/server.sock' \
@@ -213,7 +205,6 @@ univention-config-registry set \
 	kopano/cfg/server/server_pipe_name?'/var/run/kopano/server.sock' \
 	kopano/cfg/server/server_pipe_priority?'/var/run/kopano/prio.sock' \
 	kopano/cfg/server/search_socket?'file:///var/run/kopano/search.sock' \
-	kopano/cfg/server/license_socket?'/var/run/kopano/licensed.sock' \
 	kopano/cfg/server/pid_file?'/var/run/kopano/server.pid'
 
 eval "$(univention-config-registry shell)"
@@ -342,7 +333,6 @@ invoke-rc.d kopano-ical restart
 invoke-rc.d kopano-gateway restart
 invoke-rc.d kopano-dagent restart
 invoke-rc.d kopano-search restart
-invoke-rc.d kopano-licensed restart
 
 # configure firewall
 ucr set security/packetfilter/package/kopano4ucs/tcp/25/all="ACCEPT" \

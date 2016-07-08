@@ -95,6 +95,5 @@ wait_for_kopano_server_startup
 #invoke-rc.d kopano-gateway restart
 #invoke-rc.d kopano-dagent restart
 #invoke-rc.d kopano-search restart
-#invoke-rc.d kopano-licensed restart
 
 exit 0
