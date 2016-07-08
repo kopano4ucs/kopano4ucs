@@ -131,10 +131,10 @@ univention-directory-manager settings/extended_attribute create "$@" --ignore_ex
 	--set ldapMapping=kopanoFilePath \
 	--set tabPosition=3 \
 	--set multivalue=0 \
-	--set default="/var/run/kopanod/server.sock" || die
+	--set default="/var/run/kopano/server.sock" || die
 
 univention-directory-manager computers/"$server_role" modify "$@" --dn "$ldap_hostdn" \
-	--set z4uFilePath="/var/run/kopanod/server.sock" || die
+	--set z4uFilePath="/var/run/kopano/server.sock" || die
 
 univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
 	--position "cn=custom attributes,cn=univention,$ldap_base" \

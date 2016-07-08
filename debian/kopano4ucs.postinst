@@ -114,50 +114,50 @@ fi
 ##
 # admin cli
 univention-config-registry set \
-	kopano/cfg/admin/server_socket?'file:///var/run/kopanod/server.sock'
+	kopano/cfg/admin/server_socket?'file:///var/run/kopano/server.sock'
 
 # backup
 univention-config-registry set \
-	kopano/cfg/backup/server_socket?'file:///var/run/kopanod/server.sock' \
+	kopano/cfg/backup/server_socket?'file:///var/run/kopano/server.sock' \
 	kopano/cfg/backup/run_as_user?'kopano' \
 	kopano/cfg/backup/run_as_group?'kopano'
 
 # dagent
 univention-config-registry set \
-	kopano/cfg/dagent/server_socket?'file:///var/run/kopanod/server.sock' \
+	kopano/cfg/dagent/server_socket?'file:///var/run/kopano/server.sock' \
 	kopano/cfg/dagent/run_as_user?'kopano' \
 	kopano/cfg/dagent/run_as_group?'kopano' \
-	kopano/cfg/dagent/pid_file?'/var/run/kopanod/dagent.pid'
+	kopano/cfg/dagent/pid_file?'/var/run/kopano/dagent.pid'
 
 # licensed
 univention-config-registry set \
-	kopano/cfg/licensed/server_socket?'file:///var/run/kopanod/prio.sock' \
+	kopano/cfg/licensed/server_socket?'file:///var/run/kopano/prio.sock' \
 	kopano/cfg/licensed/run_as_user?'kopano' \
 	kopano/cfg/licensed/run_as_group?'kopano' \
-	kopano/cfg/licensed/pid_file?'/var/run/kopanod/licensed.pid' \
-	kopano/cfg/licensed/server_pipe_name?'/var/run/kopanod/licensed.sock' \
+	kopano/cfg/licensed/pid_file?'/var/run/kopano/licensed.pid' \
+	kopano/cfg/licensed/server_pipe_name?'/var/run/kopano/licensed.sock' \
 
 # monitor
 univention-config-registry set \
-	kopano/cfg/monitor/server_socket?'file:///var/run/kopanod/server.sock' \
+	kopano/cfg/monitor/server_socket?'file:///var/run/kopano/server.sock' \
 	kopano/cfg/monitor/run_as_user?'kopano' \
 	kopano/cfg/monitor/run_as_group?'kopano' \
-	kopano/cfg/monitor/pid_file?'/var/run/kopanod/monitor.pid'
+	kopano/cfg/monitor/pid_file?'/var/run/kopano/monitor.pid'
 
 # search
 univention-config-registry set \
-	kopano/cfg/search/server_socket?'file:///var/run/kopanod/server.sock' \
+	kopano/cfg/search/server_socket?'file:///var/run/kopano/server.sock' \
 	kopano/cfg/search/run_as_user?'kopano' \
 	kopano/cfg/search/run_as_group?'kopano' \
-	kopano/cfg/search/pid_file?'/var/run/kopanod/search.pid' \
-	kopano/cfg/search/server_bind_name?'file:///var/run/kopanod/search.sock'
+	kopano/cfg/search/pid_file?'/var/run/kopano/search.pid' \
+	kopano/cfg/search/server_bind_name?'file:///var/run/kopano/search.sock'
 
 # spooler
 univention-config-registry set \
-	kopano/cfg/spooler/server_socket?'file:///var/run/kopanod/server.sock' \
+	kopano/cfg/spooler/server_socket?'file:///var/run/kopano/server.sock' \
 	kopano/cfg/spooler/run_as_user?'kopano' \
 	kopano/cfg/spooler/run_as_group?'kopano' \
-	kopano/cfg/spooler/pid_file?'/var/run/kopanod/spooler.pid'
+	kopano/cfg/spooler/pid_file?'/var/run/kopano/spooler.pid'
 
 
 # gateway
@@ -169,10 +169,10 @@ univention-config-registry set \
 	kopano/cfg/gateway/ssl_protocols?'!SSLv2' \
 	kopano/cfg/gateway/ssl_ciphers?'ALL:!LOW:!SSLv2:!EXP:!aNULL' \
 	kopano/cfg/gateway/ssl_prefer_server_ciphers?'no' \
-	kopano/cfg/gateway/server_socket?'file:///var/run/kopanod/server.sock' \
+	kopano/cfg/gateway/server_socket?'file:///var/run/kopano/server.sock' \
 	kopano/cfg/gateway/run_as_user?'kopano' \
 	kopano/cfg/gateway/run_as_group?'kopano' \
-	kopano/cfg/gateway/pid_file?'/var/run/kopanod/gateway.pid'
+	kopano/cfg/gateway/pid_file?'/var/run/kopano/gateway.pid'
 
 # ical
 univention-config-registry set \
@@ -183,16 +183,16 @@ univention-config-registry set \
 	kopano/cfg/ical/ssl_protocols?'!SSLv2' \
 	kopano/cfg/ical/ssl_ciphers?'ALL:!LOW:!SSLv2:!EXP:!aNULL' \
 	kopano/cfg/ical/ssl_prefer_server_ciphers?'no' \
-	kopano/cfg/ical/server_socket?'file:///var/run/kopanod/server.sock' \
+	kopano/cfg/ical/server_socket?'file:///var/run/kopano/server.sock' \
 	kopano/cfg/ical/run_as_user?'kopano' \
 	kopano/cfg/ical/run_as_group?'kopano' \
-	kopano/cfg/ical/pid_file?'/var/run/kopanod/ical.pid'
+	kopano/cfg/ical/pid_file?'/var/run/kopano/ical.pid'
 
 # server
 univention-config-registry set \
 	kopano/cfg/server/mysql_host?'localhost' \
 	kopano/cfg/server/mysql_port?'3306' \
-	kopano/cfg/server/mysql_user?'kopanoDbUser' \
+	kopano/cfg/server/mysql_user?'kopanobUser' \
 	kopano/cfg/server/mysql_password?'@&@/etc/kopano-mysql.secret@&@' \
 	kopano/cfg/server/mysql_database?'kopano' \
 	kopano/cfg/server/server_ssl_key_file?'/etc/kopano/ssl/server.pem' \
@@ -210,11 +210,11 @@ univention-config-registry set \
 	kopano/cfg/server/local_admin_users?'root kopano' \
 	kopano/cfg/server/run_as_user?'kopano' \
 	kopano/cfg/server/run_as_group?'kopano' \
-	kopano/cfg/server/server_pipe_name?'/var/run/kopanod/server.sock' \
-	kopano/cfg/server/server_pipe_priority?'/var/run/kopanod/prio.sock' \
-	kopano/cfg/server/search_socket?'file:///var/run/kopanod/search.sock' \
-	kopano/cfg/server/license_socket?'/var/run/kopanod/licensed.sock' \
-	kopano/cfg/server/pid_file?'/var/run/kopanod/server.pid'
+	kopano/cfg/server/server_pipe_name?'/var/run/kopano/server.sock' \
+	kopano/cfg/server/server_pipe_priority?'/var/run/kopano/prio.sock' \
+	kopano/cfg/server/search_socket?'file:///var/run/kopano/search.sock' \
+	kopano/cfg/server/license_socket?'/var/run/kopano/licensed.sock' \
+	kopano/cfg/server/pid_file?'/var/run/kopano/server.pid'
 
 eval "$(univention-config-registry shell)"
 # Ensure these attributes are always present in the UCR variable
