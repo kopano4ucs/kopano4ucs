@@ -1,7 +1,6 @@
 #!/bin/bash
 ## Script makes use of the open build service cli client and a private buildnode. Therefore it only works from the Kopano offices.
-
-## TODO: copy stuff from the core download into subdir for webapp app
+set -e
 
 osc_get () {
 	arch="x86_64"
@@ -16,6 +15,10 @@ osc_get () {
 }
 
 outdir="$HOME/ownCloud-Kopano/kopano4ucs"
+
+if [ ! -d "$outdir" ]; then
+	git clone https://fbartels@stash.z-hub.io/scm/k4u/app-metadata.git $outdir
+fi
 
 # kopano4ucs
 osc_get kopano4ucs kopano4ucs $outdir/kopano4ucs
@@ -79,6 +82,7 @@ cd $outdir
 outdirs="$outdir/kopano-core/packages $outdir/kopano-webapp/packages $outdir/meetings4ucs/packages $outdir/z-push-kopano/packages"
 for finaldir in $(find . -mindepth 1 -maxdepth 1 -type d); do
 	[[ $finaldir = ./kopano4ucs ]] && continue
+	[[ $finaldir = ./.git ]] && continue
 	if [ ! -e $(basename $finaldir).tar.gz ]; then
 		#find $finaldir/packages -type f ! -name "*.deb" -delete
 		tar --exclude='*.gz' --exclude='*.dsc' --exclude='*.changes' --exclude='_buildenv' --exclude='_statistics' \
