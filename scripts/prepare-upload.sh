@@ -27,6 +27,7 @@ osc_get kopano4ucs kopano4ucs $outdir/kopano4ucs
 osc_get core:pre-final kopano $outdir/kopano-core/packages
 
 # copying over kopano4ucs dependencies
+mkdir -p $outdir/kopano-webapp/packages
 deps="kopano4ucs-lib kopano4ucs-multiserver kopano4ucs-schema kopano4ucs-udm kopano4ucs"
 for pkg in $deps; do
   cp $outdir/kopano4ucs/"$pkg"*.deb $outdir/kopano-webapp/packages/
@@ -69,10 +70,10 @@ for pkg in $deps; do
 done
 
 # webmeetings
-osc_get kopano4ucs meetings4ucs $outdir/meetings4ucs/packages
-osc_get kopano4ucs mod_proxy_wstunnel $outdir/meetings4ucs/packages
-osc_get webmeetings:final kopano-webmeetings $outdir/meetings4ucs/packages
-osc_get webmeetings:final kopano-webapp-plugin-meetings $outdir/meetings4ucs/packages
+osc_get kopano4ucs meetings4ucs $outdir/kopano-webmeetings/packages
+osc_get kopano4ucs mod_proxy_wstunnel $outdir/kopano-webmeetings/packages
+osc_get webmeetings:final kopano-webmeetings $outdir/kopano-webmeetings/packages
+osc_get webmeetings:final kopano-webapp-plugin-meetings $outdir/kopano-webmeetings/packages
 
 # z-push
 osc_get z-push:pre-final z-push $outdir/z-push-kopano/packages
