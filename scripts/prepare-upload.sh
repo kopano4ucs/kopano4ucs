@@ -27,10 +27,10 @@ osc_get kopano4ucs kopano4ucs $outdir/kopano4ucs
 osc_get core:pre-final kopano $outdir/kopano-core/packages
 
 # copying over kopano4ucs dependencies
-mkdir -p $outdir/kopano-webapp/packages
+mkdir -p $outdir/kopano-core/packages
 deps="kopano4ucs-lib kopano4ucs-multiserver kopano4ucs-schema kopano4ucs-udm kopano4ucs"
 for pkg in $deps; do
-  cp $outdir/kopano4ucs/"$pkg"*.deb $outdir/kopano-webapp/packages/
+  cp $outdir/kopano4ucs/"$pkg"*.deb $outdir/kopano-core/packages/
 done
 
 # External deps (Univention unmaintained e.g.): python-jinja2 python-flask python-sleekxmpp libs3-2
