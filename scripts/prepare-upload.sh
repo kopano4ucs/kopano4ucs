@@ -81,13 +81,21 @@ osc_get webmeetings:final kopano-webapp-plugin-meetings $outdir/kopano-webmeetin
 deps="libkcpyconv0 libkcpydirector0 python-mapi python-kopano kopano-presence"
 echo "webmeeting dependencies - $outdir/kopano-webmeeting/packages"
 for pkg in $deps; do
-        find $outdir/kopano-core/packages -name "$pkg"*.deb -exec cp {} $outdir/kopano-webmeetings/packages \;
+	find $outdir/kopano-core/packages -name "$pkg"*.deb -exec cp {} $outdir/kopano-webmeetings/packages \;
 done
 
 # External deps (Univention unmaintained e.g.): python-jinja2 python-flask python-sleekxmpp
 
 # z-push
 osc_get z-push:pre-final z-push $outdir/z-push-kopano/packages
+
+# copying over dependencies from kopano core
+deps="libgsoap-kopano-2-8 libkcutil0 libkcmapi0 libmapi1 libkcfreebusy0 libkcsoapclient0 libkcssl0 libkcsync0 kopano-lang kopano-client kopano-contacts libkcicalmapi0 libvmime-kopano0 libkcinetmapi0 php5-mapi"
+echo "z-push dependencies - $outdir/z-push-kopano/packages"
+for pkg in $deps; do
+	find $outdir/kopano-core/packages -name "$pkg"*.deb -exec cp {} $outdir/z-push-kopano/packages \;
+done
+
 
 # remove source and other files
 cd $outdir
