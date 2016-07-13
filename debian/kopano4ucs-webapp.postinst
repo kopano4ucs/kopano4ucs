@@ -53,6 +53,21 @@ fi
 call_joinscript 71kopano4ucs-webapp.inst
 
 # reload apache
+# REMOVE if bug #41781 is fixed
+PIDFILE="/var/run/apache2.pid"
+apache_wait_for_pidfile() {
+	# wait up to 5 seconds until really started (i.e., PIDFILE exists)
+	i=0
+	while [ "$i" -lt "50" ];  do
+		if [ -e "$PIDFILE" ]; then
+			return 0
+		fi
+		i=$(($i+1))
+		sleep 0.1
+	done
+	return 1
+}
+apache_wait_for_pidfile
 invoke-rc.d apache2 restart
 
 exit 0

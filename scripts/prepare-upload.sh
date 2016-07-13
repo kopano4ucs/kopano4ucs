@@ -104,9 +104,11 @@ for finaldir in $(find . -mindepth 1 -maxdepth 1 -type d); do
 	[[ $finaldir = ./kopano4ucs ]] && continue
 	[[ $finaldir = ./.git ]] && continue
 	if [ ! -e $(basename $finaldir).tar.gz ]; then
+		cd $finaldir
 		#find $finaldir/packages -type f ! -name "*.deb" -delete
 		tar --exclude='*.gz' --exclude='*.dsc' --exclude='*.changes' --exclude='_buildenv' --exclude='_statistics' \
-		-czvf $(basename $finaldir).tar.gz $finaldir
+		-czvf ../$(basename $finaldir).tar.gz .
+		cd ..
 	fi
 done
 
