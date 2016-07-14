@@ -44,8 +44,6 @@ for pkg in $deps; do
   cp $outdir/kopano4ucs/"$pkg"*.deb $outdir/kopano-core/packages/
 done
 
-# External deps (Univention unmaintained e.g.): python-jinja2 python-flask python-sleekxmpp libs3-2
-
 # webapp
 osc_get webapp:final kopano-webapp $outdir/kopano-webapp/packages
 osc_get webapp:final kopano-webapp-plugin-delayeddelivery $outdir/kopano-webapp/packages
@@ -89,13 +87,11 @@ osc_get webmeetings:final kopano-webmeetings $outdir/kopano-webmeetings/packages
 osc_get webmeetings:final kopano-webapp-plugin-meetings $outdir/kopano-webmeetings/packages
 
 # copying over dependencies from kopano core
-deps="libkcpyconv0 libkcpydirector0 python-mapi python-kopano kopano-presence"
+deps="libkcpyconv0 libkcpydirector0 python-mapi python-kopano kopano-presence python-flask python-jinja2 python-sleekxmpp"
 echo "webmeeting dependencies - $outdir/kopano-webmeeting/packages"
 for pkg in $deps; do
 	find $outdir/kopano-core/packages -name "$pkg"*.deb -exec cp {} $outdir/kopano-webmeetings/packages \;
 done
-
-# External deps (Univention unmaintained e.g.): python-jinja2 python-flask python-sleekxmpp
 
 # z-push
 osc_get z-push:pre-final z-push $outdir/z-push-kopano/packages
