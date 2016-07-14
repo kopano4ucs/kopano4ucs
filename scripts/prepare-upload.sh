@@ -30,6 +30,13 @@ osc_get kopano:dependencies libjansson $outdir/kopano-core/packages
 osc_get kopano:dependencies libvmime_kopano $outdir/kopano-core/packages
 osc_get kopano:dependencies tidy-html5 $outdir/kopano-core/packages
 
+# packages from univention unmaintained
+wget -N https://updates.software-univention.de/4.0/unmaintained/4.0-0/amd64/python-jinja2_2.6-1.7.201403220351_amd64.deb -P $outdir/kopano-core/packages
+wget -N https://updates.software-univention.de/4.0/unmaintained/4.0-0/all/python-flask_0.8-1.4.201403231707_all.deb -P $outdir/kopano-core/packages
+wget -N https://updates.software-univention.de/4.0/unmaintained/4.0-0/all/python-sleekxmpp_1.0~beta5-2.4.201403200211_all.deb -P $outdir/kopano-core/packages
+wget -N https://updates.software-univention.de/4.0/unmaintained/4.0-0/amd64/libs3-2_2.0-1.2.201403270307_amd64.deb -P $outdir/kopano-core/packages
+wget -N https://updates.software-univention.de/4.0/unmaintained/4.0-0/amd64/libtcmalloc-minimal4_2.0-2.4.201403151718_amd64.deb -P $outdir/kopano-core/packages
+
 # copying over kopano4ucs dependencies
 mkdir -p $outdir/kopano-core/packages
 deps="kopano4ucs-lib kopano4ucs-multiserver kopano4ucs-schema kopano4ucs-udm kopano4ucs"
