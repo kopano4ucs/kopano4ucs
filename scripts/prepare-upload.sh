@@ -25,6 +25,10 @@ osc_get kopano4ucs kopano4ucs $outdir/kopano4ucs
 
 # core
 osc_get core:pre-final kopano $outdir/kopano-core/packages
+osc_get kopano:dependencies gsoap-kopano $outdir/kopano-core/packages
+osc_get kopano:dependencies libjansson $outdir/kopano-core/packages
+osc_get kopano:dependencies libvmime_kopano $outdir/kopano-core/packages
+osc_get kopano:dependencies tidy-html5 $outdir/kopano-core/packages
 
 # copying over kopano4ucs dependencies
 mkdir -p $outdir/kopano-core/packages
