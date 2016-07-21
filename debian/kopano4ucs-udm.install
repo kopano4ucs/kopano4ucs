@@ -5,5 +5,6 @@ univention/admin/hooks.d/kopano4ucsRole.py usr/share/pyshared/univention/admin/h
 locale/kopano4ucs.mo usr/share/locale/de/LC_MESSAGES/
 umc/udm-kopano.mo usr/share/univention-management-console/i18n/de
 umc/*xml usr/share/univention-management-console/modules
+umc/icons/scalable/* usr/share/univention-management-console-frontend/js/dijit/themes/umc/icons/scalable
 umc/icons/50x50/* usr/share/univention-management-console-frontend/js/dijit/themes/umc/icons/50x50
 umc/icons/16x16/* usr/share/univention-management-console-frontend/js/dijit/themes/umc/icons/16x16
