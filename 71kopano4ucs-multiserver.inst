@@ -42,7 +42,7 @@ eval "$(univention-config-registry shell)"
 
 univention-directory-manager settings/syntax create "$@" --ignore_exists \
 	--position "cn=custom attributes,cn=univention,$ldap_base" \
-	--set name=z4uUserServerSyntax \
+	--set name=k4uUserServerSyntax \
 	--set description="Search syntax for Kopano Server" \
 	--set filter="(&(objectClass=kopano-server)(univentionService=Kopano))" \
 	--set ldapattribute="cn" \
@@ -51,7 +51,7 @@ univention-directory-manager settings/syntax create "$@" --ignore_exists \
 
 univention-directory-manager settings/syntax create "$@" --ignore_exists \
 	--position "cn=custom attributes,cn=univention,$ldap_base" \
-	--set name=z4uUserServerSyntaxANDEmptyValue \
+	--set name=k4uUserServerSyntaxANDEmptyValue \
 	--set description="Search syntax for Kopano Server" \
 	--set filter="(&(objectClass=kopano-server)(univentionService=Kopano))" \
 	--set ldapattribute="cn" \
@@ -61,7 +61,7 @@ univention-directory-manager settings/syntax create "$@" --ignore_exists \
 
 univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
 	--position "cn=custom attributes,cn=univention,$ldap_base" \
-	--set name="z4uUserServer" \
+	--set name="k4uUserServer" \
 	--set module=users/user \
 	--set module=settings/usertemplate \
 	--set tabName="Kopano" \
@@ -71,7 +71,7 @@ univention-directory-manager settings/extended_attribute create "$@" --ignore_ex
 	--set translationShortDescription='"de_DE" "Kopano Home Server"' \
 	--set translationLongDescription='"de_DE" "Kopano-Server, auf dem der Benutzer-Store gespeichert wird"' \
 	--set objectClass=kopano-user \
-	--set syntax=z4uUserServerSyntaxANDEmptyValue \
+	--set syntax=k4uUserServerSyntaxANDEmptyValue \
 	--set mayChange=1 \
 	--set ldapMapping=kopanoUserServer \
 	--set multivalue=0 || die
@@ -79,7 +79,7 @@ univention-directory-manager settings/extended_attribute create "$@" --ignore_ex
 #archiver related
 univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
 	--position "cn=custom attributes,cn=univention,$ldap_base" \
-	--set name="z4uArchiveServer" \
+	--set name="k4uArchiveServer" \
 	--set module=users/user \
 	--set module=settings/usertemplate \
 	--set tabName="Kopano" \
@@ -89,14 +89,14 @@ univention-directory-manager settings/extended_attribute create "$@" --ignore_ex
 	--set translationShortDescription='"de_DE" "Kopano Archive Server"' \
 	--set translationLongDescription='"de_DE" "Kopano-Server, auf dem das Benutzer-Archiv gespeichert wird"' \
 	--set objectClass=kopano-user \
-	--set syntax=z4uUserServerSyntaxANDEmptyValue \
+	--set syntax=k4uUserServerSyntaxANDEmptyValue \
 	--set mayChange=1 \
 	--set ldapMapping=kopanoUserArchiveServers \
 	--set multivalue=0 || die
 
 univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
 	--position "cn=custom attributes,cn=univention,$ldap_base" \
-	--set name="z4uContainsPublic" \
+	--set name="k4uContainsPublic" \
 	--set module=computers/domaincontroller_master \
 	--set module=computers/domaincontroller_backup \
 	--set module=computers/domaincontroller_slave \
@@ -115,7 +115,7 @@ univention-directory-manager settings/extended_attribute create "$@" --ignore_ex
 
 univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
 	--position "cn=custom attributes,cn=univention,$ldap_base" \
-	--set name="z4uFilePath" \
+	--set name="k4uFilePath" \
 	--set module=computers/domaincontroller_master \
 	--set module=computers/domaincontroller_backup \
 	--set module=computers/domaincontroller_slave \
@@ -134,11 +134,11 @@ univention-directory-manager settings/extended_attribute create "$@" --ignore_ex
 	--set default="/var/run/kopano/server.sock" || die
 
 univention-directory-manager computers/"$server_role" modify "$@" --dn "$ldap_hostdn" \
-	--set z4uFilePath="/var/run/kopano/server.sock" || die
+	--set k4uFilePath="/var/run/kopano/server.sock" || die
 
 univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
 	--position "cn=custom attributes,cn=univention,$ldap_base" \
-	--set name="z4uHttpPort" \
+	--set name="k4uHttpPort" \
 	--set module=computers/domaincontroller_master \
 	--set module=computers/domaincontroller_backup \
 	--set module=computers/domaincontroller_slave \
@@ -157,11 +157,11 @@ univention-directory-manager settings/extended_attribute create "$@" --ignore_ex
 	--set default="236" || die
 
 univention-directory-manager computers/"$server_role" modify "$@" --dn "$ldap_hostdn" \
-	--set z4uHttpPort="236" || die
+	--set k4uHttpPort="236" || die
 
 univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
 	--position "cn=custom attributes,cn=univention,$ldap_base" \
-	--set name="z4uSslPort" \
+	--set name="k4uSslPort" \
 	--set module=computers/domaincontroller_master \
 	--set module=computers/domaincontroller_backup \
 	--set module=computers/domaincontroller_slave \
@@ -180,11 +180,11 @@ univention-directory-manager settings/extended_attribute create "$@" --ignore_ex
 	--set default="237" || die
 
 univention-directory-manager computers/"$server_role" modify "$@" --dn "$ldap_hostdn" \
-	--set z4uSslPort="237" || die
+	--set k4uSslPort="237" || die
 
 univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
 	--position "cn=custom attributes,cn=univention,$ldap_base" \
-	--set name="z4uFQDN" \
+	--set name="k4uFQDN" \
 	--set module=computers/domaincontroller_master \
 	--set module=computers/domaincontroller_backup \
 	--set module=computers/domaincontroller_slave \
@@ -203,12 +203,12 @@ univention-directory-manager settings/extended_attribute create "$@" --ignore_ex
 	--set default="" || die
 
 univention-directory-manager computers/"$server_role" modify "$@" --dn "$ldap_hostdn" \
-	--set z4uFQDN="$hostname.$domainname" || die
+	--set k4uFQDN="$hostname.$domainname" || die
 
 # Home- and Archive-server for nonactive accounts
 univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
 	--position "cn=custom attributes,cn=univention,$ldap_base" \
-	--set name="z4uUserServerNonactive" \
+	--set name="k4uUserServerNonactive" \
 	--set module=kopano/non-active \
 	--set tabName="General" \
 	--set translationTabName='"de_DE" "Allgemein"' \
@@ -218,14 +218,14 @@ univention-directory-manager settings/extended_attribute create "$@" --ignore_ex
 	--set translationShortDescription='"de_DE" "Kopano Home Server"' \
 	--set translationLongDescription='"de_DE" "Kopano-Server, auf dem der Benutzer-Store gespeichert wird"' \
 	--set objectClass=kopano-user \
-	--set syntax=z4uUserServerSyntaxANDEmptyValue \
+	--set syntax=k4uUserServerSyntaxANDEmptyValue \
 	--set mayChange=1 \
 	--set ldapMapping=kopanoUserServer \
 	--set multivalue=0 || die
 
 univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
 	--position "cn=custom attributes,cn=univention,$ldap_base" \
-	--set name="z4uArchiveServerNonactive" \
+	--set name="k4uArchiveServerNonactive" \
 	--set module=kopano/non-active \
 	--set tabName="General" \
 	--set translationTabName='"de_DE" "Allgemein"' \
@@ -235,7 +235,7 @@ univention-directory-manager settings/extended_attribute create "$@" --ignore_ex
 	--set translationShortDescription='"de_DE" "Kopano Archive Server"' \
 	--set translationLongDescription='"de_DE" "Kopano-Server, auf dem das Benutzer-Archiv gespeichert wird"' \
 	--set objectClass=kopano-user \
-	--set syntax=z4uUserServerSyntaxANDEmptyValue \
+	--set syntax=k4uUserServerSyntaxANDEmptyValue \
 	--set mayChange=1 \
 	--set ldapMapping=kopanoUserArchiveServers \
 	--set multivalue=0 || die

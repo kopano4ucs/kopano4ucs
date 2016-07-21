@@ -127,7 +127,7 @@ univention-directory-manager settings/extended_attribute create "$@" --ignore_ex
 	--set translationLongDescription='"de_DE" "Liste mit Benutzern, die E-Mails mit der Identität der Gruppe versenden dürfen"' \
 	--set objectClass=kopano-group  \
 	--set mayChange=1 \
-	--set syntax=z4uUserSendAsPrivilege \
+	--set syntax=k4uUserSendAsPrivilege \
 	--set ldapMapping=kopanoSendAsPrivilege \
 	--set multivalue=1 || die
 
@@ -155,7 +155,7 @@ univention-directory-manager settings/extended_attribute create "$@" --ignore_ex
 
 univention-directory-manager settings/syntax create "$@" --ignore_exists \
 	--position "cn=kopano,cn=custom attributes,cn=univention,$ldap_base" \
-	--set name=z4uUserSendAsPrivilege \
+	--set name=k4uUserSendAsPrivilege \
 	--set description="Kopano User for SendAsPrivilege" \
 	--set filter="(&(kopanoAccount=1)(uidNumber=*)(!(objectClass=kopano-contact)))" \
 	--set ldapattribute="uid" \
@@ -174,7 +174,7 @@ univention-directory-manager settings/extended_attribute create "$@" --ignore_ex
 	--set translationShortDescription='"de_DE" "Stellvertreter"' \
 	--set translationLongDescription='"de_DE" "Liste mit Benutzern, die E-Mails mit der Identität des aktuellen Benutzers versenden dürfen"' \
 	--set objectClass=kopano-user \
-	--set syntax=z4uUserSendAsPrivilege \
+	--set syntax=k4uUserSendAsPrivilege \
 	--set mayChange=1 \
 	--set ldapMapping=kopanoSendAsPrivilege \
 	--set multivalue=1 || die

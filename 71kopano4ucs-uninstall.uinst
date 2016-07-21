@@ -49,7 +49,7 @@ if ucs_isServiceUnused "${SERVICE}" "$@"; then
 	univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=kopano-group,$EXTENDED_ATTR_CONTAINER"
 	univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=kopano-group-hidden,$EXTENDED_ATTR_CONTAINER"
 	univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=kopano-role,$EXTENDED_ATTR_CONTAINER"
-	univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=z4uUserSendAsPrivilege,$EXTENDED_ATTR_CONTAINER"
+	univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=k4uUserSendAsPrivilege,$EXTENDED_ATTR_CONTAINER"
 	univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=SendAsPrivilege,$EXTENDED_ATTR_CONTAINER"
 	univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=kopano-user-hidden,$EXTENDED_ATTR_CONTAINER"
 	univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=MRAccept,$EXTENDED_ATTR_CONTAINER"
