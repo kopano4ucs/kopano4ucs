@@ -56,6 +56,7 @@ univention-config-registry set \
 	kopano/cfg/ldapms/ldap_bind_passwd?'@&@/etc/kopano-ldap.secret@&@' \
 	kopano/cfg/ldapms/ldap_user_search_filter?'(kopanoAccount=1)' \
 	kopano/cfg/ldapms/ldap_authentication_method?'bind' \
+	kopano/cfg/ldapms/ldap_group_type_attribute_value?'posixGroup' \
 	kopano/cfg/ldapms/ldap_group_search_filter?'(&(kopanoAccount=1)(objectClass=kopano-group))' \
 	kopano/cfg/ldapms/ldap_quota_multiplier?'1048576' \
 	kopano/cfg/ldapms/ldap_emailaddress_attribute?'mailPrimaryAddress' \
