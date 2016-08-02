@@ -94,7 +94,7 @@ for pkg in $deps; do
 done
 
 # z-push
-osc_get z-push:pre-final z-push $outdir/z-push-kopano/packages
+osc_get z-push:final z-push $outdir/z-push-kopano/packages
 
 # copying over dependencies from kopano core
 deps="libgsoap-kopano-2-8 libkcutil0 libkcmapi0 libmapi1 libkcfreebusy0 libkcsoapclient0 libkcssl0 libkcsync0 kopano-lang kopano-client kopano-contacts libkcicalmapi0 libvmime-kopano0 libkcinetmapi0 php5-mapi"

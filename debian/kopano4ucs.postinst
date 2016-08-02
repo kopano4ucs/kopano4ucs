@@ -56,7 +56,7 @@ if [ "$1" = "configure" -a -n "$2" ] && dpkg --compare-versions "$2" lt 7.1.1000
 		cp /etc/default/kopano "/etc/default/kopano.$(date +%Y%m%d-%H%M%S)"
 		sed -i s/"indexer"/"search"/g /etc/default/kopano
 		sed -i s/"INDEXER"/"SEARCH"/g /etc/default/kopano
-		ucr set kopano/default/ZARAFA_LOCALE="$(ucr get kopano/default/ZARAFA_LOCALE)"
+		ucr set kopano/default/KOPANO_LOCALE="$(ucr get kopano/default/KOPANO_LOCALE)"
 	fi
 
 	# update config
@@ -184,7 +184,7 @@ univention-config-registry set \
 univention-config-registry set \
 	kopano/cfg/server/mysql_host?'localhost' \
 	kopano/cfg/server/mysql_port?'3306' \
-	kopano/cfg/server/mysql_user?'kopanobUser' \
+	kopano/cfg/server/mysql_user?'kopanoDbUser' \
 	kopano/cfg/server/mysql_password?'@&@/etc/kopano-mysql.secret@&@' \
 	kopano/cfg/server/mysql_database?'kopano' \
 	kopano/cfg/server/server_ssl_key_file?'/etc/kopano/ssl/server.pem' \
@@ -253,8 +253,8 @@ univention-config-registry set \
 
 # defaults
 univention-config-registry set \
-	kopano/default/ZARAFA_USERSCRIPT_LOCALE?"$(ucr get locale/default | sed -e 's/[.:].*/.UTF-8/')" \
-	kopano/default/ZARAFA_LOCALE?"$(ucr get locale/default | sed -e 's/[.:].*/.UTF-8/')"
+	kopano/default/KOPANO_USERSCRIPT_LOCALE?"$(ucr get locale/default | sed -e 's/[.:].*/.UTF-8/')" \
+	kopano/default/KOPANO_LOCALE?"$(ucr get locale/default | sed -e 's/[.:].*/.UTF-8/')"
 
 # disable spamassassin's cronjob for learning cyrus mails (no cyrus installed on kopano machines)
 if [ "$1" = "configure" -a -z "$2" ]; then
@@ -350,9 +350,9 @@ ucr set security/packetfilter/package/kopano4ucs/tcp/25/all="ACCEPT" \
 		security/packetfilter/package/kopano4ucs/tcp/8443/all="ACCEPT" \
 		security/packetfilter/package/kopano4ucs/tcp/8080/all/en="ICAL" \
 		security/packetfilter/package/kopano4ucs/tcp/8080/all="ACCEPT" \
-		security/packetfilter/package/kopano4ucs/tcp/236/all/en="ZARAFA" \
+		security/packetfilter/package/kopano4ucs/tcp/236/all/en="KOPANO" \
 		security/packetfilter/package/kopano4ucs/tcp/236/all="ACCEPT" \
-		security/packetfilter/package/kopano4ucs/tcp/237/all/en="ZARAFA encrypted" \
+		security/packetfilter/package/kopano4ucs/tcp/237/all/en="KOPANO encrypted" \
 		security/packetfilter/package/kopano4ucs/tcp/237/all="ACCEPT"
 [ -x "/etc/init.d/univention-firewall" ] && invoke-rc.d univention-firewall restart
 
