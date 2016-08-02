@@ -37,59 +37,9 @@
 
 eval "$(univention-config-registry shell)"
 
-if  [ "$1" = 'configure' -a -n "$2" ] && dpkg --compare-versions "$2" lt '7.1.2001-5'; then
-	mkdir -p /etc/univention/templates/removed/
-	files="en.html.d/42kopano-webaccess.html de.html.d/42kopano-webaccess.html"
-	for file in $files; do
-		if [ -e "/etc/univention/templates/files/var/www/ucs-overview/$file" ]; then
-			mv "/etc/univention/templates/files/var/www/ucs-overview/$file" /etc/univention/templates/removed/
-		fi
-	done
-fi
-
-
-# update to zcp 7.1
-if [ "$1" = "configure" -a -n "$2" ] && dpkg --compare-versions "$2" lt 7.1.1000-1; then
-
-	# update config
-	if [ -e /etc/default/kopano ]; then
-		cp /etc/default/kopano "/etc/default/kopano.$(date +%Y%m%d-%H%M%S)"
-		sed -i s/"indexer"/"search"/g /etc/default/kopano
-		sed -i s/"INDEXER"/"SEARCH"/g /etc/default/kopano
-		ucr set kopano/default/KOPANO_LOCALE="$(ucr get kopano/default/KOPANO_LOCALE)"
-	fi
-
-	# update config
-	if [ -e /etc/kopano/server.cfg ]; then
-		cp /etc/kopano/server.cfg "/etc/kopano/server.cfg.$(date +%Y%m%d-%H%M%S)"
-		sed -i s/"kopano-indexer"/"kopano-search"/g /etc/kopano/server.cfg
-		sed -i s/"index_services_enabled"/"search_enabled"/g /etc/kopano/server.cfg
-		sed -i s/"index_services_path"/"search_socket"/g /etc/kopano/server.cfg
-		sed -i s/"index_services_search_timeout"/"search_timeout"/g /etc/kopano/server.cfg
-		sed -i /"index_services_prefix_chars"/d /etc/kopano/server.cfg
-		sed -i /"# Minimum length of a search term in characters to enable prefix searching"/d /etc/kopano/server.cfg
-		ucr set kopano/cfg/server/mysql_host="$(ucr get kopano/cfg/server/mysql_host)"
-	fi
-
-	# disable global address book sync
-	ucr set kopano/cfg/server/sync_gab_realtime='no'
-
-	# update new configuration options
-	/usr/share/kopano4ucs/kopano4ucs-update-configs -w
-fi
-# end update to zcp 7.1
-
-# update to zcp 7.1.12
-if [ "$1" = "configure" -a -n "$2" ] && dpkg --compare-versions "$2" lt 7.1.3001-3; then
-	# remove obsolete options
-	sed -i s/"^server_ssl_enable_v2"/"# no longer supported with 7.1.12 server_ssl_enable_v2"/g /etc/kopano/server.cfg
-	sed -i s/"^ssl_enable_v2"/"# no longer supported with 7.1.12 ssl_enable_v2"/g /etc/kopano/ical.cfg
-	sed -i s/"^ssl_enable_v2"/"# no longer supported with 7.1.12 ssl_enable_v2"/g /etc/kopano/gateway.cfg
-fi
-
 # configure system only on package installation
 if [ "$1" = "configure" -a -z "$2" ] ; then
-	# configure postfix: 
+	# configure postfix:
 	# - listen on all interfaces
 	# - enable virtual tables and local delivery via LMTP
 	# - disable LDAP transport table
