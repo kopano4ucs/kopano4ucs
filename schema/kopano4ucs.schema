@@ -191,7 +191,7 @@ objectclass	( 1.3.6.1.4.1.47732.1.6.0.0
 	NAME 'kopano-contact'
 	DESC 'KOPANO: a contact of Kopano'
 	SUP top AUXILIARY
-	MUST ( cn $ uidNumber )
+	MUST ( cn )
 	MAY (
 		kopanoSendAsPrivilege $ kopanoHidden $ kopanoAliases $ kopanoAccount
 		)
