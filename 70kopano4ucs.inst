@@ -31,7 +31,7 @@
 # /usr/share/common-licenses/AGPL-3; if not, see
 # <http://www.gnu.org/licenses/>.
 
-VERSION=1
+VERSION=2
 
 . /usr/share/univention-join/joinscripthelper.lib
 . /usr/share/univention-lib/all.sh
@@ -316,6 +316,38 @@ univention-directory-manager settings/extended_attribute create "$@" --ignore_ex
 	--set ldapMapping=kopanoQuotaHard \
 	--set tabPosition=19 \
 	--set multivalue=0 || die
+
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=kopano,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="kopanoEnabledFeature" \
+	--set module=users/user \
+	--set tabName="Kopano" \
+	--set shortDescription="Enable specific features for user" \
+	--set longDescription="Enable specific features for user" \
+	--set translationShortDescription='"de_DE" "Aktiviere spezifische Features für Benutzer"' \
+	--set translationLongDescription='"de_DE" "Aktiviere spezifische Features für Benutzer"' \
+	--set objectClass=kopano-user \
+	--set syntax=kopano4ucsFeature \
+	--set mayChange=1 \
+	--set ldapMapping=kopanoEnabledFeatures \
+	--set multivalue=1 \
+	--set tabPosition=25 || die
+
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=kopano,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="kopanoDisabledFeature" \
+	--set module=users/user \
+	--set tabName="Kopano" \
+	--set shortDescription="Disable specific features for user" \
+	--set longDescription="Disable specific features for user" \
+	--set translationShortDescription='"de_DE" "Deaktiviere spezifische Features für Benutzer"' \
+	--set translationLongDescription='"de_DE" "Deaktiviere spezifische Features für Benutzer"' \
+	--set objectClass=kopano-user \
+	--set syntax=kopano4ucsFeature \
+	--set mayChange=1 \
+	--set ldapMapping=kopanoDisabledFeatures \
+	--set multivalue=1 \
+	--set tabPosition=26 || die
 
 # restart UDM CLI server
 stop_udm_cli_server

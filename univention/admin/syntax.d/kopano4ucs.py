@@ -49,3 +49,11 @@ class kopano4ucsSendAsPrivilege(univention.admin.syntax.UDM_Objects):
 	udm_filter = '(&(kopanoAccount=1)(!(univentionObjectFlag=functional)))'
 	simple = True
 	regex = None
+
+class kopano4ucsFeature(select):
+	choices=[
+		('pop3', 'POP3 access'),
+		('imap', 'IMAP access'),
+		('mobile', 'ActiveSync access'),
+		('outlook', 'Outlook over ActiveSync access'),
+	]
