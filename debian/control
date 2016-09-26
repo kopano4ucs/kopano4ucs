@@ -113,3 +113,27 @@ Depends: ${misc:Depends},
 Description: Kopano4ucs kopano-webapp integration package for Univention Corporate Server
  Integration package for installation and configuration of the Kopano
  groupware solution WebApp interface on Univention Corporate Server.
+
+Package: kopano4ucs-z-push
+Architecture: all
+Depends: ${misc:Depends},
+ z-push-kopano,
+ z-push-config-apache
+Conflicts: d-push,
+ z-push
+Replaces: d-push,
+ z-push
+Description: Meta package for Z-Push installation
+ Meta package to ease installation of Z-Push through the Univention Appcenter.
+
+Package: zarafa4ucs-z-push
+Architecture: all
+Depends: ${misc:Depends},
+ z-push-kopano,
+ z-push-config-apache
+Conflicts: d-push,
+ z-push
+Replaces: d-push,
+ z-push
+Description: Meta package for Z-Push installation
+ Meta package to ease installation of Z-Push through the Univention Appcenter.
