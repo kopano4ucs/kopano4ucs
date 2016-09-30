@@ -27,10 +27,14 @@ function migratedir() {
 		ucr set "$registry"="$directory"
 	fi
 
-	if [ $olddir == "false" ]; then
-		rsync -avP $(basename $directory) "$directory"
+	if [ "$olddir" == "false" ]; then
+		if [ -d "$olddir" ]; then
+			rsync -avP /var/lib/zarafa/$(basename $directory) "$directory"
+		fi
 	fi
-	chown -R kopano:kopano "$directory"
+	if [ -d "$directory" ]; then
+		chown -R kopano:kopano "$directory"
+	fi
 }
 
 
