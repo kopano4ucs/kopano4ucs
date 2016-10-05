@@ -29,7 +29,7 @@ function migratedir() {
 
 	if [ "$olddir" == "false" ]; then
 		if [ -d "$olddir" ]; then
-			rsync -avP /var/lib/zarafa/$(basename $directory) "$directory"
+			rsync -avP --remove-source-files /var/lib/zarafa/$(basename $directory) "$directory"
 		fi
 	fi
 	if [ -d "$directory" ]; then
