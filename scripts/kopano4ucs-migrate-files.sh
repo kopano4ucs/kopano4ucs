@@ -6,7 +6,7 @@ if [ -e /etc/mapi/zarafa.inf ]; then
 fi
 
 # check if /var/lib/zarafa is a mount. if so keep everything there
-if [ ! -z $(mount | grep /var/lib/zarafa) ]; then
+if [ ! -z "$(mount | grep /var/lib/zarafa)" ]; then
 	echo "/var/lib/zarafa is a mount, going to reuse it"
 	basedirectory=/var/lib/zarafa
 	olddir=true
