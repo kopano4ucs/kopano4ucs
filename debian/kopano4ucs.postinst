@@ -99,7 +99,9 @@ univention-config-registry set \
 	kopano/cfg/server/server_ssl_ciphers?'ALL:!LOW:!SSLv2:!EXP:!aNULL' \
 	kopano/cfg/server/server_ssl_prefer_server_ciphers?'no' \
 	kopano/cfg/server/server_name="$hostname" \
-	kopano/cfg/server/local_admin_users?'root kopano'
+	kopano/cfg/server/local_admin_users?'root kopano' \
+	kopano/cfg/server/run_as_user=kopano \
+	kopano/cfg/server/run_as_group=kopano
 
 eval "$(univention-config-registry shell)"
 # Ensure these attributes are always present in the UCR variable
