@@ -178,24 +178,6 @@ if [ ! -e "$mysqlPasswordFile" ]; then
 	ucr set kopano/cfg/server/mysql_password="$kopano_cfg_server_mysql_password"
 fi
 
-# Set correct permissions for conf and socket files
-owner=$(ucr get kopano/cfg/server/run_as_user)
-group=$(ucr get kopano/cfg/server/run_as_group)
-
-chown -R ${owner}:${group} /etc/kopano
-chown -R ${owner}:${group} /var/lib/kopano
-
-if ! dpkg-statoverride --list /etc/kopano/ldap.cfg; then
-	dpkg-statoverride --quiet --force --update --add ${owner} ${group} 660 /etc/kopano/ldap.cfg
-fi
-if ! dpkg-statoverride --list /etc/kopano/server.cfg; then
-	dpkg-statoverride --quiet --force --update --add ${owner} ${group} 660 /etc/kopano/server.cfg
-fi
-if [ -e /etc/kopano/sslkeys ]; then
-	chown root:'DC Backup Hosts' /etc/kopano/sslkeys
-	chmod 775 /etc/kopano/sslkeys
-fi
-
 # join script
 call_joinscript 70kopano4ucs.inst
 
