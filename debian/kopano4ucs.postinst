@@ -68,20 +68,14 @@ univention-config-registry set \
 	kopano/cfg/gateway/pop3s_enable?'yes' \
 	kopano/cfg/gateway/imaps_enable?'yes' \
 	kopano/cfg/gateway/ssl_private_key_file?'/etc/kopano/ssl/private.key' \
-	kopano/cfg/gateway/ssl_certificate_file?'/etc/kopano/ssl/cert.pem' \
-	kopano/cfg/gateway/ssl_protocols?'!SSLv2' \
-	kopano/cfg/gateway/ssl_ciphers?'ALL:!LOW:!SSLv2:!EXP:!aNULL' \
-	kopano/cfg/gateway/ssl_prefer_server_ciphers?'no'
+	kopano/cfg/gateway/ssl_certificate_file?'/etc/kopano/ssl/cert.pem'
 
 # ical
 univention-config-registry set \
 	kopano/cfg/ical/icals_enable?'yes' \
 	kopano/cfg/ical/server_timezone?'@&@/etc/timezone@&@' \
 	kopano/cfg/ical/ssl_private_key_file?'/etc/kopano/ssl/private.key' \
-	kopano/cfg/ical/ssl_certificate_file?'/etc/kopano/ssl/cert.pem' \
-	kopano/cfg/ical/ssl_protocols?'!SSLv2' \
-	kopano/cfg/ical/ssl_ciphers?'ALL:!LOW:!SSLv2:!EXP:!aNULL' \
-	kopano/cfg/ical/ssl_prefer_server_ciphers?'no'
+	kopano/cfg/ical/ssl_certificate_file?'/etc/kopano/ssl/cert.pem'
 
 # server
 univention-config-registry set \
@@ -95,9 +89,6 @@ univention-config-registry set \
 	kopano/cfg/server/server_ssl_enabled?'yes' \
 	kopano/cfg/server/user_plugin?'ldap' \
 	kopano/cfg/server/sync_gab_realtime?'no' \
-	kopano/cfg/server/server_ssl_protocols?'!SSLv2' \
-	kopano/cfg/server/server_ssl_ciphers?'ALL:!LOW:!SSLv2:!EXP:!aNULL' \
-	kopano/cfg/server/server_ssl_prefer_server_ciphers?'no' \
 	kopano/cfg/server/server_name="$hostname" \
 	kopano/cfg/server/local_admin_users?'root kopano' \
 	kopano/cfg/server/run_as_user=kopano \
