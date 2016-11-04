@@ -130,6 +130,7 @@ Package: zarafa4ucs-z-push
 Architecture: all
 Depends: ${misc:Depends},
  z-push-kopano,
+ z-push-kopano-gabsync,
  z-push-config-apache
 Conflicts: d-push,
  z-push
