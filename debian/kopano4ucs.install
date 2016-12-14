@@ -4,5 +4,5 @@
 71kopano4ucs-uninstall.uinst usr/lib/univention-uninstall/
 server_password_change.d/70kopano usr/lib/univention-server/server_password_change.d/
 listener/kopano.py usr/lib/univention-directory-listener/system/
-scripts/* usr/share/kopano4ucs
+scripts/kopano4ucs-update-configs usr/share/kopano4ucs
 lib/*.sh usr/share/univention-lib/
