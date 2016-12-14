@@ -138,3 +138,12 @@ Replaces: d-push,
  z-push
 Description: Meta package for Z-Push installation
  Meta package to ease installation of Z-Push through the Univention Appcenter.
+
+Package: kopano4ucs-migrate-zarafa
+Architecture: all
+Pre-Depends: univention-config
+Depends: ${misc:Depends},
+ shell-univention-lib,
+ kopano4ucs-lib
+Description:
+ Helper package that detects and migrates settings and data of a former Zarafa installation (will not migrate WebMeetings settings).
