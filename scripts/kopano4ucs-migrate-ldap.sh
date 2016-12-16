@@ -7,7 +7,9 @@ LDAP_PASSWD_FILE="/etc/ldap.secret"
 LDAP_LDIF="/tmp/zarafa2kopano.ldif"
 
 cleanup (){
-	[ -e /tmp/zarafa2kopano.passwd ] && rm /tmp/zarafa2kopano.passwd
+	if [ -e /tmp/zarafa2kopano.passwd ]; then
+		rm /tmp/zarafa2kopano.passwd
+	fi
 }
 
 if [ ! -e $LDAP_PASSWD_FILE ]; then
