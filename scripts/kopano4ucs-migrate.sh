@@ -22,6 +22,8 @@ done
 
 migrationlog=/var/log/kopano/kopano4ucs-migrate.log
 
+echo "All actions done by the next steps are logged to $migrationlog"
+
 echo "------ldap-----" >> $migrationlog
 bash -x /usr/share/kopano4ucs/kopano4ucs-migrate-ldap.sh 2>&1 | tee -a $migrationlog ; test ${PIPESTATUS[0]} -eq 0 || { echo "Something went wrong, please check your logs.";  exit 1; }
 echo "-----ucr-----" >> $migrationlog
