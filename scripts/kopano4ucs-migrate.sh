@@ -37,7 +37,7 @@ echo "Kopano-server has been automatically started, please check if all data has
 echo "Once the migration has been verified please remember to deactivate user_safe_mode and start the remaining services:"
 echo "ucr set kopano/cfg/server/user_safe_mode=no"
 echo "for kop in /etc/init.d/kopano-*; do
-	$kop start
+	'$kop' start
 done"
 echo "service postfix start"
 echo "service fetchmail start"
