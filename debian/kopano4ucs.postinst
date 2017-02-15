@@ -144,6 +144,12 @@ univention-config-registry set \
 	kopano/default/KOPANO_USERSCRIPT_LOCALE?"$(ucr get locale/default | sed -e 's/[.:].*/.UTF-8/')" \
 	kopano/default/KOPANO_LOCALE?"$(ucr get locale/default | sed -e 's/[.:].*/.UTF-8/')"
 
+# initialise Kopano repository variables
+univention-config-registry set \
+	kopano/repo/kopano-core?'false' \
+	kopano/repo/username?'your-kopano-portal-username' \
+	kopano/repo/password?'your-kopano-portal-password'
+
 # disable spamassassin's cronjob for learning cyrus mails (no cyrus installed on kopano machines)
 if [ "$1" = "configure" -a -z "$2" ]; then
 	ucr set mail/antispam/learndaily=no

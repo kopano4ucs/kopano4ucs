@@ -4,3 +4,7 @@ Description[en]=If this option is set to true, new users with a valid email addr
 Type=bool
 Categories=kopano
 
+[kopano/repo/kopano-core]
+description[en]=Should updates be also installed over the official Kopano repository?
+type=bool
+Categories=kopano

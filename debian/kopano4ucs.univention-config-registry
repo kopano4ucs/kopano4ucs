@@ -1,0 +1,5 @@
+Type: file
+File: etc/apt/sources.list.d/kopano-core.list
+Variables: kopano/repo/kopano-core
+Variables: kopano/repo/username
+Variables: kopano/repo/password
