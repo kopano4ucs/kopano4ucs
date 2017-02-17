@@ -1,9 +1,15 @@
 #!/bin/bash
 
 # clean up files not removed by uninstalling zarafa app
-if [ -e /etc/mapi/zarafa.inf ]; then
-	rm /etc/mapi/zarafa.inf
-fi
+function cleanfile() {
+	local toremove="$1"
+	if [ -e $toremove ]; then
+		rm $toremove
+	fi
+}
+
+cleanfile /etc/mapi/zarafa.inf
+cleanfile /etc/php5/mods-available/zarafa.ini
 
 # check if /var/lib/zarafa is a mount. if so keep everything there
 if [ ! -z "$(mount | grep /var/lib/zarafa)" ]; then
