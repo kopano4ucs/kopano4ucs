@@ -7,4 +7,3 @@ listener/kopano.py usr/lib/univention-directory-listener/system/
 scripts/kopano4ucs-update-configs usr/share/kopano4ucs
 lib/*.sh usr/share/univention-lib/
 kopano-http-repository.key /usr/share/keyrings/
-kopano-core-preferences /etc/apt/preferences.d/kopano-core
