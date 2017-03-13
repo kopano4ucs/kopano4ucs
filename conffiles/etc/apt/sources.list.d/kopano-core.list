@@ -4,8 +4,14 @@
 if configRegistry.is_true('kopano/repo/kopano-core'):
         username = configRegistry.get('kopano/repo/username', 'your-kopano-portal-username')
         password = configRegistry.get('kopano/repo/password', 'your-kopano-portal-password')
-        print 'deb https://%s:%s@download.kopano.io/supported/core:/final/Univention_4.0/ /' % (username,password)
+        if configRegistry.get('version/version') == 4.1:
+                print 'deb https://%s:%s@download.kopano.io/supported/core:/final/Univention_4.0/ /' % (username,password)
+        elif configRegistry.get('version/version') == 4.2:
+                print 'deb https://%s:%s@download.kopano.io/supported/core:/final/Debian_8.0/ /' % (username,password)
+        else:
+                print '# unsupported version'
+
 else:
-	print '# This feature is disabled and can be enabled with:'
-	print '#   univention-config-registry set kopano/repo/kopano-core=true'
+        print '# This feature is disabled and can be enabled with:'
+        print '#   univention-config-registry set kopano/repo/kopano-core=true'
 @!@
