@@ -56,7 +56,7 @@ fi
 
 # copy OpenLDAP example as new ldap.cfg during first package installation
 if [ "$1" = "configure" -a -z "$2" -a ! -e "/etc/kopano/ldap.cfg" ] ; then
-	# check if installes on Kopano 8.1 or earlier. else use the new default configuration
+	# check if installed on Kopano 8.1 or earlier. else use the new default configuration
 	if [ -e /etc/kopano/ldap.openldap.cfg ]; then
 		cp "/etc/kopano/ldap.openldap.cfg" "/etc/kopano/ldap.cfg"
 	else
