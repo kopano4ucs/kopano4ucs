@@ -61,6 +61,7 @@ if [ "$1" = "configure" -a -z "$2" -a ! -e "/etc/kopano/ldap.cfg" ] ; then
 		cp "/etc/kopano/ldap.openldap.cfg" "/etc/kopano/ldap.cfg"
 	else
 		cp "/usr/share/doc/kopano/example-config/ldap.cfg" "/etc/kopano/ldap.cfg"
+	fi
 fi
 
 ##
