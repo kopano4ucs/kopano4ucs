@@ -32,7 +32,7 @@
 
 eval "$(univention-config-registry shell)"
 
-if [ "$1" = "postchange" -o "$1" = "nochange" ] ; then
+if [ "$1" = "postchange" ] ; then
 
 	# copy machine.secret
 	dest="/etc/kopano-ldap.secret"
