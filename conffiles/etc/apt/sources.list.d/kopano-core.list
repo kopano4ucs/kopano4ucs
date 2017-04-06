@@ -2,8 +2,8 @@
 
 @!@
 if configRegistry.is_true('kopano/repo/kopano-core'):
-        username = configRegistry.get('kopano/repo/username', 'your-kopano-portal-username')
-        password = configRegistry.get('kopano/repo/password', 'your-kopano-portal-password')
+        username = configRegistry.get('kopano/repo/username', 'serial')
+        password = configRegistry.get('kopano/repo/password', 'your-kopano-subscription-key')
         if configRegistry.get('version/version') == "4.1":
                 print 'deb https://%s:%s@download.kopano.io/supported/core:/final/Univention_4.0/ /' % (username,password)
         elif configRegistry.get('version/version') == "4.2":
@@ -14,4 +14,5 @@ if configRegistry.is_true('kopano/repo/kopano-core'):
 else:
         print '# This feature is disabled and can be enabled with:'
         print '#   univention-config-registry set kopano/repo/kopano-core=true'
+	print '# Read more at: https://wiki.z-hub.io/display/K4U/Updating+Kopano+packages+directly+from+the+Kopano+download+server'
 @!@

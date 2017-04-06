@@ -5,6 +5,6 @@ Type=bool
 Categories=kopano
 
 [kopano/repo/kopano-core]
-description[en]=Should updates be also installed over the official Kopano repository?
+description[en]=Should updates be installed through the official Kopano repository?
 type=bool
 Categories=kopano
