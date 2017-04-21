@@ -3,3 +3,4 @@
 0010-2: scripts/db-upgrade-addressbook-entryids.pl
 0010-2: scripts/db-upgrade-addressbook-entryids-delegate.pl
 0004-12: conffiles/etc/apt/sources.list.d/kopano-core.list
+0004-12: conffiles/etc/apt/sources.list.d/kopano-webapp.list
