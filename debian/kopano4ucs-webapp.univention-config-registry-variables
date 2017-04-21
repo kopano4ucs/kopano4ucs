@@ -1,0 +1,9 @@
+[kopano/repo/kopano-webapp]
+description[en]=Should updates for Webapp and its plugins be installed through the official Kopano repository?
+type=bool
+Categories=kopano
+
+[kopano/repo/kopano-webapp-releasetype]
+description[en]=Specifies the release type. Can either be final, pre-final, or master (for nightly builds). 
+type=text
+Categories=kopano
