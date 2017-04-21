@@ -52,7 +52,7 @@ find_first_kopano_server ()
 
 kopano_server=$(find_first_kopano_server)
 if [ $kopano_server = $hostname ]; then
-	ucr set kopano/webapp/config/DEFAULT_SERVER="\"default:\""
+	ucr set kopano/webapp/config/DEFAULT_SERVER=\"default:\"
 elif [ -n $kopano_server ]; then
 	ucr set kopano/webapp/config/DEFAULT_SERVER=\"https://${kopano_server}.${domainname}:237/kopano\"
 else
