@@ -60,7 +60,7 @@ else
 fi
 
 # Create TXT record, used by Kopano Deskapps to autoconfigure their settings
-udm dns/forward_zone modify \
+udm dns/forward_zone modify "$@" \
 	--dn zoneName="$domainname",cn=dns,"$ldap_base" \
 	--append txt="kdiscover https://$hostname.$domainname/webapp/" || die
 
