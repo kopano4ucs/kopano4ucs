@@ -6,9 +6,29 @@ if configRegistry.is_true('kopano/repo/kopano-webapp'):
         password = configRegistry.get('kopano/repo/password', 'your-kopano-subscription-key')
         releasetype = configRegistry.get('kopano/repo/kopano-webapp-releasetype', 'final')
         if configRegistry.get('version/version') == "4.1":
-                print 'deb https://%s:%s@download.kopano.io/supported/webapp:/%s/Univention_4.0/ /' % (username,password,releasetype)
+		if releasetype == "final":
+	                print 'deb https://%s:%s@download.kopano.io/supported/webapp:/final/Univention_4.0/ /' % (username,password)
+		elif releasetype == "pre-final":
+	                print 'deb https://%s:%s@download.kopano.io/supported/webapp:/final/Univention_4.0/ /' % (username,password)
+	                print 'deb https://%s:%s@download.kopano.io/supported/webapp:/pre-final/Univention_4.0/ /' % (username,password)
+		elif releasetype == "master":
+	                print 'deb https://%s:%s@download.kopano.io/supported/webapp:/final/Univention_4.0/ /' % (username,password)
+	                print 'deb https://%s:%s@download.kopano.io/supported/webapp:/pre-final/Univention_4.0/ /' % (username,password)
+	                print 'deb https://%s:%s@download.kopano.io/supported/webapp:/master/Univention_4.0/ /' % (username,password)
+		else:
+			print '# unknown release type'
         elif configRegistry.get('version/version') == "4.2":
-                print 'deb https://%s:%s@download.kopano.io/supported/webapp:/%s/Debian_8.0/ /' % (username,password,releasetype)
+                if releasetype == "final":
+                        print 'deb https://%s:%s@download.kopano.io/supported/webapp:/final/Debian_8.0/ /' % (username,password)
+                elif releasetype == "pre-final":
+                        print 'deb https://%s:%s@download.kopano.io/supported/webapp:/final/Debian_8.0/ /' % (username,password)
+                        print 'deb https://%s:%s@download.kopano.io/supported/webapp:/pre-final/Debian_8.0/ /' % (username,password)
+                elif releasetype == "master":
+                        print 'deb https://%s:%s@download.kopano.io/supported/webapp:/final/Debian_8.0/ /' % (username,password)
+                        print 'deb https://%s:%s@download.kopano.io/supported/webapp:/pre-final/Debian_8.0/ /' % (username,password)
+                        print 'deb https://%s:%s@download.kopano.io/supported/webapp:/master/Debian_8.0/ /' % (username,password)
+                else:
+                        print '# unknown release type'
         else:
                 print '# unsupported version'
 
