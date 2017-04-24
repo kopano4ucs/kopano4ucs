@@ -47,7 +47,7 @@ ucs_addServiceToLocalhost "Kopano-WebApp" "$@"
 # we can take the first kopano server in the domain and use that
 find_first_kopano_server ()
 {
-	univention-ldapsearch -xLLL univentionService=Kopano cn | grep "^cn: " | sed s/"^cn: "// | head -n1
+	univention-ldapsearch -LLL univentionService=Kopano cn | grep "^cn: " | sed s/"^cn: "// | head -n1
 }
 
 kopano_server=$(find_first_kopano_server)
