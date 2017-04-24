@@ -1,9 +1,39 @@
 [kopano/repo/kopano-webapp]
-description[en]=Should updates for Webapp and its plugins be installed through the official Kopano repository?
+description[en]=Should updates for Kopano WebApp and its plugins be installed through the official Kopano repository?
 type=bool
 Categories=kopano
 
 [kopano/repo/kopano-webapp-releasetype]
-description[en]=Specifies the release type. Can either be final, pre-final, or master (for nightly builds). 
+description[en]=Specifies the release type. Can either be final, pre-final, or master (for nightly builds).
+type=text
+Categories=kopano
+
+[kopano/repo/kopano-files]
+description[en]=Should updates for Kopano Files and its plugins be installed through the official Kopano repository?
+type=bool
+Categories=kopano
+
+[kopano/repo/kopano-files-releasetype]
+description[en]=Specifies the release type. Can either be final, pre-final, or master (for nightly builds).
+type=text
+Categories=kopano
+
+[kopano/repo/kopano-mdm]
+description[en]=Should updates for Kopüano MDM be installed through the official Kopano repository?
+type=bool
+Categories=kopano
+
+[kopano/repo/kopano-mdm-releasetype]
+description[en]=Specifies the release type. Can either be final, pre-final, or master (for nightly builds).
+type=text
+Categories=kopano
+
+[kopano/repo/kopano-smime]
+description[en]=Should updates for Kopano S/Mime be installed through the official Kopano repository?
+type=bool
+Categories=kopano
+
+[kopano/repo/kopano-smime-releasetype]
+description[en]=Specifies the release type. Can either be final, pre-final, or master (for nightly builds).
 type=text
 Categories=kopano

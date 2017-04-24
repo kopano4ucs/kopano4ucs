@@ -17,3 +17,57 @@ else:
         print '#   univention-config-registry set kopano/repo/kopano-webapp=true'
 	print '# Read more at: https://wiki.z-hub.io/display/K4U/Updating+Kopano+packages+directly+from+the+Kopano+download+server'
 @!@
+
+@!@
+if configRegistry.is_true('kopano/repo/kopano-files'):
+        username = configRegistry.get('kopano/repo/username', 'serial')
+        password = configRegistry.get('kopano/repo/password', 'your-kopano-subscription-key')
+        releasetype = configRegistry.get('kopano/repo/kopano-files-releasetype', 'final')
+        if configRegistry.get('version/version') == "4.1":
+                print 'deb https://%s:%s@download.kopano.io/supported/files:/%s/Univention_4.0/ /' % (username,password,releasetype)
+        elif configRegistry.get('version/version') == "4.2":
+                print 'deb https://%s:%s@download.kopano.io/supported/files:/%s/Debian_8.0/ /' % (username,password,releasetype)
+        else:
+                print '# unsupported version'
+
+else:
+        print '# This feature is disabled and can be enabled with:'
+        print '#   univention-config-registry set kopano/repo/kopano-files=true'
+	print '# Read more at: https://wiki.z-hub.io/display/K4U/Updating+Kopano+packages+directly+from+the+Kopano+download+server'
+@!@
+
+@!@
+if configRegistry.is_true('kopano/repo/kopano-mdm'):
+        username = configRegistry.get('kopano/repo/username', 'serial')
+        password = configRegistry.get('kopano/repo/password', 'your-kopano-subscription-key')
+        releasetype = configRegistry.get('kopano/repo/kopano-mdm-releasetype', 'final')
+        if configRegistry.get('version/version') == "4.1":
+                print 'deb https://%s:%s@download.kopano.io/supported/mdm:/%s/Univention_4.0/ /' % (username,password,releasetype)
+        elif configRegistry.get('version/version') == "4.2":
+                print 'deb https://%s:%s@download.kopano.io/supported/mdm:/%s/Debian_8.0/ /' % (username,password,releasetype)
+        else:
+                print '# unsupported version'
+
+else:
+        print '# This feature is disabled and can be enabled with:'
+        print '#   univention-config-registry set kopano/repo/kopano-mdm=true'
+	print '# Read more at: https://wiki.z-hub.io/display/K4U/Updating+Kopano+packages+directly+from+the+Kopano+download+server'
+@!@
+
+@!@
+if configRegistry.is_true('kopano/repo/kopano-smime'):
+        username = configRegistry.get('kopano/repo/username', 'serial')
+        password = configRegistry.get('kopano/repo/password', 'your-kopano-subscription-key')
+        releasetype = configRegistry.get('kopano/repo/kopano-smime-releasetype', 'final')
+        if configRegistry.get('version/version') == "4.1":
+                print 'deb https://%s:%s@download.kopano.io/supported/smime:/%s/Univention_4.0/ /' % (username,password,releasetype)
+        elif configRegistry.get('version/version') == "4.2":
+                print 'deb https://%s:%s@download.kopano.io/supported/smime:/%s/Debian_8.0/ /' % (username,password,releasetype)
+        else:
+                print '# unsupported version'
+
+else:
+        print '# This feature is disabled and can be enabled with:'
+        print '#   univention-config-registry set kopano/repo/kopano-webapp=true'
+	print '# Read more at: https://wiki.z-hub.io/display/K4U/Updating+Kopano+packages+directly+from+the+Kopano+download+server'
+@!@

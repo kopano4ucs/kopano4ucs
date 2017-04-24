@@ -2,5 +2,11 @@ Type: file
 File: etc/apt/sources.list.d/kopano-webapp.list
 Variables: kopano/repo/kopano-webapp
 Variables: kopano/repo/kopano-webapp-releasetype
+Variables: kopano/repo/kopano-files
+Variables: kopano/repo/kopano-files-releasetype
+Variables: kopano/repo/kopano-mdm
+Variables: kopano/repo/kopano-mdm-releasetype
+Variables: kopano/repo/kopano-smime
+Variables: kopano/repo/kopano-smime-releasetype
 Variables: kopano/repo/username
 Variables: kopano/repo/password
