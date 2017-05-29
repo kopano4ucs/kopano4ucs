@@ -8,8 +8,8 @@ if configRegistry.is_true('kopano/repo/kopano-core'):
                 print 'deb https://%s:%s@download.kopano.io/supported/core:/final/Univention_4.0/ /' % (username,password)
                 print 'deb https://%s:%s@download.kopano.io/supported/archiver:/final/Univention_4.0/ /' % (username,password)
         elif configRegistry.get('version/version') == "4.2":
-                print 'deb https://%s:%s@download.kopano.io/supported/core:/final/Debian_8.0/ /' % (username,password)
-                print 'deb https://%s:%s@download.kopano.io/supported/archiver:/final/Debian_8.0/ /' % (username,password)
+                print 'deb https://%s:%s@download.kopano.io/supported/core:/final/Univention_4.2/ /' % (username,password)
+                print 'deb https://%s:%s@download.kopano.io/supported/archiver:/final/Univention_4.2/ /' % (username,password)
         else:
                 print '# unsupported version'
 
