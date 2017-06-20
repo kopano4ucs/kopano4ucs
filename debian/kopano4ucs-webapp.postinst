@@ -50,6 +50,11 @@ if ! dpkg-statoverride --list /var/lib/kopano-webapp/tmp; then
 	dpkg-statoverride --quiet --force --update --add www-data root 755 /var/lib/kopano-webapp/tmp
 fi
 
+# workaround for wrongly set directory owner in <=2.0.0.90-13.1
+if [ -d /var/lib/kopano-webapp/plugin_files ]; then
+	chown www-data:www-data /var/lib/kopano-webapp/plugin_files
+fi
+
 call_joinscript 71kopano4ucs-webapp.inst
 
 # reload apache
