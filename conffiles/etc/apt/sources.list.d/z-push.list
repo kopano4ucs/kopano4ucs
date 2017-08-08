@@ -1,0 +1,35 @@
+@%@UCRWARNING=# @%@
+
+@!@
+map_ucsversion_kopano_repo = {'4.2': 'Univention_4.2',
+							  '4.1': 'Univention_4.0'}
+
+repo_component_name = None
+if configRegistry.get('version/version', 'invalid') in map_ucsversion_kopano_repo:
+	repo_component_name = map_ucsversion_kopano_repo['%s' % configRegistry.get('version/version')]
+else:
+	print "# UCS Version %s is incompatible with any available kopano repository, exiting" % configRegistry.get('version/version')
+	exit()
+
+components = ['z-push-kopano']
+
+for component in components:
+	is_component_repo_activated = configRegistry.is_true('kopano/repo/%s' % component, False)
+	releasetype = configRegistry.get('kopano/repo/%s-releasetype' % component, 'final')
+
+	if is_component_repo_activated:
+		print ''
+
+		if releasetype == "final":
+	                print 'deb http://repo.z-hub.io/z-push:/final/%s /' % (repo_component_name)
+		elif releasetype == "pre-final":
+	                print 'deb http://repo.z-hub.io/z-push:/pre-final/%s /' % (repo_component_name)
+		elif releasetype == "master":
+	                print 'deb http://repo.z-hub.io/z-push:/develop/%s /' % (repo_component_name)
+
+	else:
+		print ''
+		print '# This component feature is disabled and can be enabled with:'
+		print '#   univention-config-registry set kopano/repo/%s=true' % component
+		print '# Read more at: https://wiki.z-hub.io/display/K4U/Updating+Kopano+packages+directly+from+the+Kopano+download+server'
+@!@

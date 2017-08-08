@@ -1,0 +1,4 @@
+Type: file
+File: etc/apt/sources.list.d/z-push.list
+Variables: kopano/repo/z-push-kopano
+Variables: kopano/repo/z-push-kopano-releasetype
