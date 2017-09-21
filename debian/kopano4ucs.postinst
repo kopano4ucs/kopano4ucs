@@ -124,7 +124,10 @@ univention-config-registry set \
 	kopano/cfg/ldap/ldap_nonactive_attribute?'kopanoSharedStoreOnly' \
 	kopano/cfg/ldap/ldap_user_type_attribute_value?'kopano-user' \
 	kopano/cfg/ldap/ldap_user_unique_attribute?'entryUUID' \
-	kopano/cfg/ldap/ldap_sendas_relation_attribute?'uidNumber'
+	kopano/cfg/ldap/ldap_sendas_relation_attribute?'uidNumber' \
+	kopano/cfg/ldap/ldap_groupmembers_attribute_type?'dn' \
+	kopano/cfg/ldap/ldap_groupmembers_attribute?'uniqueMember'
+	kopano/cfg/ldap/ldap_groupmembers_relation_attribute?''
 
 # ldap mapping (addressbook)
 univention-config-registry set \
