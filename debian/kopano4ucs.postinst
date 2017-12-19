@@ -129,6 +129,12 @@ univention-config-registry set \
 	kopano/cfg/ldap/ldap_groupmembers_attribute?'uniqueMember'
 	kopano/cfg/ldap/ldap_groupmembers_relation_attribute?''
 
+# touch propmap so that we are sure it exists
+touch /etc/kopano/ldap.propmap.cfg
+
+# include ldap.propmap.cfg in ldap.cfg
+sed -i 's|#!propmap /etc/kopano/ldap.propmap.cfg|!propmap /etc/kopano/ldap.propmap.cfg|' /etc/kopano/ldap.cfg
+
 # ldap mapping (addressbook)
 univention-config-registry set \
 	kopano/cfg/ldap.propmap/0x3A18001E?'departmentNumber' \
