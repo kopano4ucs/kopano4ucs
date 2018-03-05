@@ -109,7 +109,8 @@ Depends: ${misc:Depends},
  kopano-webapp-plugin-spell-en,
  kopano-webapp-plugin-spell-nl,
  kopano-webapp-plugin-titlecounter,
- kopano-webapp-plugin-webappmanual
+ kopano-webapp-plugin-webappmanual,
+ ${dist:Depends}
 Description: Kopano4ucs kopano-webapp integration package for Univention Corporate Server
  Integration package for installation and configuration of the Kopano
  groupware solution WebApp interface on Univention Corporate Server.

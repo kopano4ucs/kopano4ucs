@@ -30,6 +30,11 @@
 # /usr/share/common-licenses/AGPL-3; if not, see
 # <http://www.gnu.org/licenses/>.
 
+# explicitly depend on php7-mapi for ucs 4.3
+ifeq ($(shell grep -q stretch /etc/os-release && echo yes),yes)
+	SUBSTVARS = -Vdist:Depends="php7-mapi"
+endif
+
 override_dh_auto_install:
 	msgfmt -o locale/kopano4ucs.mo locale/kopano4ucs.po
 	msgfmt -o umc/udm-kopano.mo umc/kopano.po
@@ -38,6 +43,9 @@ override_dh_auto_install:
 
 override_dh_auto_test:
 	ucslint
+
+override_dh_gencontrol:
+	dh_gencontrol -- $(SUBSTVARS)
 
 %:
 	dh $@ --with python_support
