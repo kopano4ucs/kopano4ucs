@@ -1,0 +1,3 @@
+#!/bin/bash
+
+ucr commit /etc/apt/sources.list.d/z-push.list
