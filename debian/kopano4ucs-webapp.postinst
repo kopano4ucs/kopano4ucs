@@ -75,4 +75,6 @@ apache_wait_for_pidfile() {
 apache_wait_for_pidfile
 invoke-rc.d apache2 restart
 
+ucr commit /etc/apt/sources.list.d/kopano-webapp.list
+
 exit 0
