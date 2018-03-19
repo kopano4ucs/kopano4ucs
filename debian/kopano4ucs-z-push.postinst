@@ -1,3 +1,7 @@
 #!/bin/bash
 
+#DEBHELPER#
+
 ucr commit /etc/apt/sources.list.d/z-push.list
+
+exit 0
