@@ -99,6 +99,14 @@ univention-config-registry set \
 	kopano/cfg/server/run_as_user=kopano \
 	kopano/cfg/server/run_as_group=kopano
 
+# check if user has set server_ssl_protocols to only !SSLv2 and reset value to default
+# !SSLv2 will result in a failure to start the server on UCS 4.3
+sslsetting=`ucr get kopano/cfg/server/server_ssl_protocols`
+if [ "$sslsetting" == "!SSLv2" ]; then
+	ucr unset kopano/cfg/server/server_ssl_protocols
+fi
+
+
 eval "$(univention-config-registry shell)"
 # Ensure these attributes are always present in the UCR variable
 ATTRS="root kopano"
