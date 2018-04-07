@@ -32,7 +32,7 @@
 
 # explicitly depend on php7-mapi for ucs 4.3
 ifeq ($(shell grep -q stretch /etc/os-release && echo yes),yes)
-	SUBSTVARS = -Vdist:Depends="php7-mapi"
+	SUBSTVARS = -Vdist:Depends="libapache2-mod-php7.0 php7-mapi php-libsmbclient"
 endif
 
 override_dh_auto_install:
