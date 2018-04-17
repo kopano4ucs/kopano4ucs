@@ -51,6 +51,7 @@ chmod 600 /etc/kopano/ssl/server.pem
 
 # add service to my host object
 ucs_addServiceToLocalhost "SMTP" "$@"
+ucs_addServiceToLocalhost "IMAP" "$@"
 ucs_addServiceToLocalhost "Kopano" "$@"
 
 # folder
