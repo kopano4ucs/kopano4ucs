@@ -1,7 +1,7 @@
 @%@UCRWARNING=# @%@
 
 @!@
-map_ucsversion_kopano_repo = {'4.3': 'Debian_9.0',
+map_ucsversion_kopano_repo = {'4.3': 'Univention_4.3',
 							  '4.2': 'Univention_4.2',
 							  '4.1': 'Univention_4.0'}
 
