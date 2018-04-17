@@ -392,6 +392,11 @@ fi
 # kopano-server was just restarted in server_password_change.d/70kopano postchange (Bug #31709, #34011)
 wait_for_kopano_server_startup
 
+# make sure kopano services are enabled in systemd
+for component in kopano-dagent.service kopano-gateway.service kopano-ical.service kopano-monitor.service kopano-search.service kopano-server.service kopano-spooler.service; do
+	systemctl enable $component
+done
+
 # give kopano server some time to settle
 sleep 3
 # create public store if missing
