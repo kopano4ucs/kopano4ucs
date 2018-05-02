@@ -359,7 +359,8 @@ univention-directory-manager settings/usertemplate create "$@" --ignore_exists \
 	--set name="Kopano Account" \
 	--set mailPrimaryAddress="<username>@$domainname" \
 	--set kopano-role="user" \
-	--set unixhome="/home/<username>" || die
+	--set unixhome="/home/<username>" \
+	--set primaryGroup="cn=$(custom_groupname 'Domain Users'),cn=groups,$ldap_base" || die
 
 # create initial mail domain object(s) if missing
 if ! udm mail/domain list "$@" | grep -q "^DN:" ; then
