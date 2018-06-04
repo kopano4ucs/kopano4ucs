@@ -30,7 +30,7 @@
 # /usr/share/common-licenses/AGPL-3; if not, see
 # <http://www.gnu.org/licenses/>.
 
-VERSION=2
+VERSION=3
 
 . /usr/share/univention-join/joinscripthelper.lib
 . /usr/share/univention-lib/all.sh
@@ -63,6 +63,19 @@ fi
 udm dns/forward_zone modify "$@" \
 	--dn zoneName="$domainname",cn=dns,"$ldap_base" \
 	--append txt="kdiscover https://$hostname.$domainname/webapp/" || die
+
+# make sure that php7 is used on UCS 4.3
+ucsversion=$(ucr get version/version)
+if [ $(echo "$ucsversion >= 4.3" | bc -l) -eq 1 ]; then
+	# disable php5 module on apache, enable the php7 one instead
+	a2dismod php5
+	a2enmod php7.0
+	# also make sure the php-mapi module is loaded
+	phpenmod kopano
+	php5dismod kopano
+	# restart apache to apply changes
+	systemctl restart apache2.service
+fi
 
 joinscript_save_current_version
 
