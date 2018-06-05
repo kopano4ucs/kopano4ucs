@@ -79,7 +79,7 @@ def get_line(option, ucrkey, configRegistry, lineformat):
 
 def find_last(list, element):
 	for index, el in enumerate(reversed(list)):
-		if el == element:
+		if el.strip() == element:
 			return len(list) - 1 - index
 	return None
 
