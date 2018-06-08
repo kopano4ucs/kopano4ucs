@@ -78,6 +78,11 @@ univention-config-registry set \
 	kopano/cfg/ldapms/ldap_server_search_filter?'' \
 	kopano/cfg/ldapms/ldap_server_unique_attribute?'cn'
 
+# add archiver mappings to propmap
+univention-config-registry set \
+	kopano/cfg/ldap.propmap/0x67C4101E?'kopanoUserArchiveServers' \
+	kopano/cfg/ldap.propmap/0x67C5101E?'kopanoUserArchiveCouplings'
+
 if [ ! -e "/etc/kopano/admin.cfg" ]; then
 	touch /etc/kopano/admin.cfg
 fi
