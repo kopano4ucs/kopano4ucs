@@ -39,7 +39,11 @@ eval "$(univention-config-registry shell)"
 
 # copy OpenLDAP multiserver example as new ldapms.cfg during first package installation
 if [ "$1" = "configure" -a -z "$2" -a ! -e "/etc/kopano/ldapms.cfg" ] ; then
-	gunzip -c "/usr/share/doc/kopano/example-config/ldapms.openldap.cfg.gz" > "/etc/kopano/ldapms.cfg"
+	if [ -e "/usr/share/doc/kopano/example-config/ldapms.openldap.cfg.gz" ]; then
+		gunzip -c "/usr/share/doc/kopano/example-config/ldapms.openldap.cfg.gz" > "/etc/kopano/ldapms.cfg"
+	else
+		cp "/etc/kopano/ldap.cfg" "/etc/kopano/ldapms.cfg"
+	fi
 	chown kopano:kopano /etc/kopano/ldapms.cfg
 fi
 
