@@ -170,8 +170,8 @@ univention-config-registry set \
 # initialise Kopano repository variables
 univention-config-registry set \
 	kopano/repo/kopano-core?'false' \
-	kopano/repo/username?'your-kopano-portal-username' \
-	kopano/repo/password?'your-kopano-portal-password'
+	kopano/repo/username?'serial' \
+	kopano/repo/password?'YOUR-KOPANO-SERIAL'
 
 # disable spamassassin's cronjob for learning cyrus mails (no cyrus installed on kopano machines)
 if [ "$1" = "configure" -a -z "$2" ]; then
