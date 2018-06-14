@@ -164,7 +164,8 @@ univention-config-registry set \
 # defaults
 univention-config-registry set \
 	kopano/default/KOPANO_USERSCRIPT_LOCALE?"$(ucr get locale/default | sed -e 's/[.:].*/.UTF-8/')" \
-	kopano/default/KOPANO_LOCALE?"$(ucr get locale/default | sed -e 's/[.:].*/.UTF-8/')"
+	kopano/default/LC_CTYPE?"$(ucr get locale/default | sed -e 's/[.:].*/.UTF-8/')" \
+	kopano/default/LC_TIME?"$(ucr get locale/default | sed -e 's/[.:].*/.UTF-8/')"
 
 # initialise Kopano repository variables
 univention-config-registry set \
