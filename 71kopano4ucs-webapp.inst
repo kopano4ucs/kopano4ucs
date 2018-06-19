@@ -79,9 +79,9 @@ fi
 
 # Up-to-date webapp versions are by default only available via https. Update the portal_entry and remove http links:
 if [ "$(ucr get kopano/webapp/modify-portal-in-joinscript)" != "no" ]; then
-	for link in $(udm settings/portal_entry "$@" list --filter=cn=kopano-webapp | grep "link: http://" | cut -d" " -f 4);
+	for link in $(udm settings/portal_entry list "$@" --filter=cn=kopano-webapp | grep "link: http://" | cut -d" " -f 4);
 	do
-		udm settings/portal_entry "$@" modify --dn=cn=kopano-webapp,cn=portal,cn=univention,$(ucr get ldap/base) --remove=link="$link"
+		udm settings/portal_entry modify "$@" --dn=cn=kopano-webapp,cn=portal,cn=univention,$(ucr get ldap/base) --remove=link="$link"
 	done
 fi
 

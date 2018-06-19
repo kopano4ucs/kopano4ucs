@@ -93,6 +93,7 @@ Description: Kopano4ucs multiserver integration package for UCS
 Package: kopano4ucs-webapp
 Architecture: all
 Depends: ${misc:Depends},
+ libapache2-mod-php7.0,
  kopano-webapp,
  shell-univention-lib,
  kopano4ucs-lib,
