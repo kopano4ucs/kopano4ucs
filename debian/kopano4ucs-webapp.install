@@ -1,1 +1,4 @@
 71kopano4ucs-webapp.inst usr/lib/univention-install
+webapp/theme.json usr/share/kopano-webapp/plugins/univention
+webapp/univention-bg.png usr/share/kopano-webapp/plugins/univention/img
+webapp/Univ_Logo_pos_600x146.png usr/share/kopano-webapp/plugins/univention/img

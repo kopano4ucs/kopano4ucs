@@ -85,6 +85,10 @@ if [ "$(ucr get kopano/webapp/modify-portal-in-joinscript)" != "no" ]; then
 	done
 fi
 
+# Univention-ise Kopano WebApp
+ucr set kopano/webapp/config/THEME?'"univention"'
+ucr set kopano/webapp/config/WEBAPP_TITLE?'"Kopano WebApp @ UCS"'
+
 joinscript_save_current_version
 
 exit 0
