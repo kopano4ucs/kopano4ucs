@@ -1,4 +1,4 @@
 71kopano4ucs-webapp.inst usr/lib/univention-install
 webapp/KopanoUnivention.png usr/share/kopano-webapp/plugins/univention/img
 webapp/theme.json usr/share/kopano-webapp/plugins/univention
-webapp/background-tile.png usr/share/kopano-webapp/plugins/univention/img
+webapp/univention-bg.png usr/share/kopano-webapp/plugins/univention/img
