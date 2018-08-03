@@ -48,7 +48,10 @@ cp "/etc/univention/ssl/$hostname.$domainname/private.key" /etc/kopano/ssl/
 cat /etc/kopano/ssl/cert.pem /etc/kopano/ssl/private.key > /etc/kopano/ssl/server.pem
 chmod 600 /etc/kopano/ssl/private.key
 chmod 600 /etc/kopano/ssl/server.pem
-chown kopano:kopano /etc/kopano/ssl/{.,cert.pem,private.key,server.pem}
+chown kopano:kopano /etc/kopano/ssl/
+chown kopano:kopano /etc/kopano/ssl/cert.pem
+chown kopano:kopano /etc/kopano/ssl/private.key
+chown kopano:kopano /etc/kopano/ssl/server.pem
 
 # add service to my host object
 ucs_addServiceToLocalhost "SMTP" "$@"
