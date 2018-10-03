@@ -131,8 +131,7 @@ done
 
 # ldap
 univention-config-registry set \
-	kopano/cfg/ldap/ldap_host?'@%@ldap/server/name@%@' \
-	kopano/cfg/ldap/ldap_port?'@%@ldap/server/port@%@' \
+	kopano/cfg/ldap/ldap_uri?'ldap://@%@ldap/server/name@%@:@%@ldap/server/port@%@/' \
 	kopano/cfg/ldap/ldap_search_base?'@%@ldap/base@%@' \
 	kopano/cfg/ldap/ldap_bind_user?'@%@ldap/hostdn@%@' \
 	kopano/cfg/ldap/ldap_bind_passwd?'@&@/etc/kopano-ldap.secret@&@' \
@@ -149,6 +148,11 @@ univention-config-registry set \
 	kopano/cfg/ldap/ldap_groupmembers_attribute_type?'dn' \
 	kopano/cfg/ldap/ldap_groupmembers_attribute?'uniqueMember' \
 	kopano/cfg/ldap/ldap_groupmembers_relation_attribute?''
+
+# unset obsolete ldap configuration
+univention-config-registry unset \
+	kopano/cfg/ldap/ldap_host \
+	kopano/cfg/ldap/ldap_port
 
 # touch propmap so that we are sure it exists
 touch /etc/kopano/ldap.propmap.cfg

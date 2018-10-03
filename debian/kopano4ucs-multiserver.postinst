@@ -53,8 +53,7 @@ fi
 
 # ldapms multiserver
 univention-config-registry set \
-	kopano/cfg/ldapms/ldap_host?'@%@ldap/server/name@%@' \
-	kopano/cfg/ldapms/ldap_port?'@%@ldap/server/port@%@' \
+	kopano/cfg/ldapms/ldap_uri?'ldap://@%@ldap/server/name@%@:@%@ldap/server/port@%@/' \
 	kopano/cfg/ldapms/ldap_search_base?'@%@ldap/base@%@' \
 	kopano/cfg/ldapms/ldap_bind_user?'@%@ldap/hostdn@%@' \
 	kopano/cfg/ldapms/ldap_bind_passwd?'@&@/etc/kopano-ldap.secret@&@' \
@@ -77,6 +76,11 @@ univention-config-registry set \
 	kopano/cfg/ldapms/ldap_server_file_path_attribute?'kopanoFilePath' \
 	kopano/cfg/ldapms/ldap_server_search_filter?'' \
 	kopano/cfg/ldapms/ldap_server_unique_attribute?'cn'
+
+# unset obsolete ldap configuration
+univention-config-registry unset \
+	kopano/cfg/ldapms/ldap_host \
+	kopano/cfg/ldapms/ldap_port
 
 # add archiver mappings to propmap
 univention-config-registry set \
