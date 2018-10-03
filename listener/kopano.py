@@ -68,6 +68,7 @@ def handler(dn, new, old, command):
 			changed_objects[dn] = new
 			event_counter += 1
 
+# TODO the below actions could be done in python directly instead of calling out to the shell
 def postrun():
 	"""
 	set kopano options 15 seconds after last sync in a bulk action
