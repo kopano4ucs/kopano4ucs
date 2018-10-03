@@ -273,13 +273,13 @@ ucr set security/packetfilter/package/kopano4ucs/tcp/25/all="ACCEPT" \
 # create public store on installation
 if [ "$1" = "configure" -a -z "$2" ]; then
 	sleep 3s
-	kopano-admin -s
+	kopano-storeadm -h default: -P
 fi
 
 # add gpg key of kopano repository to later use it with https://wiki.z-hub.io/x/poBX
 if [ -x /usr/bin/apt-key ]; then
 	/usr/bin/apt-key add /usr/share/keyrings/kopano-http-repository.key
-    ucr commit /etc/apt/sources.list.d/kopano-core.list
+	ucr commit /etc/apt/sources.list.d/kopano-core.list
 fi
 
 exit 0
