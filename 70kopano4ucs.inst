@@ -406,7 +406,7 @@ done
 # give kopano server some time to settle
 sleep 3
 # create public store if missing
-kopano-admin -s
+kopano-storeadm -h default: -P
 
 joinscript_save_current_version
 
