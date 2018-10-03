@@ -80,7 +80,7 @@ def postrun():
 	listener.setuid(0)
 	try:
 		# initiate another sync
-		subprocess.call(['/usr/sbin/kopano-admin', '--sync'])
+		subprocess.call(['/usr/sbin/kopano-cli', '--sync'])
 		# do a mass change for all cached objects
 		for dn, new in changed_objects.items():
 			univention.debug.debug(univention.debug.LISTENER, univention.debug.PROCESS, 'kopano: updating %s' % dn)
@@ -92,7 +92,7 @@ def postrun():
 				value = 'no'
 				if new.get(attr) and ('1' in new.get(attr)):
 					value = 'yes'
-				cmd = ['/usr/sbin/kopano-admin', '-u', new['uid'][0], option, value]
+				cmd = ['/usr/sbin/kopano-cli', '-u', new['uid'][0], option, value]
 				univention.debug.debug(univention.debug.LISTENER, univention.debug.INFO, 'kopano: calling %s' % str(cmd))
 				subprocess.call(cmd)
 	finally:
