@@ -110,7 +110,15 @@ univention-config-registry set \
 
 # unset obsolete server config
 univention-config-registry unset \
-	kopano/cfg/server/server_ssl_enabled
+	kopano/cfg/server/client_update_enabled \
+	kopano/cfg/server/client_update_log_level \
+	kopano/cfg/server/client_update_log_path \
+	kopano/cfg/server/client_update_path \
+	kopano/cfg/server/plugin_path \
+	kopano/cfg/server/server_max_keep_alive_requests \
+	kopano/cfg/server/server_ssl_enabled \
+	kopano/cfg/server/sync_log_all_changes \
+	kopano/cfg/server/thread_stacksize
 
 # check if user has set server_ssl_protocols to only !SSLv2 and reset value to default
 # !SSLv2 will result in a failure to start the server on UCS 4.3
