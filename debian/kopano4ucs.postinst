@@ -186,11 +186,14 @@ univention-config-registry set \
 	kopano/cfg/ldap.propmap/0x3A17001E?'title' \
 	kopano/cfg/ldap.propmap/0x3A2A001E?'postalCode'
 
-# defaults
+# localisation defaults
+# prior to 8.6.8 this is done in /etc/default/kopano, newer version use admin.cfg
+touch /etc/default/kopano /etc/kopano/admin.cfg
 univention-config-registry set \
 	kopano/default/KOPANO_USERSCRIPT_LOCALE?"$(ucr get locale/default | sed -e 's/[.:].*/.UTF-8/')" \
 	kopano/default/LC_CTYPE?"$(ucr get locale/default | sed -e 's/[.:].*/.UTF-8/')" \
-	kopano/default/LC_TIME?"$(ucr get locale/default | sed -e 's/[.:].*/.UTF-8/')"
+	kopano/default/LC_TIME?"$(ucr get locale/default | sed -e 's/[.:].*/.UTF-8/')" \
+	kopano/cfg/admin/default_store_locale?"$(ucr get locale/default | sed -e 's/[.:].*/.UTF-8/')"
 
 # initialise Kopano repository variables
 univention-config-registry set \
