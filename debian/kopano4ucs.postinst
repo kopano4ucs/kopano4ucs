@@ -89,7 +89,17 @@ univention-config-registry set \
 
 # unset obsolete ical config
 univention-config-registry unset \
-	kopano/cfg/ical/icals_enable
+	kopano/cfg/ical/icals_enable \
+	kopano/cfg/ical/ical_enable \
+	kopano/cfg/ical/ical_port \
+	kopano/cfg/ical/icals_port
+
+sed \
+	-e '/ical_enable/s/^#*/#/g' \
+	-e '/ical_port/s/^#*/#/g' \
+	-e '/icals_enable/s/^#*/#/g' \
+	-e '/icals_port/s/^#*/#/g' \
+	-i /etc/kopano/ical.cfg
 
 # server
 univention-config-registry set \
