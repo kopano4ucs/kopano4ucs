@@ -68,26 +68,43 @@ fi
 # set ucr defaults
 ##
 
-# gateway
+echo "configuring kopano-gateway"
 univention-config-registry set \
 	kopano/cfg/gateway/pop3s_listen?'*:995' \
 	kopano/cfg/gateway/imaps_listen?'*:993' \
 	kopano/cfg/gateway/ssl_private_key_file?'/etc/kopano/ssl/private.key' \
 	kopano/cfg/gateway/ssl_certificate_file?'/etc/kopano/ssl/cert.pem'
 
-# unset obsolete gateway config
+echo "removing obsolete options from kopano-gateway configuration"
 univention-config-registry unset \
-	kopano/cfg/gateway/pop3s_enable \
-	kopano/cfg/gateway/imaps_enable
+	kopano/cfg/gateway/imap_enable \
+	kopano/cfg/gateway/imap_generate_utf8 \
+	kopano/cfg/gateway/imap_port \
+	kopano/cfg/gateway/imap_store_rfc822 \
+	kopano/cfg/gateway/imaps_port \
+	kopano/cfg/gateway/pop3_enable \
+	kopano/cfg/gateway/pop3_port \
+	kopano/cfg/gateway/pop3s_port
 
-# ical
+sed \
+        -e '/imap_enable/s/^#*/#/g' \
+        -e '/imap_generate_utf8/s/^#*/#/g' \
+        -e '/imap_port/s/^#*/#/g' \
+        -e '/imap_store_rfc822/s/^#*/#/g' \
+        -e '/imaps_port/s/^#*/#/g' \
+        -e '/pop3_enable/s/^#*/#/g' \
+        -e '/pop3_port/s/^#*/#/g' \
+        -e '/pop3s_port/s/^#*/#/g' \
+        -i /etc/kopano/gateway.cfg
+
+echo "configuring kopano-ical"
 univention-config-registry set \
 	kopano/cfg/ical/icals_listen?'*:8443' \
 	kopano/cfg/ical/server_timezone?'@&@/etc/timezone@&@' \
 	kopano/cfg/ical/ssl_private_key_file?'/etc/kopano/ssl/private.key' \
 	kopano/cfg/ical/ssl_certificate_file?'/etc/kopano/ssl/cert.pem'
 
-# unset obsolete ical config
+echo "removing obsolete options from kopano-ical configuration"
 univention-config-registry unset \
 	kopano/cfg/ical/icals_enable \
 	kopano/cfg/ical/ical_enable \
@@ -101,7 +118,7 @@ sed \
 	-e '/icals_port/s/^#*/#/g' \
 	-i /etc/kopano/ical.cfg
 
-# server
+echo "configuring kopano-server"
 univention-config-registry set \
 	kopano/cfg/server/mysql_host?'localhost' \
 	kopano/cfg/server/mysql_port?'3306' \
@@ -118,7 +135,7 @@ univention-config-registry set \
 	kopano/cfg/server/run_as_user=kopano \
 	kopano/cfg/server/run_as_group=kopano
 
-# unset obsolete server config
+echo "removing obsolete option from kopano-server configuration"
 univention-config-registry unset \
 	kopano/cfg/server/client_update_enabled \
 	kopano/cfg/server/client_update_log_level \
@@ -186,7 +203,7 @@ univention-config-registry set \
 	kopano/cfg/ldap/ldap_groupmembers_attribute?'uniqueMember' \
 	kopano/cfg/ldap/ldap_groupmembers_relation_attribute?''
 
-# unset obsolete ldap configuration
+echo "removing obsolete options from kopano ldap confiuration"
 univention-config-registry unset \
 	kopano/cfg/ldap/ldap_host \
 	kopano/cfg/ldap/ldap_port
