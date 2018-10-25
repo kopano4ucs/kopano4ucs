@@ -127,6 +127,7 @@ univention-config-registry set \
 	kopano/cfg/server/mysql_database?'kopano' \
 	kopano/cfg/server/server_ssl_key_file?'/etc/kopano/ssl/server.pem' \
 	kopano/cfg/server/server_ssl_ca_file?'/etc/univention/ssl/ucsCA/CAcert.pem' \
+	kopano/cfg/server/server_listen?'*:236' \
 	kopano/cfg/server/server_listen_tls?'*:237' \
 	kopano/cfg/server/user_plugin?'ldap' \
 	kopano/cfg/server/sync_gab_realtime?'no' \
