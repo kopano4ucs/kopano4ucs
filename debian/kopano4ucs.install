@@ -5,5 +5,6 @@
 server_password_change.d/70kopano usr/lib/univention-server/server_password_change.d/
 listener/kopano.py usr/lib/univention-directory-listener/system/
 scripts/kopano4ucs-update-configs usr/share/kopano4ucs
+scripts/kopano4ucs-update-settings870.sh usr/share/kopano4ucs
 lib/*.sh usr/share/univention-lib/
 kopano-http-repository.key /usr/share/keyrings/
