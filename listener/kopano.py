@@ -87,8 +87,9 @@ def postrun():
 			univention.debug.debug(univention.debug.LISTENER, univention.debug.PROCESS, 'kopano: updating %s' % dn)
 			# set some options for automatic meeting request handling
 			for attr, option in [('kopanoMrAccept', '--mr-accept'),
-								 ('kopanoMrDeclineConflict', '--mr-decline-conflict'),
-								 ('kopanoMrDeclineRecurring', '--mr-decline-recurring'),
+								 ('kopanoMrProcess', '--mr-process'),
+								 ('kopanoMrAcceptConflict', '--mr-accept-conflict'),
+								 ('kopanoMrAcceptRecurring', '--mr-accept-recurring'),
 								 ]:
 				value = 'no'
 				if new.get(attr) and ('1' in new.get(attr)):

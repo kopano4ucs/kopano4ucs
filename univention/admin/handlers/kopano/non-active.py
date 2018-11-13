@@ -283,9 +283,9 @@ property_descriptions = {
 		identifies=0,
 		default=False
 	),
-	'MRDeclineConflictingTimes': univention.admin.property(
-		short_description=_('Auto decline meetings requests with conflicting times'),
-		long_description=_('Decline meeting requests with conflicting times (ressource) automatically'),
+	'MRAcceptConflictingTimes': univention.admin.property(
+		short_description=_('Auto accept meetings requests with conflicting times'),
+		long_description=_('Accept meeting requests with conflicting times (ressource) automatically'),
 		syntax=univention.admin.syntax.boolean,
 		multivalue=0,
 		required=0,
@@ -293,9 +293,9 @@ property_descriptions = {
 		identifies=0,
 		default=False
 	),
-	'MRDeclineRecurringItems': univention.admin.property(
-		short_description=_('Auto decline recurring meeting requests'),
-		long_description=_('Decline recurring items (ressource) automatically'),
+	'MRAcceptRecurringItems': univention.admin.property(
+		short_description=_('Auto accept recurring meeting requests'),
+		long_description=_('Accept recurring items (ressource) automatically'),
 		syntax=univention.admin.syntax.boolean,
 		multivalue=0,
 		required=0,
@@ -351,8 +351,8 @@ layout = [
 			[ 'mailAlternativeAddress', ],
 			[ 'SendAsPrivilege', ],
 			[ 'MRaccept', ],
-			[ 'MRDeclineConflictingTimes', ],
-			[ 'MRDeclineRecurringItems', ],
+			[ 'MRAcceptConflictingTimes', ],
+			[ 'MRAcceptRecurringItems', ],
 			[ 'quotaOverride', ],
 			[ 'quotaWarn', ],
 			[ 'quotaSoft', ],
@@ -400,8 +400,8 @@ mapping.register('logindenied', 'kopanoSharedStoreOnly', None, univention.admin.
 mapping.register('username', 'uid', None, univention.admin.mapping.ListToString)
 mapping.register('SendAsPrivilege', 'kopanoSendAsPrivilege')
 mapping.register('MRaccept', 'kopanoMrAccept', None, univention.admin.mapping.ListToString)
-mapping.register('MRDeclineConflictingTimes', 'kopanoMrDeclineConflict', None, univention.admin.mapping.ListToString)
-mapping.register('MRDeclineRecurringItems', 'kopanoMrDeclineRecurring', None, univention.admin.mapping.ListToString)
+mapping.register('MRAcceptConflictingTimes', 'kopanoMrAcceptConflict', None, univention.admin.mapping.ListToString)
+mapping.register('MRAcceptRecurringItems', 'kopanoMrAcceptRecurring', None, univention.admin.mapping.ListToString)
 mapping.register('quotaOverride', 'kopanoQuotaOverride', None, univention.admin.mapping.ListToString)
 mapping.register('quotaWarn', 'kopanoQuotaWarn', None, univention.admin.mapping.ListToString)
 mapping.register('quotaSoft', 'kopanoQuotaSoft', None, univention.admin.mapping.ListToString)

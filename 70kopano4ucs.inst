@@ -31,7 +31,7 @@
 # /usr/share/common-licenses/AGPL-3; if not, see
 # <http://www.gnu.org/licenses/>.
 
-VERSION=5
+VERSION=6
 
 . /usr/share/univention-join/joinscripthelper.lib
 . /usr/share/univention-lib/all.sh
@@ -221,36 +221,60 @@ univention-directory-manager settings/extended_attribute create "$@" --ignore_ex
 
 univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
 	--position "cn=kopano,cn=custom attributes,cn=univention,$ldap_base" \
-	--set name="MRDeclineConflictingTimes" \
+	--set name="MRProcess" \
+	--set module=users/user \
+	--set module=settings/usertemplate \
+	--set tabName="Kopano" \
+	--set tabPosition=6 \
+	--set shortDescription="Auto process meeting requests" \
+	--set longDescription="Accept process request (resource) automatically" \
+	--set translationShortDescription='"de_DE" "Besprechungsanfragen automatisch verarbeiten"' \
+	--set translationLongDescription='"de_DE" "Besprechungsanfragen automatisch verarbeiten"' \
+	--set objectClass=kopano-user \
+	--set syntax=boolean \
+	--set mayChange=1 \
+	--set ldapMapping=kopanoMrProcess \
+	--set default="1" \
+	--set multivalue=0 || die
+
+# remove old variants of mrdecline..
+univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=MRDeclineConflictingTimes,cn=kopano,cn=custom attributes,cn=univention,$ldap_base"
+univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=MRDeclineRecurringItems,cn=kopano,cn=custom attributes,cn=univention,$ldap_base"
+
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=kopano,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="MRAcceptConflictingTimes" \
 	--set module=users/user \
 	--set module=settings/usertemplate \
 	--set tabName="Kopano" \
 	--set tabPosition=9 \
-	--set shortDescription="Auto decline meetings requests with conflicting times" \
-	--set longDescription="Decline meeting requests with conflicting times (resource) automatically" \
-	--set translationShortDescription='"de_DE" "Besprechungsanfragen bei Konflikten automatisch ablehnen"' \
-	--set translationLongDescription='"de_DE" "Besprechungsanfragen bei Konflikten automatisch ablehnen"' \
+	--set shortDescription="Auto accept meetings requests with conflicting times" \
+	--set longDescription="Accept meeting requests with conflicting times (resource) automatically" \
+	--set translationShortDescription='"de_DE" "Besprechungsanfragen bei Konflikten automatisch annehmen"' \
+	--set translationLongDescription='"de_DE" "Besprechungsanfragen bei Konflikten automatisch annehmen"' \
 	--set objectClass=kopano-user \
 	--set syntax=boolean \
 	--set mayChange=1 \
-	--set ldapMapping=kopanoMrDeclineConflict \
+	--set ldapMapping=kopanoMrAcceptConflict \
+	--set default="1" \
 	--set multivalue=0 || die
 
 univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
 	--position "cn=kopano,cn=custom attributes,cn=univention,$ldap_base" \
-	--set name="MRDeclineRecurringItems" \
+	--set name="MRAcceptRecurringItems" \
 	--set module=users/user \
 	--set module=settings/usertemplate \
 	--set tabName="Kopano" \
 	--set tabPosition=11 \
-	--set shortDescription="Auto decline recurring meeting requests" \
-	--set longDescription="Decline recurring items (resource) automatically" \
-	--set translationShortDescription='"de_DE" "Wiederkehrende Besprechungsanfragen automatisch ablehnen"' \
-	--set translationLongDescription='"de_DE" "Wiederkehrende Besprechungsanfragen automatisch ablehnen"' \
+	--set shortDescription="Auto accept recurring meeting requests" \
+	--set longDescription="Accept recurring items (resource) automatically" \
+	--set translationShortDescription='"de_DE" "Wiederkehrende Besprechungsanfragen automatisch annehmen"' \
+	--set translationLongDescription='"de_DE" "Wiederkehrende Besprechungsanfragen automatisch annehmen"' \
 	--set objectClass=kopano-user \
 	--set syntax=boolean \
 	--set mayChange=1 \
-	--set ldapMapping=kopanoMrDeclineRecurring \
+	--set ldapMapping=kopanoMrAcceptRecurring \
+	--set default="1" \
 	--set multivalue=0 || die
 
 univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
