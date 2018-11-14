@@ -237,9 +237,34 @@ univention-directory-manager settings/extended_attribute create "$@" --ignore_ex
 	--set default="1" \
 	--set multivalue=0 || die
 
-# remove old variants of mrdecline..
-univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=MRDeclineConflictingTimes,cn=kopano,cn=custom attributes,cn=univention,$ldap_base"
-univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=MRDeclineRecurringItems,cn=kopano,cn=custom attributes,cn=univention,$ldap_base"
+if joinscript_check_version_in_range_executed 1 5; then
+	# migrate and remove old variants of mrdecline..
+	for u in $(udm users/user list | grep "DN:" | awk '{ print $2 }'); do
+		uid=$(echo "$u" | cut '-d,' -f1 | cut -b5-)
+		echo "checking user $uid"
+		ConflictingTimes=$(udm users/user list --position "$u" | grep MRDeclineConflictingTimes | tr -d '[:space:]' | cut -d':' -f 2)
+		RecurringItems=$(udm users/user list --position "$u" | grep MRDeclineRecurringItems | tr -d '[:space:]' | cut -d':' -f 2)
+
+		# Having MRDeclineConflictingTimes set to 1 means that it should not accept conflicting meetings
+		if [ "$ConflictingTimes" = "1" ]; then
+			echo "disabling acceptance of conflicting meetings"
+			udm users/user modify --dn "$u" \
+			--set MRAcceptConflictingTimes="0"
+		fi
+
+		# Having MRDeclineRecurringItems set to 1 mean that it should not accept recurring meetings
+		if [ "$RecurringItems" = "1" ]; then
+			echo "disabling acceptance of recurring meetings"
+			echo setting non default
+			udm users/user modify --dn "$u" \
+			--set MRAcceptRecurringItems="0"
+		fi
+	done
+	univention-directory-manager settings/extended_attribute remove "$@" \
+	--dn "cn=MRDeclineConflictingTimes,cn=kopano,cn=custom attributes,cn=univention,$ldap_base"
+	univention-directory-manager settings/extended_attribute remove "$@" \
+	--dn "cn=MRDeclineRecurringItems,cn=kopano,cn=custom attributes,cn=univention,$ldap_base"
+fi
 
 univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
 	--position "cn=kopano,cn=custom attributes,cn=univention,$ldap_base" \
