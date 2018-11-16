@@ -1,5 +1,5 @@
 --- kopano.schema	2017-04-26 19:24:19.890003743 +0200
-+++ kopano4ucs.schema	2018-11-13 12:40:09.045814961 +0100
++++ kopano4ucs.schema	2018-11-16 15:45:21.132076405 +0100
 @@ -79,28 +79,28 @@
  
  attributetype ( 1.3.6.1.4.1.47732.1.1.2.6
@@ -37,7 +37,7 @@
  
  attributetype ( 1.3.6.1.4.1.47732.1.1.2.10
  	NAME 'kopanoResourceCapacity'
-@@ -154,6 +154,42 @@
+@@ -154,6 +154,41 @@
  	SUBSTR caseIgnoreSubstringsMatch
  	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 )
  
@@ -56,7 +56,6 @@
 +	MAY (
 +		mailPrimaryAddress $ gidNumber
 +	    )
-+
 +	)
 +
 +attributetype ( 1.3.6.1.4.1.47732.2.1.2.3
@@ -80,7 +79,7 @@
  objectclass	( 1.3.6.1.4.1.47732.1.1.0.0
  	NAME 'kopano-user'
  	DESC 'KOPANO: an user of Kopano'
-@@ -165,6 +201,8 @@
+@@ -165,6 +200,8 @@
  		kopanoResourceCapacity $ kopanoAccount $ kopanoHidden $ kopanoAliases $
  		kopanoUserServer $ kopanoEnabledFeatures $ kopanoDisabledFeatures $
  		kopanoUserArchiveServers $ kopanoUserArchiveCouplings $
@@ -89,7 +88,7 @@
  		uidNumber
  		)
  	)
-@@ -173,7 +211,7 @@
+@@ -173,7 +210,7 @@
  	NAME 'kopano-contact'
  	DESC 'KOPANO: a contact of Kopano'
  	SUP top AUXILIARY
@@ -98,7 +97,7 @@
  	MAY (
  		kopanoSendAsPrivilege $ kopanoHidden $ kopanoAliases $ kopanoAccount
  		)
-@@ -291,13 +329,21 @@
+@@ -291,13 +328,21 @@
  	SUBSTR caseIgnoreSubstringsMatch
  	SYNTAX 1.3.6.1.4.1.1466.115.121.1.15 SINGLE-VALUE )
  
