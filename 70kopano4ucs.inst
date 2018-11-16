@@ -273,10 +273,10 @@ univention-directory-manager settings/extended_attribute create "$@" --ignore_ex
 	--set module=settings/usertemplate \
 	--set tabName="Kopano" \
 	--set tabPosition=9 \
-	--set shortDescription="Auto accept meetings requests with conflicting times" \
-	--set longDescription="Accept meeting requests with conflicting times (resource) automatically" \
-	--set translationShortDescription='"de_DE" "Besprechungsanfragen bei Konflikten automatisch annehmen"' \
-	--set translationLongDescription='"de_DE" "Besprechungsanfragen bei Konflikten automatisch annehmen"' \
+	--set shortDescription="Also accept meetings requests with conflicting times?" \
+	--set longDescription="Accept meeting requests even with conflicting times automatically" \
+	--set translationShortDescription='"de_DE" "Auch Besprechungsanfragen bei Konflikten annehmen?"' \
+	--set translationLongDescription='"de_DE" "Besprechungsanfragen trotz Konflikten automatisch annehmen"' \
 	--set objectClass=kopano-user \
 	--set syntax=boolean \
 	--set mayChange=1 \
@@ -291,9 +291,9 @@ univention-directory-manager settings/extended_attribute create "$@" --ignore_ex
 	--set module=settings/usertemplate \
 	--set tabName="Kopano" \
 	--set tabPosition=11 \
-	--set shortDescription="Auto accept recurring meeting requests" \
-	--set longDescription="Accept recurring items (resource) automatically" \
-	--set translationShortDescription='"de_DE" "Wiederkehrende Besprechungsanfragen automatisch annehmen"' \
+	--set shortDescription="Also accept recurring meeting requests?" \
+	--set longDescription="Accept recurring meeting requests automatically" \
+	--set translationShortDescription='"de_DE" "Auch Besprechungsserien automatisch annehmen?"' \
 	--set translationLongDescription='"de_DE" "Wiederkehrende Besprechungsanfragen automatisch annehmen"' \
 	--set objectClass=kopano-user \
 	--set syntax=boolean \
