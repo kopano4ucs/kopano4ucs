@@ -169,7 +169,6 @@ objectclass ( 1.3.6.1.4.1.47732.2.1.1.2
 	MAY (
 		mailPrimaryAddress $ gidNumber
 	    )
-
 	)
 
 attributetype ( 1.3.6.1.4.1.47732.2.1.2.3
