@@ -225,7 +225,7 @@ univention-directory-manager settings/extended_attribute create "$@" --ignore_ex
 	--set module=users/user \
 	--set module=settings/usertemplate \
 	--set tabName="Kopano" \
-	--set tabPosition=6 \
+	--set tabPosition=7 \
 	--set shortDescription="Auto process meeting requests" \
 	--set longDescription="Accept process request (resource) automatically" \
 	--set translationShortDescription='"de_DE" "Besprechungsanfragen automatisch verarbeiten"' \
