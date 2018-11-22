@@ -8,3 +8,4 @@ scripts/kopano4ucs-update-configs usr/share/kopano4ucs
 scripts/kopano4ucs-update-settings870.sh usr/share/kopano4ucs
 lib/*.sh usr/share/univention-lib/
 kopano-http-repository.key /usr/share/keyrings/
+univention/ucs-systemd.conf /etc/systemd/system/kopano-server.service.d/
