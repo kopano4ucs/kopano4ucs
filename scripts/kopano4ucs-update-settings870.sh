@@ -15,21 +15,25 @@ if $(dpkg --compare-versions $kopanoversion "gt" "8.6.81"); then
 	echo "removing obsolete options from kopano-gateway configuration"
 	univention-config-registry unset \
 		kopano/cfg/gateway/imap_enable \
+		kopano/cfg/gateway/imaps_enable \
 		kopano/cfg/gateway/imap_generate_utf8 \
 		kopano/cfg/gateway/imap_port \
 		kopano/cfg/gateway/imap_store_rfc822 \
 		kopano/cfg/gateway/imaps_port \
 		kopano/cfg/gateway/pop3_enable \
+		kopano/cfg/gateway/pop3s_enable \
 		kopano/cfg/gateway/pop3_port \
 		kopano/cfg/gateway/pop3s_port
 
 	sed \
 	        -e '/imap_enable/s/^#*/#/g' \
+	        -e '/imaps_enable/s/^#*/#/g' \
 	        -e '/imap_generate_utf8/s/^#*/#/g' \
 	        -e '/imap_port/s/^#*/#/g' \
 	        -e '/imap_store_rfc822/s/^#*/#/g' \
 	        -e '/imaps_port/s/^#*/#/g' \
 	        -e '/pop3_enable/s/^#*/#/g' \
+	        -e '/pop3s_enable/s/^#*/#/g' \
 	        -e '/pop3_port/s/^#*/#/g' \
 	        -e '/pop3s_port/s/^#*/#/g' \
 	        -i /etc/kopano/gateway.cfg
