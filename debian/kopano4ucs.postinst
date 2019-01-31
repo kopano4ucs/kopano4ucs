@@ -148,7 +148,13 @@ univention-config-registry set \
 	kopano/cfg/server/server_name="$hostname" \
 	kopano/cfg/server/local_admin_users?'root kopano' \
 	kopano/cfg/server/run_as_user=kopano \
-	kopano/cfg/server/run_as_group=kopano
+	kopano/cfg/server/run_as_group=kopano \
+	kopano/cfg/server/createuser_script?'/usr/lib/kopano/userscripts/createuser' \
+	kopano/cfg/server/deleteuser_script?'/usr/lib/kopano/userscripts/deleteuser' \
+	kopano/cfg/server/creategroup_script?'/usr/lib/kopano/userscripts/creategroup' \
+	kopano/cfg/server/deletegroup_script?'/usr/lib/kopano/userscripts/deletegroup' \
+	kopano/cfg/server/createcompany_script?'/usr/lib/kopano/userscripts/createcompany' \
+	kopano/cfg/server/deletecompany_script?'/usr/lib/kopano/userscripts/deletecompany'
 
 echo "removing obsolete option from kopano-server configuration"
 univention-config-registry unset \
