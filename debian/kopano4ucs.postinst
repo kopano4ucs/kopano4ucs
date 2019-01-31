@@ -119,6 +119,19 @@ sed \
 	-e '/icals_port/s/^#*/#/g' \
 	-i /etc/kopano/ical.cfg
 
+echo "removing obsolete options from kopano-dagent configuration"
+univention-config-regitry unset \
+	kopano/cfg/dagent/lmtp_port
+
+sed \
+	-e '/lmtp_port/s/^#*/#/g' \
+	-i /etc/kopano/dagent.cfg
+
+echo "configuring kopano-dagent"
+# set dagent to listen on ipv4
+univention-config-registry set \
+	kopano/cfg/dagent/lmtp_listen?'127.0.0.1:2003' \
+
 echo "configuring kopano-server"
 univention-config-registry set \
 	kopano/cfg/server/mysql_host?'localhost' \
