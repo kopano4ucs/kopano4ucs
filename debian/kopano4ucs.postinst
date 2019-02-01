@@ -54,14 +54,11 @@ if ! ucr get locale | grep -qF "en_US.UTF-8" ; then
 	locale-gen
 fi
 
-# copy OpenLDAP example as new ldap.cfg during first package installation
-if [ "$1" = "configure" -a -z "$2" -a ! -e "/etc/kopano/ldap.cfg" ] ; then
-	# check if installed on Kopano 8.1 or earlier. else use the new default configuration
-	if [ -e /etc/kopano/ldap.openldap.cfg ]; then
-		cp "/etc/kopano/ldap.openldap.cfg" "/etc/kopano/ldap.cfg"
-	else
-		cp "/usr/share/doc/kopano/example-config/ldap.cfg" "/etc/kopano/ldap.cfg"
-	fi
+# copy example config during first package installation
+if [ "$1" = "configure" -a -z "$2" ] ; then
+	cp /usr/share/doc/kopano/example-config/*.cfg /etc/kopano/ && \
+	cp /usr/share/doc/kopano/example-config/*.cfg.gz /etc/kopano/ && \
+	gzip -d -f /etc/kopano/*.gz
 fi
 
 ##
