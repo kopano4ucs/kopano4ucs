@@ -265,6 +265,11 @@ univention-config-registry set \
 	kopano/repo/username?'serial' \
 	kopano/repo/password?'YOUR-KOPANO-SERIAL'
 
+# if the old default is used change to new default username
+if [ $(ucr get kopano/repo/username) == "your-kopano-portal-username" ]; then
+        ucr set kopano/repo/username='serial'
+fi
+
 # disable spamassassin's cronjob for learning cyrus mails (no cyrus installed on kopano machines)
 if [ "$1" = "configure" -a -z "$2" ]; then
 	ucr set mail/antispam/learndaily=no
