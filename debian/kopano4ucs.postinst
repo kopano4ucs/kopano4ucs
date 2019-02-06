@@ -366,4 +366,7 @@ if [ -x /usr/bin/apt-key ]; then
 	ucr commit /etc/apt/sources.list.d/kopano-core.list
 fi
 
+# check if all services have been restarted
+needrestart -r a
+
 exit 0
