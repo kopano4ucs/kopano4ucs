@@ -60,8 +60,7 @@ Depends: ${misc:Depends},
  univention-sasl,
  univention-mail-postfix,
  kopano-contacts,
- kopano4ucs-lib,
- needrestart
+ kopano4ucs-lib
 Recommends: bsd-mailx,
  univention-spamassassin,
  univention-antivir-mail
