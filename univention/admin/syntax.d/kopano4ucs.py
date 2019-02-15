@@ -28,13 +28,14 @@
 # <http://www.gnu.org/licenses/>.
 
 import univention.admin.localization
-import univention.admin.syntax
+from univention.admin.syntax import select, UDM_Objects
 
 translation = univention.admin.localization.translation('kopano4ucs')
 _ = translation.translate
 
+
 class kopano4ucsRole(select):
-	choices=[
+	choices = [
 		('none', _('None')),
 		('user', _('Kopano User')),
 		('admin', _('Kopano Admin')),
@@ -42,7 +43,8 @@ class kopano4ucsRole(select):
 		('contact', _('Kopano Contact')),
 	]
 
-class kopano4ucsSendAsPrivilege(univention.admin.syntax.UDM_Objects):
+
+class kopano4ucsSendAsPrivilege(UDM_Objects):
 	udm_modules = ('users/user', )
 	key = '%(uidNumber)s'
 	label = '%(username)s'
@@ -50,8 +52,9 @@ class kopano4ucsSendAsPrivilege(univention.admin.syntax.UDM_Objects):
 	simple = True
 	regex = None
 
+
 class kopano4ucsFeature(select):
-	choices=[
+	choices = [
 		('pop3', 'POP3 access'),
 		('imap', 'IMAP access'),
 		('mobile', 'ActiveSync access'),

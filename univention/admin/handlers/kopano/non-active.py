@@ -44,21 +44,21 @@ childs = 0
 short_description = _(u'Kopano non-active and shared store account')
 long_description = _(u'Management of Kopano non-active user accounts, shared stores and resources.')
 operations = ['add', 'edit', 'remove', 'search', 'move']
-default_containers=["cn=non-active,cn=kopano"]
+default_containers = ["cn=non-active,cn=kopano"]
 
 options = {}
 
 property_descriptions = {
 	'kopanoAccount': univention.admin.property(
-		short_description = _(u'Recognized by Kopano'),
-		long_description = _(u'If set to 1, the account is synced to Kopano'),
-		syntax = univention.admin.syntax.string,
-		multivalue = False,
-		options = [],
-		required = True,
-		may_change = True,
-		identifies = False,
-		default = '1',
+		short_description=_(u'Recognized by Kopano'),
+		long_description=_(u'If set to 1, the account is synced to Kopano'),
+		syntax=univention.admin.syntax.string,
+		multivalue=False,
+		options=[],
+		required=True,
+		may_change=True,
+		identifies=False,
+		default='1',
 	),
 	'firstname': univention.admin.property(
 		short_description=_('First name'),
@@ -90,7 +90,7 @@ property_descriptions = {
 		multivalue=0,
 		required=0,
 		may_change=1,
-		default = '<username><:strip>',
+		default='<username><:strip>',
 		identifies=0
 	),
 	'title': univention.admin.property(
@@ -344,34 +344,34 @@ property_descriptions = {
 
 layout = [
 	Tab(_(u'General'), _(u'Kopano non-active account'), layout=[
-		Group( _('Kopano account settings'), layout = [
-			[ 'logindenied', ],
-			[ 'username', 'mailPrimaryAddress', ],
-			[ 'password', ],
-			[ 'mailAlternativeAddress', ],
-			[ 'SendAsPrivilege', ],
-			[ 'MRaccept', ],
-			[ 'MRAcceptConflictingTimes', ],
-			[ 'MRAcceptRecurringItems', ],
-			[ 'quotaOverride', ],
-			[ 'quotaWarn', ],
-			[ 'quotaSoft', ],
-			[ 'quotaHard', ],
+		Group(_('Kopano account settings'), layout=[
+			['logindenied', ],
+			['username', 'mailPrimaryAddress', ],
+			['password', ],
+			['mailAlternativeAddress', ],
+			['SendAsPrivilege', ],
+			['MRaccept', ],
+			['MRAcceptConflictingTimes', ],
+			['MRAcceptRecurringItems', ],
+			['quotaOverride', ],
+			['quotaWarn', ],
+			['quotaSoft', ],
+			['quotaHard', ],
 		]),
 	]),
 	Tab(_(u'Contact information'), _(u'Kopano non-active account'), layout=[
-		Group( _( 'General Contact information' ), layout = [
-			[ 'kopanoHidden', ],
-			[ 'title', 'firstname', 'lastname'],
-			[ 'displayName', ],
-			[ 'phone', ],
+		Group(_('General Contact information'), layout=[
+			['kopanoHidden', ],
+			['title', 'firstname', 'lastname'],
+			['displayName', ],
+			['phone', ],
 		]),
-		Group( _( 'Further Contact information' ), layout = [
-			[ 'organisation', 'roomNumber', 'departmentNumber', ], 
-			[ 'street', 'postcode', 'city', ],
-			[ 'mobileTelephoneNumber', ],
-			[ 'homeTelephoneNumber', ], 
-			[ 'pagerTelephoneNumber', ],
+		Group(_('Further Contact information'), layout=[
+			['organisation', 'roomNumber', 'departmentNumber', ],
+			['street', 'postcode', 'city', ],
+			['mobileTelephoneNumber', ],
+			['homeTelephoneNumber', ],
+			['pagerTelephoneNumber', ],
 		]),
 	]),
 ]
@@ -407,93 +407,77 @@ mapping.register('quotaWarn', 'kopanoQuotaWarn', None, univention.admin.mapping.
 mapping.register('quotaSoft', 'kopanoQuotaSoft', None, univention.admin.mapping.ListToString)
 mapping.register('quotaHard', 'kopanoQuotaHard', None, univention.admin.mapping.ListToString)
 
+
 class object(univention.admin.handlers.simpleLdap):
 	module = module
 
 	def __init__(self, co, lo, position, dn='', superordinate=None, attributes=None):
-		self.co = co
-		self.lo = lo
-		self.dn = dn
-		self.position = position
-		self.mapping = mapping
-		self.descriptions = property_descriptions
-		univention.admin.handlers.simpleLdap.__init__(self, co, lo, position, dn, superordinate)
-		self.options = []
+		univention.admin.handlers.simpleLdap.__init__(self, co, lo, position, dn, superordinate, attributes=attributes)
 		self.allocation_locks = []
 
 	def cancel(self):
 		for type, value in self.allocation_locks:
 			univention.admin.allocators.release(self.lo, self.position, type, value)
-	def open(self):
-		univention.admin.handlers.simpleLdap.open(self)
-		self.save()
-
-	def _ldap_pre_create(self):
-		self.dn = '%s=%s,%s' % (mapping.mapName('username'), mapping.mapValue('username', self.info['username']), self.position.getDn())
 
 	def _ldap_post_create(self):
-		if self[ 'mailPrimaryAddress' ]:
-			univention.admin.allocators.confirm( self.lo, self.position, 'mailPrimaryAddress', self[ 'mailPrimaryAddress' ] )
+		if self['mailPrimaryAddress']:
+			univention.admin.allocators.confirm(self.lo, self.position, 'mailPrimaryAddress', self['mailPrimaryAddress'])
 		univention.admin.allocators.confirm(self.lo, self.position, 'uid', self['username'])
 
 	def _ldap_pre_modify(self):
 		if self.hasChanged('mailPrimaryAddress'):
 			if self['mailPrimaryAddress']:
-				self['mailPrimaryAddress']=self['mailPrimaryAddress'].lower()
+				self['mailPrimaryAddress'] = self['mailPrimaryAddress'].lower()
 
 		if self.hasChanged('username'):
 			try:
 				univention.admin.allocators.request(self.lo, self.position, 'uid', value=self['username'])
-			except univention.admin.uexceptions.noLock, e:
-				username=self['username']
+			except univention.admin.uexceptions.noLock:
+				username = self['username']
 				del(self.info['username'])
-				self.oldinfo={}
-				self.dn=None
-				self._exists=0
+				self.oldinfo = {}
+				self.dn = None
+				self._exists = 0
 				self.old_username = username
 				univention.admin.allocators.release(self.lo, self.position, 'uid', username)
-				raise univention.admin.uexceptions.uidAlreadyUsed, ': %s' % username
-
+				raise univention.admin.uexceptions.uidAlreadyUsed(': %s' % username)
 
 	def _ldap_post_modify(self):
-		if self.hasChanged( 'mailPrimaryAddress' ):
-			if self[ 'mailPrimaryAddress' ]:
-				univention.admin.allocators.confirm( self.lo, self.position, 'mailPrimaryAddress', self[ 'mailPrimaryAddress' ] )
+		if self.hasChanged('mailPrimaryAddress'):
+			if self['mailPrimaryAddress']:
+				univention.admin.allocators.confirm(self.lo, self.position, 'mailPrimaryAddress', self['mailPrimaryAddress'])
 			else:
-				univention.admin.allocators.release( self.lo, self.position, 'mailPrimaryAddress', self.oldinfo[ 'mailPrimaryAddress' ] )
-
-	def _ldap_pre_remove(self):
-		pass
+				univention.admin.allocators.release(self.lo, self.position, 'mailPrimaryAddress', self.oldinfo['mailPrimaryAddress'])
 
 	def _ldap_post_remove(self):
-		univention.admin.allocators.release(self.lo, self.position, 'mailPrimaryAddress', self[ 'mailPrimaryAddress' ] ) 
+		univention.admin.allocators.release(self.lo, self.position, 'mailPrimaryAddress', self['mailPrimaryAddress'])
 		univention.admin.allocators.release(self.lo, self.position, 'uid', self['username'])
 
 	def _update_policies(self):
-		pass
+		pass  # TODO: is there a reason why this doesn't do the inherited things?
 
 	def _ldap_addlist(self):
 		# Try to set username
-		try:    
-			uid=univention.admin.allocators.request(self.lo, self.position, 'uid', value=self['username'])
+		try:
+			uid = univention.admin.allocators.request(self.lo, self.position, 'uid', value=self['username'])
 			self.allocation_locks.append(('uid', uid))
 		except univention.admin.uexceptions.noLock:
-			username=self['username']
+			username = self['username']
 			del(self.info['username'])
-			self.oldinfo={}
-			self.dn=None
-			self._exists=0
+			self.oldinfo = {}
+			self.dn = None
+			self._exists = 0
 			self.old_username = username
 			univention.admin.allocators.release(self.lo, self.position, 'uid', username)
-			raise univention.admin.uexceptions.uidAlreadyUsed, ': %s' % username	
+			raise univention.admin.uexceptions.uidAlreadyUsed(': %s' % username)
 
 		al = [('uid', [uid])]
 
 		# check if mailprimaryaddress is not in use
-		if self[ 'mailPrimaryAddress' ]:
+		if self['mailPrimaryAddress']:
 			try:
-				univention.admin.allocators.request( self.lo, self.position, 'mailPrimaryAddress', value = self[ 'mailPrimaryAddress' ] )
-				self.allocation_locks.append( ( 'mailPrimaryAddress', self[ 'mailPrimaryAddress' ] ) )
+				univention.admin.allocators.request(self.lo, self.position, 'mailPrimaryAddress', value=self['mailPrimaryAddress'])
+				self.allocation_locks.append(('mailPrimaryAddress', self['mailPrimaryAddress']))
 			except univention.admin.uexceptions.noLock:
 				self.cancel()
 				raise univention.admin.uexceptions.mailAddressUsed
@@ -506,36 +490,38 @@ class object(univention.admin.handlers.simpleLdap):
 		return al
 
 	def _ldap_modlist(self):
-		ml=univention.admin.handlers.simpleLdap._ldap_modlist(self)
+		ml = univention.admin.handlers.simpleLdap._ldap_modlist(self)
 		if self.hasChanged('password'):
 			pwdCheck = univention.password.Check(self.lo)
 			pwdCheck.enableQualityCheck = True
 			try:
 				pwdCheck.check(self['password'])
-			except ValueError, e:
-				raise univention.admin.uexceptions.pwQuality, str(e).replace('W?rterbucheintrag','Wörterbucheintrag').replace('enth?lt', 'enthält')
+			except ValueError as e:
+				raise univention.admin.uexceptions.pwQuality(str(e).replace('W?rterbucheintrag', 'Wörterbucheintrag').replace('enth?lt', 'enthält'))
 
 			password_crypt = "{crypt}%s" % univention.admin.password.crypt(self['password'])
 			ml.append(('userPassword', self.oldattr.get('userPassword', [''])[0], password_crypt))
 
 		if self.hasChanged('mailPrimaryAddress') and self['mailPrimaryAddress']:
 			for type, value in self.allocation_locks:
-				if type == 'mailPrimaryAddress': break
-			else:           
-				try:    
-					univention.admin.allocators.request( self.lo, self.position, 'mailPrimaryAddress', value = self[ 'mailPrimaryAddress' ] )
-					self.allocation_locks.append( ( 'mailPrimaryAddress', self[ 'mailPrimaryAddress' ] ) )
+				if type == 'mailPrimaryAddress':
+					break
+			else:
+				try:
+					univention.admin.allocators.request(self.lo, self.position, 'mailPrimaryAddress', value=self['mailPrimaryAddress'])
+					self.allocation_locks.append(('mailPrimaryAddress', self['mailPrimaryAddress']))
 				except univention.admin.uexceptions.noLock:
 					self.cancel()
 					raise univention.admin.uexceptions.mailAddressUsed
 
 		return ml
 
+
 def lookup(co, lo, filter_s, base='', superordinate=None, scope='sub', unique=0, required=0, timeout=-1, sizelimit=0):
 	searchfilter = univention.admin.filter.conjunction('&', [
-				univention.admin.filter.expression('objectClass', 'kopano-user'),
-				univention.admin.filter.expression('objectClass', 'kopano4ucsObject'),
-				])
+		univention.admin.filter.expression('objectClass', 'kopano-user'),
+		univention.admin.filter.expression('objectClass', 'kopano4ucsObject'),
+	])
 
 	if filter_s:
 		filter_p = univention.admin.filter.parse(filter_s)
@@ -546,6 +532,7 @@ def lookup(co, lo, filter_s, base='', superordinate=None, scope='sub', unique=0,
 	for dn in lo.searchDn(unicode(searchfilter), base, scope, unique, required, timeout, sizelimit):
 		res.append(object(co, lo, None, dn))
 	return res
+
 
 def identify(distinguished_name, attributes, canonical=False):
 	return 'kopano-user' in attributes.get('objectClass', []) and 'kopano4ucsObject' in attributes.get('objectClass', [])

@@ -41,21 +41,21 @@ childs = 0
 short_description = _(u'Kopano Contact')
 long_description = _(u'Management of Kopano Contact accounts.')
 operations = ['add', 'edit', 'remove', 'search', 'move']
-default_containers=["cn=contacts,cn=kopano"]
+default_containers = ["cn=contacts,cn=kopano"]
 
 options = {}
 
 property_descriptions = {
 	'kopanoAccount': univention.admin.property(
-		short_description = _(u'Recognized by Kopano'),
-		long_description = _(u'If set to 1, the account is recognized by kopano'),
-		syntax = univention.admin.syntax.string,
-		multivalue = False,
-		options = [],
-		required = True,
-		may_change = True,
-		identifies = False,
-		default = '1',
+		short_description=_(u'Recognized by Kopano'),
+		long_description=_(u'If set to 1, the account is recognized by kopano'),
+		syntax=univention.admin.syntax.string,
+		multivalue=False,
+		options=[],
+		required=True,
+		may_change=True,
+		identifies=False,
+		default='1',
 	),
 	'firstname': univention.admin.property(
 		short_description=_('First name'),
@@ -86,8 +86,8 @@ property_descriptions = {
 		multivalue=0,
 		required=1,
 		may_change=1,
-		default = '<firstname> <lastname><:strip>',
-		identifies=0
+		default='<firstname> <lastname><:strip>',
+		identifies=True
 	),
 	'title': univention.admin.property(
 		short_description=_('Title'),
@@ -222,19 +222,19 @@ property_descriptions = {
 
 layout = [
 	Tab(_(u'General'), _(u'Kopano Contact'), layout=[
-		Group( _( 'General Contact information' ), layout = [
-			[ 'kopanoHidden', ],
-			[ 'title', 'firstname', 'lastname'],
-			[ 'displayName', ],
-			[ 'phone', ],
-			[ 'e-mail', ],
+		Group(_('General Contact information'), layout=[
+			['kopanoHidden', ],
+			['title', 'firstname', 'lastname'],
+			['displayName', ],
+			['phone', ],
+			['e-mail', ],
 		]),
-		Group( _( 'Further Contact information' ), layout = [
-			[ 'organisation', 'roomNumber', 'departmentNumber', ], 
-			[ 'street', 'postcode', 'city', ],
-			[ 'mobileTelephoneNumber', ],
-			[ 'homeTelephoneNumber', ], 
-			[ 'pagerTelephoneNumber', ],
+		Group(_('Further Contact information'), layout=[
+			['organisation', 'roomNumber', 'departmentNumber', ],
+			['street', 'postcode', 'city', ],
+			['mobileTelephoneNumber', ],
+			['homeTelephoneNumber', ],
+			['pagerTelephoneNumber', ],
 		]),
 	]),
 ]
@@ -258,52 +258,22 @@ mapping.register('departmentNumber', 'departmentNumber', None, univention.admin.
 mapping.register('roomNumber', 'roomNumber', None, univention.admin.mapping.ListToString)
 mapping.register('kopanoHidden', 'kopanoHidden', None, univention.admin.mapping.ListToString)
 
+
 class object(univention.admin.handlers.simpleLdap):
 	module = module
 
-	def __init__(self, co, lo, position, dn='', superordinate=None, attributes=None):
-		self.co = co
-		self.lo = lo
-		self.dn = dn
-		self.position = position
-		self.mapping = mapping
-		self.descriptions = property_descriptions
-		univention.admin.handlers.simpleLdap.__init__(self, co, lo, position, dn, superordinate)
-		self.options = []
-
-	def open(self):
-		univention.admin.handlers.simpleLdap.open(self)
-		self.save()
-
-	def _ldap_pre_create(self):
-		self.dn = '%s=%s,%s' % (mapping.mapName('displayName'), mapping.mapValue('displayName', self.info['displayName']), self.position.getDn())
-
-	def _ldap_post_create(self):
-		pass
-
-	def _ldap_pre_modify(self):
-		pass
-
-	def _ldap_post_modify(self):
-		pass
-
-	def _ldap_pre_remove(self):
-		pass
-
-	def _ldap_post_remove(self):
-		pass
-
 	def _update_policies(self):
-		pass
+		pass  # TODO: is there a reason why this doesn't do the inherited things?
 
 	def _ldap_addlist(self):
-		return [('objectClass', ['top', 'kopano-contact', 'person', 'inetOrgPerson', 'univentionObject', 'kopano4ucsObject']),('univentionObjectFlag', ['functional'])]
+		return [('objectClass', ['top', 'kopano-contact', 'person', 'inetOrgPerson', 'univentionObject', 'kopano4ucsObject']), ('univentionObjectFlag', ['functional'])]
+
 
 def lookup(co, lo, filter_s, base='', superordinate=None, scope='sub', unique=0, required=0, timeout=-1, sizelimit=0):
 	searchfilter = univention.admin.filter.conjunction('&', [
-				univention.admin.filter.expression('objectClass', 'kopano-contact'),
-				univention.admin.filter.expression('univentionObjectFlag', 'functional')
-				])
+		univention.admin.filter.expression('objectClass', 'kopano-contact'),
+		univention.admin.filter.expression('univentionObjectFlag', 'functional')
+	])
 
 	if filter_s:
 		filter_p = univention.admin.filter.parse(filter_s)
@@ -314,6 +284,7 @@ def lookup(co, lo, filter_s, base='', superordinate=None, scope='sub', unique=0,
 	for dn in lo.searchDn(unicode(searchfilter), base, scope, unique, required, timeout, sizelimit):
 		res.append(object(co, lo, None, dn))
 	return res
+
 
 def identify(distinguished_name, attributes, canonical=False):
 	return 'kopano-contact' in attributes.get('objectClass', []) and 'functional' in attributes.get('univentionObjectFlag', [])

@@ -30,23 +30,23 @@
 # /usr/share/common-licenses/AGPL-3; if not, see
 # <http://www.gnu.org/licenses/>.
 
-__package__='' 	# workaround for PEP 366
+from __future__ import absolute_import
 import listener
 import subprocess
 import univention.debug
 
-name='kopano'
-description='update database of kopano on changes in UCS LDAP'
-filter='(|(kopanoAccount=1)(objectClass=kopano-group))'
-attributes=[]
-modrdn="1"
+name = 'kopano'
+description = 'update database of kopano on changes in UCS LDAP'
+filter = '(|(kopanoAccount=1)(objectClass=kopano-group))'
+attributes = []
+modrdn = "1"
 
 # dn --> new_attributes
 changed_objects = {}
 event_counter = 0
 
-def handler(dn, new, old, command):
 
+def handler(dn, new, old, command):
 	global changed_objects, event_counter
 
 	# ignore modrdn changes
@@ -63,10 +63,11 @@ def handler(dn, new, old, command):
 		event_counter += 1
 
 	# add object to list if it is a kopano user object
-	if new and new.get('uid') and not 'kopano-contact' in new.get('objectClass'):
-		if new.get('kopanoAccount', [''])[0] == '1' and not 'kopano-group' in new.get('objectClass'):
+	if new and new.get('uid') and 'kopano-contact' not in new.get('objectClass'):
+		if new.get('kopanoAccount', [''])[0] == '1' and 'kopano-group' not in new.get('objectClass'):
 			changed_objects[dn] = new
 			event_counter += 1
+
 
 # TODO the below actions could be done in python directly instead of calling out to the shell
 def postrun():
@@ -86,11 +87,12 @@ def postrun():
 		for dn, new in changed_objects.items():
 			univention.debug.debug(univention.debug.LISTENER, univention.debug.PROCESS, 'kopano: updating %s' % dn)
 			# set some options for automatic meeting request handling
-			for attr, option in [('kopanoMrAccept', '--mr-accept'),
-								 ('kopanoMrProcess', '--mr-process'),
-								 ('kopanoMrAcceptConflict', '--mr-accept-conflict'),
-								 ('kopanoMrAcceptRecurring', '--mr-accept-recurring'),
-								 ]:
+			for attr, option in [
+				('kopanoMrAccept', '--mr-accept'),
+				('kopanoMrProcess', '--mr-process'),
+				('kopanoMrAcceptConflict', '--mr-accept-conflict'),
+				('kopanoMrAcceptRecurring', '--mr-accept-recurring'),
+			]:
 				value = 'no'
 				if new.get(attr) and ('1' in new.get(attr)):
 					value = 'yes'
