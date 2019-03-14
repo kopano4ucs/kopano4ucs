@@ -1,9 +1,10 @@
 @%@UCRWARNING=# @%@
 
 @!@
-map_ucsversion_kopano_repo = {'4.3': 'Univention_4.3',
-							  '4.2': 'Univention_4.2',
-							  '4.1': 'Univention_4.0'}
+map_ucsversion_kopano_repo = {'4.4': 'Univention_4.3',
+							  '4.3': 'Univention_4.3',
+							  '4.2': 'Univention_4.2'
+}
 
 repo_component_name = None
 if configRegistry.get('version/version', 'invalid') in map_ucsversion_kopano_repo:
