@@ -1,6 +1,6 @@
 # kopano4ucsRole UDM hook
 #
-# Copyright 2012-2016 Univention GmbH
+# Copyright 2012-2019 Univention GmbH
 #
 # http://www.univention.de/
 #
