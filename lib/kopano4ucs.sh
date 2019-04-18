@@ -1,6 +1,6 @@
 # Univention kopano4ucs Shell Library
 #
-# Copyright 2014-2016 Univention GmbH
+# Copyright 2014-2019 Univention GmbH
 # Copyright 2016 Kopano b.v.
 #
 # http://www.univention.de/

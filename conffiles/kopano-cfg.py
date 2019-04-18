@@ -3,7 +3,7 @@
 # kopano4ucs
 #  config registry module to update kopano configuration
 #
-# Copyright 2012-2016 Univention GmbH
+# Copyright 2012-2019 Univention GmbH
 #
 # http://www.univention.de/
 #
@@ -35,19 +35,19 @@ import re
 import subprocess
 
 OPTIONS_CFG = {
-		'DIR_CONFIG': '/etc/kopano',
-		'FN_SUFFIX': '.cfg',
-		'UCR_PREFIX': 'kopano/cfg/',
-		'LINEFORMAT': '%s = %s\n',
-		'RE_CFGOPTION': '^#?\s*%s\s*='
-		}
+	'DIR_CONFIG': '/etc/kopano',
+	'FN_SUFFIX': '.cfg',
+	'UCR_PREFIX': 'kopano/cfg/',
+	'LINEFORMAT': '%s = %s\n',
+	'RE_CFGOPTION': '^#?\s*%s\s*='
+}
 OPTIONS_PHP = {
-		'DIR_CONFIG': '/etc/kopano/webapp',
-		'FN_SUFFIX': '.php',
-		'UCR_PREFIX': 'kopano/webapp/',
-		'LINEFORMAT': 'define("%s",%s);\n',
-		'RE_CFGOPTION': '^\s*define\(\"%s\",\s*'
-		}
+	'DIR_CONFIG': '/etc/kopano/webapp',
+	'FN_SUFFIX': '.php',
+	'UCR_PREFIX': 'kopano/webapp/',
+	'LINEFORMAT': 'define("%s",%s);\n',
+	'RE_CFGOPTION': '^\s*define\(\"%s\",\s*'
+}
 RE_WARNING = re.compile('^# Warning: the value .*? has been set via UCR variable')
 MSG_WARNING = '# Warning: the value "%s" has been set via UCR variable "%s"\n'
 RE_UCRVAR = re.compile('@%@(.*?)@%@')
@@ -71,7 +71,7 @@ def get_line(option, ucrkey, configRegistry, lineformat):
 	for key in matches:
 		try:
 			content = open(key, 'r').read()
-		except IOError, e:
+		except IOError:
 			content = ''
 		value = value.replace('@&@%s@&@' % key, content)
 	return value
@@ -98,7 +98,7 @@ def handle_files_etc_kopano(configRegistry, changes, OPTIONS):
 	handle UCR variable changes with prefix ucr_prefix and alter kopano
 	config files in DIR_CONFIG if neccessary.
 	UCR config option style:  <ucr_prefix>/server/quota_warn=12345
-       	                      <-PREFIX-><-FILE-><-Option->=<-Value->
+							<-PREFIX-><-FILE-><-Option->=<-Value->
 	The UCR variable value may contain UCR placeholders (@%@variable/name@%@).
 	The UCR variable value may contain placeholders for files (@&@/etc/fstab@&@).
 	"""
@@ -110,9 +110,9 @@ def handle_files_etc_kopano(configRegistry, changes, OPTIONS):
 
 	changed_options = {}
 	# check all kopano UCR variables
-	for key in [ x for x in configRegistry.keys() if x.startswith(UCR_PREFIX) ]:
+	for key in [x for x in configRegistry.keys() if x.startswith(UCR_PREFIX)]:
 		# find UCR placeholder in variable values (==> e.g. @%@ldap/server/name@%@)
-		matches = RE_UCRVAR.findall( configRegistry.get(key) )
+		matches = RE_UCRVAR.findall(configRegistry.get(key))
 		# if key is in list of changed UCR variables or
 		# the UCR variable value contains a UCR placeholder that is listed in changed UCR variables list then...
 		if key in changes or filter(lambda x: x in changes, matches):
@@ -120,18 +120,18 @@ def handle_files_etc_kopano(configRegistry, changes, OPTIONS):
 			items = key.split('/')
 			if len(items) == 4:
 				filename = os.path.join(DIR_CONFIG, '%s%s' % (items[2], FN_SUFFIX))
-				if not filename in changed_options:
+				if filename not in changed_options:
 					changed_options[filename] = {}
-				changed_options[filename][items[3]] = [ key, configRegistry.get(key), False ]  # key, value, replaced
+				changed_options[filename][items[3]] = [key, configRegistry.get(key), False]  # key, value, replaced
 
 	# check for removed UCR variables
-	for key in [ x for x in changes.keys() if x.startswith(UCR_PREFIX) and x not in configRegistry ]:
+	for key in [x for x in changes.keys() if x.startswith(UCR_PREFIX) and x not in configRegistry]:
 		items = key.split('/')
 		if len(items) == 4:
 			filename = os.path.join(DIR_CONFIG, '%s%s' % (items[2], FN_SUFFIX))
-			if not filename in changed_options:
+			if filename not in changed_options:
 				changed_options[filename] = {}
-			changed_options[filename][items[3]] = [ key, None, False ]  # key, value, replaced
+			changed_options[filename][items[3]] = [key, None, False]  # key, value, replaced
 
 	if changed_options:
 		handle_files(configRegistry, changed_options, LINEFORMAT, RE_CFGOPTION)
@@ -141,31 +141,31 @@ def handle_files_etc_default(configRegistry, changes):
 	"""
 	handle UCR variable changes with prefix "kopano/default/" and alter config file /etc/default/kopano.
 	UCR config option style:  kopano/default/quota_warn=12345
-       	                      <----PREFIX----><-Option->=<-Value->
+							<----PREFIX----><-Option->=<-Value->
 	The UCR variable value may contain UCR placeholders (@%@variable/name@%@).
 	The UCR variable value may contain placeholders for files (@&@/etc/fstab@&@).
 	"""
 
 	filename = '/etc/default/kopano'
-	changed_options = { filename: {} }
+	changed_options = {filename: {}}
 
 	# check all kopano UCR variables
-	for key in [ x for x in configRegistry.keys() if x.startswith('kopano/default/') ]:
+	for key in [x for x in configRegistry.keys() if x.startswith('kopano/default/')]:
 		# find UCR placeholder in variable values (==> e.g. @%@ldap/server/name@%@)
-		matches = RE_UCRVAR.findall( configRegistry.get(key) )
+		matches = RE_UCRVAR.findall(configRegistry.get(key))
 		# if key is in list of changed UCR variables or
 		# the UCR variable value contains a UCR placeholder that is listed in changed UCR variables list then...
 		if key in changes or filter(lambda x: x in changes, matches):
 			# ...prepare UCR variable and remember filename, key and value
 			items = key.split('/')
 			if len(items) == 3:
-				changed_options[filename][items[2]] = [ key, configRegistry.get(key), False ]  # key, value, replaced
+				changed_options[filename][items[2]] = [key, configRegistry.get(key), False]  # key, value, replaced
 
 	# check for removed UCR variables
-	for key in [ x for x in changes.keys() if x.startswith('kopano/default/') and x not in configRegistry ]:
+	for key in [x for x in changes.keys() if x.startswith('kopano/default/') and x not in configRegistry]:
 		items = key.split('/')
 		if len(items) == 3:
-			changed_options[filename][items[2]] = [ key, None, False ]  # key, value, replaced
+			changed_options[filename][items[2]] = [key, None, False]  # key, value, replaced
 
 	if changed_options:
 		handle_files(configRegistry, changed_options, '%s="%s"\n', OPTIONS_CFG['RE_CFGOPTION'])
@@ -173,13 +173,14 @@ def handle_files_etc_default(configRegistry, changes):
 
 def handle_files(configRegistry, changed_options, lineformat, RE_CFGOPTION):
 	"""
-    Update specified files based on data structure "changed_options":
+	Update specified files based on data structure "changed_options":
 
-	changed_options = { '/etc/kopano/ldap.cfg': { 'mykey':  [ 'kopano/cfg/ldap/mykey', 'the_value', False ],
-												  'thekey': [ 'kopano/cfg/ldap/thekey', 'some_value', False ],
-												  },
-												  ....
-					  }
+	changed_options = {
+		'/etc/kopano/ldap.cfg': {
+			'mykey': ['kopano/cfg/ldap/mykey', 'the_value', False],
+			'thekey': ['kopano/cfg/ldap/thekey', 'some_value', False],
+		}, ....
+	}
 	"""
 
 	# iterate over all filenames specified in UCR variables
@@ -209,14 +210,14 @@ def handle_files(configRegistry, changed_options, lineformat, RE_CFGOPTION):
 						# ...and UCR variable does still exist, so current line will be replaced
 						lines[i] = get_line(cfgitem, changed_options[fn][cfgitem][KEY], configRegistry, lineformat)
 						# check if warning text is missing...
-						if (i == 0) or (i > 0 and not RE_WARNING.match(lines[i-1])):
+						if (i == 0) or (i > 0 and not RE_WARNING.match(lines[i - 1])):
 							lines.insert(i, MSG_WARNING % (cfgitem, changed_options[fn][cfgitem][KEY]))
 							i += 1
 						file_changed = True
 					else:
 						# ...and UCR variable has been removed, so warning will be removed
-						if (i > 0) and RE_WARNING.match(lines[i-1]):
-							del lines[i-1]
+						if (i > 0) and RE_WARNING.match(lines[i - 1]):
+							del lines[i - 1]
 							i -= 1
 							lines[i] = "#%s" % lines[i]
 							file_changed = True
@@ -238,10 +239,11 @@ def handle_files(configRegistry, changed_options, lineformat, RE_CFGOPTION):
 						print "Error: no closing php tag found in %s, ucr option not added" % fn
 				else:
 					file_changed = True
-					lines.extend( [ '\n',
-								MSG_WARNING % (cfgitem, changed_options[fn][cfgitem][KEY]),
-								get_line(cfgitem, changed_options[fn][cfgitem][KEY], configRegistry, lineformat),
-								] )
+					lines.extend([
+						'\n',
+						MSG_WARNING % (cfgitem, changed_options[fn][cfgitem][KEY]),
+						get_line(cfgitem, changed_options[fn][cfgitem][KEY], configRegistry, lineformat),
+					])
 
 		# update file only if changes have been made
 		if file_changed:
