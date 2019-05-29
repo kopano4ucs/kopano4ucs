@@ -29,7 +29,7 @@ eval "$(univention-config-registry shell)"
 
 # join script
 stop_udm_cli_server
-call_joinscript 70kopano4ucs-udm.inst
+call_joinscript 70kopano4ucs-multiserver-udm.inst
 
 # restart listener
 /etc/init.d/univention-directory-listener crestart

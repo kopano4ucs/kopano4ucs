@@ -1,0 +1,210 @@
+#!/bin/sh
+#
+# kopanoschema
+#  join script
+#
+# Copyright 2018 linudata GmbH
+# Copyright 2012-2016 Univention GmbH
+# Copyright 2016 Kopano bv
+#
+# https://linudata.de/
+#
+# All rights reserved.
+#
+# The source code of this program is made available
+# under the terms of the GNU Affero General Public License version 3
+# (GNU AGPL V3) as published by the Free Software Foundation.
+#
+# Binary versions of this program provided by Univention to you as
+# well as other copyrighted, protected or trademarked materials like
+# Logos, graphics, fonts, specific documentations and configurations,
+# cryptographic keys etc. are subject to a license agreement between
+# you and Univention and not subject to the GNU AGPL V3.
+#
+# In the case you use this program under the terms of the GNU AGPL V3,
+# the program is provided in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public
+# License with the Debian GNU/Linux or Univention distribution in file
+# /usr/share/common-licenses/AGPL-3; if not, see
+# <http://www.gnu.org/licenses/>.
+
+# Based on 70kopano4ucs.inst VERSION 5
+VERSION=1
+
+# Standard action from Developer Reference
+. /usr/share/univention-join/joinscripthelper.lib
+. /usr/share/univention-lib/all.sh
+
+joinscript_init
+
+eval "$(univention-config-registry shell)"
+
+
+# --- Add Kopano multiserver stuff to the LDAP tree
+#     (schema and user management has te be installed already)
+
+univention-directory-manager settings/syntax create "$@" --ignore_exists \
+	--position "cn=kopano,cn=custom attributes,cn=univention,$ldap_base" \
+        --set name=k4uUserServerSyntax \
+	--set description="Search syntax for Kopano Server" \
+	--set filter="(objectClass=kopano-server)" \
+	--set ldapattribute="cn" \
+	--set ldapvalue="cn" \
+	--set viewonly=FALSE || die
+
+univention-directory-manager settings/syntax create "$@" --ignore_exists \
+	--position "cn=kopano,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name=k4uUserServerSyntaxANDEmptyValue \
+	--set description="Search syntax for Kopano Server" \
+	--set filter="(objectClass=kopano-server)" \
+	--set ldapattribute="cn" \
+	--set ldapvalue="cn" \
+	--set addEmptyValue=True \
+	--set viewonly=FALSE || die
+
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=kopano,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="k4uUserServer" \
+	--set module=users/user \
+	--set module=settings/usertemplate \
+	--set tabName="Kopano" \
+	--set tabPosition=21 \
+	--set shortDescription="Kopano Home Server" \
+	--set longDescription="Kopano server the user store will be hosted on" \
+	--set translationShortDescription='"de_DE" "Kopano Home Server"' \
+	--set translationLongDescription='"de_DE" "Kopano-Server, auf dem der Benutzer-Store gespeichert wird"' \
+	--set objectClass=kopano-user \
+	--set syntax=k4uUserServerSyntaxANDEmptyValue \
+	--set mayChange=1 \
+	--set ldapMapping=kopanoUserServer \
+	--set multivalue=0 || die
+
+#archiver related
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=kopano,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="k4uArchiveServer" \
+	--set module=users/user \
+	--set module=settings/usertemplate \
+	--set tabName="Kopano" \
+	--set tabPosition=22 \
+	--set shortDescription="Kopano Archive Server" \
+	--set longDescription="Kopano server the user archive will be hosted on" \
+	--set translationShortDescription='"de_DE" "Kopano Archive Server"' \
+	--set translationLongDescription='"de_DE" "Kopano-Server, auf dem das Benutzer-Archiv gespeichert wird"' \
+	--set objectClass=kopano-user \
+	--set syntax=k4uUserServerSyntaxANDEmptyValue \
+	--set mayChange=1 \
+	--set ldapMapping=kopanoUserArchiveServers \
+	--set multivalue=0 || die
+
+
+
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+        --position "cn=kopano,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="k4uFQDN" \
+	--set module=computers/memberserver \
+	--set tabName="Kopano" \
+	--set shortDescription="Kopano host FQDN" \
+	--set longDescription="The Kopano Host's full qualified domain name" \
+	--set translationShortDescription='"de_DE" "FQDN des Kopano Hosts"' \
+	--set translationLongDescription='"de_DE" "Der fully qualified domain name des Kopano Hosts"' \
+	--set objectClass=kopano-server \
+	--set syntax=string \
+	--set mayChange=1 \
+	--set ldapMapping=kopano4ucsFqdn \
+	--set tabPosition=1 \
+	--set multivalue=0 \
+	--set default="" || die
+
+univention-directory-manager computers/"$server_role" modify "$@" --dn "$ldap_hostdn" \
+	--set k4uFQDN="$hostname.$domainname" || die
+
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+        --position "cn=kopano,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="k4uContainsPublic" \
+	--set module=computers/memberserver \
+	--set tabName="Kopano" \
+	--set shortDescription="Contains Public Store (only one server may have set this option)" \
+	--set longDescription="This server contains the public store" \
+	--set translationShortDescription='"de_DE" "Enthält Public Store (dies darf nur auf einem Server gesetzt sein)"' \
+	--set translationLongDescription='"de_DE" "Dieser Server enthält einen öffentlichen Kopano-Store"' \
+	--set objectClass=kopano-server \
+	--set syntax=boolean \
+	--set mayChange=1 \
+	--set ldapMapping=kopanoContainsPublic \
+	--set tabPosition=3 \
+	--set multivalue=0 || die
+
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+        --position "cn=kopano,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="k4uFilePath" \
+	--set module=computers/memberserver \
+	--set tabName="Kopano" \
+	--set shortDescription="Server File Path" \
+	--set longDescription="The unix socket or named pipe to the server" \
+	--set translationShortDescription='"de_DE" "Server File Path"' \
+	--set translationLongDescription='"de_DE" "Pfad zum Unix-Socket or der Named-Pipe des Kopano-Servers"' \
+	--set objectClass=kopano-server \
+	--set syntax=string \
+	--set mayChange=1 \
+	--set ldapMapping=kopanoFilePath \
+	--set tabPosition=5 \
+	--set multivalue=0 \
+	--set default="/var/run/kopano/server.sock" || die
+
+univention-directory-manager computers/"$server_role" modify "$@" --dn "$ldap_hostdn" \
+        --set k4uFilePath="/var/run/kopano/server.sock" || die
+
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+        --position "cn=kopano,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="k4uHttpPort" \
+	--set module=computers/memberserver \
+	--set tabName="Kopano" \
+	--set shortDescription="HTTP Port" \
+	--set longDescription="Port for HTTP connections" \
+	--set translationShortDescription='"de_DE" "HTTP Port"' \
+	--set translationLongDescription='"de_DE" "Port für HTTP-Verbindungen"' \
+	--set objectClass=kopano-server \
+	--set syntax=string \
+	--set mayChange=1 \
+	--set ldapMapping=kopanoHttpPort \
+	--set tabPosition=7 \
+	--set multivalue=0 \
+	--set default="236" || die
+
+univention-directory-manager computers/"$server_role" modify "$@" --dn "$ldap_hostdn" \
+        --set k4uHttpPort="236" || die
+
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+        --position "cn=kopano,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="k4uSslPort" \
+	--set module=computers/memberserver \
+	--set tabName="Kopano" \
+	--set shortDescription="SSL Port" \
+	--set longDescription="Port for SSL connections" \
+	--set translationShortDescription='"de_DE" "SSL Port"' \
+	--set translationLongDescription='"de_DE" "Port für SSL-Verbindungen"' \
+	--set objectClass=kopano-server \
+	--set syntax=string \
+	--set mayChange=1 \
+	--set ldapMapping=kopanoSslPort \
+	--set tabPosition=9 \
+	--set multivalue=0 \
+	--set default="237" || die
+
+univention-directory-manager computers/"$server_role" modify "$@" --dn "$ldap_hostdn" \
+        --set k4uSslPort="237" || die
+
+
+
+# Terminate UDM CLI server to force module reload
+stop_udm_cli_server
+
+
+joinscript_save_current_version
+
+exit 0

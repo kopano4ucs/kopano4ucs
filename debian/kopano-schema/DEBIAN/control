@@ -1,0 +1,13 @@
+Package: kopano-schema
+Version: 1.0
+Architecture: amd64
+Maintainer: Claus R. Wickinghoff <info@linudata.de>
+Installed-Size: 24
+Breaks: kopano4ucs, kopano4ucs-schema, kopano4ucs-udm
+Section: misc
+Priority: optional
+Homepage: https://linudata.de/
+Description: Kopano schema extansion for Univention Corporate Server UCS
+ This package adds the Kopano schema extension to an UCS system.
+ It is based on Kopano4UCS but it does not install Kopano software itself
+ and does not need a MySQL/MariaDB setup.

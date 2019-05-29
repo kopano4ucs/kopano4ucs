@@ -1,5 +1,0 @@
-scripts/kopano4ucs-migrate.sh usr/share/kopano4ucs
-scripts/kopano4ucs-migrate-files.sh usr/share/kopano4ucs
-scripts/kopano4ucs-migrate-ldap.sh usr/share/kopano4ucs
-scripts/kopano4ucs-migrate-ucr.sh usr/share/kopano4ucs
-schema/zarafa4ucs.schema usr/share/kopano4ucs-schema/

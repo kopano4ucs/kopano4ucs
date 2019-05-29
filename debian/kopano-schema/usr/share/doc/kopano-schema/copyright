@@ -1,9 +1,9 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: kopano4ucs
-Source: <https://linudata.de>
+Upstream-Name: kopano-schema
+Source: <url://example.com>
 
 Files: *
-Copyright: 2018-2019 linudata GmbH <info@linudata.de>
+Copyright: 2018 linudata GmbH <info@linudata.de>
 	   2016 Kopano and its licensors
            2012-2016 Univention GmbH
 	   2005-2016 Zarafa and its licensors

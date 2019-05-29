@@ -1,7 +1,0 @@
-0004-13: conffiles/kopano-cfg.py
-0010-2: conffiles/etc/kopano/userscripts/createuser.d/00createstore
-0010-2: scripts/db-upgrade-addressbook-entryids.pl
-0010-2: scripts/db-upgrade-addressbook-entryids-delegate.pl
-0004-12: conffiles/etc/apt/sources.list.d/kopano-core.list
-0004-12: conffiles/etc/apt/sources.list.d/kopano-webapp.list
-0004-12: conffiles/etc/apt/sources.list.d/z-push.list

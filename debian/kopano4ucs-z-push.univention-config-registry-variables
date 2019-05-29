@@ -1,9 +1,0 @@
-[kopano/repo/z-push-kopano]
-description[en]=Should updates for Z-Push be installed through the official Z-Push repository?
-type=bool
-Categories=kopano
-
-[kopano/repo/z-push-kopano-releasetype]
-description[en]=Specifies the release type. Can either be final, pre-final, or master (for nightly/development builds).
-type=text
-Categories=kopano

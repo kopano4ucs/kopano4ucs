@@ -1,0 +1,25 @@
+The Debian Package kopano4ucs
+----------------------------
+
+In certain setups the Univention Corporate Server UCS is running as
+central LDAP- and authentication service. Other services use this LDAP
+to retrieve information about users.
+
+In case you want to use Univention Corporate Server UCS as an LDAP
+server for a separate Kopano server installation or within a Kopano
+multiserver setup, you'll need the LDAP schema extension and a
+corresponding UDM extension.
+
+Kopano4UCS is a maintained bunch of packages for UCS, but
+unfortunately the LDAP and UDM extensions are mixed in the binary
+packages. When installing these packages you'll end up with a full
+running Kopano service including SQL database on the Univention server.
+
+If this is not what you want, this package might be the one you're
+looking for.
+
+Based on the original Kopano LDAP schema taken from the Kopano4UCS
+packages, the neccessary UDM intergration including hook mechanisms to
+run actions on the Kopano server are built together in this package.
+
+ -- Claus R. Wickinghoff <info@linudata.de>  Mon, 26 Nov 2018 16:17:20 +0100

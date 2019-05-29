@@ -1,31 +1,18 @@
 Source: kopano4ucs
-Section: univention
+Section: misc
 Priority: optional
-Maintainer: Univention GmbH <packages@univention.de>
-Standards-Version: 3.8.2
-Build-Depends: debhelper (>= 7.0.50),
- ucslint,
- python-support,
- univention-config-dev,
- python-all,
- python-support (>= 0.90),
- gettext,
- gnupg2
-XS-Python-Version: 2.6, 2.7
-
-Package: kopano4ucs-lib
-Architecture: all
-Depends: ${misc:Depends},
- shell-univention-lib (>> 2.0.17-1.125)
-Description: Library package for common Kopano4ucs functions
- This package contains common modules and functions for kopano4ucs
- integration packages
+Maintainer: Claus R. Wickinghoff <info@linudata.de>
+Build-Depends: debhelper (>= 9)
+Standards-Version: 3.9.8
+Homepage: https://linudata.de/
+#Vcs-Git: https://anonscm.debian.org/collab-maint/kopano-schema.git
+#Vcs-Browser: https://anonscm.debian.org/cgit/collab-maint/kopano-schema.git
 
 Package: kopano4ucs-schema
 Architecture: all
 Depends: ${misc:Depends},
  ${python:Depends},
- shell-univention-lib (>> 2.0.17-1.125)
+ shell-univention-lib
 Breaks: univention-ldap-server (<< 9.0.20-1.580.201303211526)
 Description: LDAP schema for the Kopano4ucs integration
  OpenLDAP schema extension for the Kopano4ucs integration
@@ -36,116 +23,22 @@ Depends: ${misc:Depends},
  ${python:Depends},
  shell-univention-lib,
  kopano4ucs-schema (= ${binary:Version}),
- kopano4ucs-lib
 Provides: ${python:Provides}
 Description: UDM extensions for the Kopano4ucs integration
- Univention Directory Manager extensions for the Kopano4ucs integration 
+ Univention Directory Manager extensions for the Kopano4ucs integration.
+ This package enhances the user management interface with Kopano specific
+ settings.
 
-Package: kopano4ucs
+Package: kopano4ucs-multiserver-udm
 Architecture: all
-Depends: ${misc:Depends}, 
+Depends: ${misc:Depends},
  ${python:Depends},
- kopano4ucs-udm (= ${binary:Version}),
- kopano4ucs-schema (= ${binary:Version}),
- univention-join (>> 5.0.20-1.436),
- shell-univention-lib (>> 2.0.17-1.125),
- kopano-server-packages,
- univention-mail-postfix,
- univention-apache,
- univention-mysql,
- makepasswd,
- python-mysqldb,
- python-univention-directory-manager (>=9.0.75-17),
- libxml-dom-perl,
- univention-sasl,
- univention-mail-postfix,
- kopano-contacts,
- kopano4ucs-lib
-Recommends: bsd-mailx,
- univention-spamassassin,
- univention-antivir-mail
-Conflicts: univention-mail-server,
- univention-mail-cyrus,
- univention-mail-dovecot,
- dovecot-imapd,
- cyrus-imapd,
- cyrus-imapd-2.4,
- cyrus-imapd-2.2,
- cyrus-common-2.2,
- cyrus-common-2.4,
-Description: Kopano4ucs integration package for Univention Corporate Server
- Integration package for installation and configuration of the Kopano
- groupware solution on Univention Corporate Server.
-
-Package: kopano4ucs-multiserver
-Architecture: all
-Depends: ${misc:Depends}, 
- ${python:Depends},
- kopano4ucs (= ${binary:Version}),
- kopano4ucs-udm (= ${binary:Version}),
- kopano4ucs-schema (= ${binary:Version}),
- univention-join (>> 5.0.20-1.436),
- shell-univention-lib (>> 2.0.17-1.125)
-Description: Kopano4ucs multiserver integration package for UCS
- Integration package for installation and configuration of the Kopano
- groupware solution multiserver support on Univention Corporate Server.
-
-Package: kopano4ucs-webapp
-Architecture: all
-Depends: ${misc:Depends},
- kopano-webapp,
  shell-univention-lib,
- kopano4ucs-lib,
- kopano-webapp-plugin-files,
- kopano-webapp-plugin-filesbackend-owncloud,
- kopano-webapp-plugin-filesbackend-smb,
- kopano-webapp-plugin-mdm,
- kopano-webapp-plugin-smime,
- kopano-webapp-plugin-desktopnotifications,
- kopano-webapp-plugin-filepreviewer,
- kopano-webapp-plugin-folderwidgets,
- kopano-webapp-plugin-spell,
- kopano-webapp-plugin-spell-de-de,
- kopano-webapp-plugin-spell-en,
- kopano-webapp-plugin-spell-nl,
- kopano-webapp-plugin-titlecounter,
- kopano-webapp-plugin-webappmanual,
- ${dist:Depends}
-Description: Kopano4ucs kopano-webapp integration package for Univention Corporate Server
- Integration package for installation and configuration of the Kopano
- groupware solution WebApp interface on Univention Corporate Server.
+ kopano4ucs-udm (= ${binary:Version}),
+Provides: ${python:Provides}
+Description: UDM extensions for the Kopano4ucs integration
+ Univention Directory Manager extensions for the Kopano4ucs integration. 
+ This package enhances the server and user management interface with
+ Kopano specific settings for setup of Kopano archiver and/or Kopano
+ multiserver setups.
 
-Package: kopano4ucs-z-push
-Architecture: all
-Depends: ${misc:Depends},
- z-push-kopano,
- z-push-kopano-gabsync,
- z-push-config-apache
-Conflicts: d-push,
- z-push
-Replaces: d-push,
- z-push
-Description: Meta package for Z-Push installation
- Meta package to ease installation of Z-Push through the Univention Appcenter.
-
-Package: zarafa4ucs-z-push
-Architecture: all
-Depends: ${misc:Depends},
- z-push-kopano,
- z-push-kopano-gabsync,
- z-push-config-apache
-Conflicts: d-push,
- z-push
-Replaces: d-push,
- z-push
-Description: Meta package for Z-Push installation
- Meta package to ease installation of Z-Push through the Univention Appcenter.
-
-Package: kopano4ucs-migrate-zarafa
-Architecture: all
-Pre-Depends: univention-config
-Depends: ${misc:Depends},
- shell-univention-lib,
- kopano4ucs-lib
-Description:
- Helper package that detects and migrates settings and data of a former Zarafa installation (will not migrate WebMeetings settings).

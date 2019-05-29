@@ -1,11 +1,13 @@
 #!/bin/sh
 #
-# kopano4ucs-udm
+# kopanoschema
 #  join script
 #
-# Copyright 2012-2019 Univention GmbH
+# Copyright 2018-2019 linudata GmbH
+# Copyright 2012-2016 Univention GmbH
+# Copyright 2016 Kopano bv
 #
-# http://www.univention.de/
+# https://linudata.de/
 #
 # All rights reserved.
 #
@@ -30,13 +32,342 @@
 # /usr/share/common-licenses/AGPL-3; if not, see
 # <http://www.gnu.org/licenses/>.
 
+# Based on 70kopano4ucs.inst VERSION 5
 VERSION=1
 
+# Standard action from Developer Reference
 . /usr/share/univention-join/joinscripthelper.lib
 . /usr/share/univention-lib/all.sh
+
 joinscript_init
 
 eval "$(univention-config-registry shell)"
+
+
+# --- Add Kopano stuff to the LDAP tree (schema has te be installed already)
+
+# create folder "kopano" in LDAP - univention - custom attributes
+univention-directory-manager container/cn create "$@" --ignore_exists \
+	--position="cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="kopano" \
+	--set description="Attributes for Kopano configuration" || die
+
+# create kopano container "kopano"  in LDAP root
+univention-directory-manager container/cn create "$@" --ignore_exists \
+	--position="$ldap_base" \
+	--set name="kopano" \
+	--set description="Container for Kopano objects" || die
+
+# groups as extended attribute "kopano-group" in LDAP - univention - custom attributes - kopano
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=kopano,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="kopano-group" \
+	--set module=groups/group \
+	--set tabName="Kopano" \
+	--set tabPosition=1 \
+	--set shortDescription="Kopano group" \
+	--set longDescription="Make group available in Kopano" \
+	--set translationShortDescription='"de_DE" "Kopano Gruppe"' \
+	--set translationLongDescription='"de_DE" "Gruppe in Kopano verfügbar machen"' \
+	--set objectClass=kopano-group  \
+	--set syntax=boolean \
+	--set mayChange=1 \
+	--set ldapMapping=kopanoAccount \
+	--set multivalue=0 \
+	--set default="0" || die
+
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=kopano,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="kopano-group-hidden" \
+	--set module=groups/group \
+	--set tabName="Kopano" \
+	--set tabPosition=2 \
+	--set shortDescription="Hide group from addressbook" \
+	--set longDescription="Hide this group from the global kopano addressbook" \
+	--set translationShortDescription='"de_DE" "Gruppe aus dem Adressbuch ausblenden"' \
+	--set translationLongDescription='"de_DE" "Gruppe aus dem globalen Kopano Adressbuch ausblenden"' \
+	--set objectClass=kopano-group  \
+	--set syntax=boolean \
+	--set mayChange=1 \
+	--set ldapMapping=kopanoHidden \
+	--set multivalue=0 \
+	--set default="0" || die
+
+# sendas-attribute for groups
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=kopano,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="kopano-group-sendas" \
+	--set module=groups/group \
+	--set tabName="Kopano" \
+	--set tabPosition=3 \
+	--set shortDescription="Delegates" \
+	--set longDescription="List of users that may send emails with the identity of the group" \
+	--set translationShortDescription='"de_DE" "Stellvertreter"' \
+	--set translationLongDescription='"de_DE" "Liste mit Benutzern, die E-Mails mit der Identität der Gruppe versenden dürfen"' \
+	--set objectClass=kopano-group  \
+	--set mayChange=1 \
+	--set syntax=k4uUserSendAsPrivilege \
+	--set ldapMapping=kopanoSendAsPrivilege \
+	--set multivalue=1 || die
+
+# users
+
+# formerly known as kopano-user, kopano-contact, kopano-admin and sharedStore
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=kopano,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="kopano-role" \
+	--set module=users/user \
+	--set module=settings/usertemplate \
+	--set tabName="Kopano" \
+	--set tabPosition=1 \
+	--set shortDescription="Kopano Role (Warning: 'None' will delete Kopano user data)" \
+	--set longDescription="Select the Kopano role for this user. Warning: by changing the role to 'None' all kopano-related user data will get deleted." \
+	--set translationShortDescription='"de_DE" "Kopano-Rolle (Warnung: '"'Keine'"' löscht Kopano-Benutzerdaten)"' \
+	--set translationLongDescription='"de_DE" "Kopano-Rolle für dieses Benutzerobjekt wählen. Warnung: Beim Wechsel auf die Rolle '"'Keine'"' werden alle kopanospezifischen Daten des Benutzers gelöscht.' \
+	--set objectClass="kopano-user" \
+	--set syntax="kopano4ucsRole" \
+	--set mayChange=1 \
+	--set ldapMapping="kopano4ucsRole" \
+	--set multivalue=0 \
+	--set hook="kopano4ucsRole" \
+	--set default="user" || die
+
+# Syntax for k4uUserSendAsPrivilege must be uidNumber
+univention-directory-manager settings/syntax create "$@" --ignore_exists \
+	--position "cn=kopano,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name=k4uUserSendAsPrivilege \
+	--set description="Kopano User for SendAsPrivilege" \
+	--set filter="(&(kopanoAccount=1)(uidNumber=*)(!(objectClass=kopano-contact)))" \
+	--set ldapattribute="uid" \
+	--set ldapvalue=uidNumber \
+	--set viewonly=FALSE || die
+
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=kopano,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="SendAsPrivilege" \
+	--set module=users/user \
+	--set module=settings/usertemplate \
+	--set tabName="Kopano" \
+	--set tabPosition=3 \
+	--set shortDescription="Delegates" \
+	--set longDescription="List of users that may send emails with the identity of the actual users" \
+	--set translationShortDescription='"de_DE" "Stellvertreter"' \
+	--set translationLongDescription='"de_DE" "Liste mit Benutzern, die E-Mails mit der Identität des aktuellen Benutzers versenden dürfen"' \
+	--set objectClass=kopano-user \
+	--set syntax=k4uUserSendAsPrivilege \
+	--set mayChange=1 \
+	--set ldapMapping=kopanoSendAsPrivilege \
+	--set multivalue=1 || die
+
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=kopano,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="kopano-user-hidden" \
+	--set module=users/user \
+	--set module=settings/usertemplate \
+	--set tabName="Kopano" \
+	--set tabPosition=5 \
+	--set shortDescription="Hide entry from Kopano addressbook" \
+	--set longDescription="Hide this entry from the global Kopano addressbook" \
+	--set translationShortDescription='"de_DE" "Objekt aus dem Kopano Adressbuch ausblenden"' \
+	--set translationLongDescription='"de_DE" "Objekt aus dem globalen Kopano Adressbuch ausblenden"' \
+	--set objectClass=kopano-user \
+	--set syntax=boolean \
+	--set mayChange=1 \
+	--set ldapMapping=kopanoHidden \
+	--set multivalue=0 \
+	--set default="0" || die
+
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=kopano,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="MRAccept" \
+	--set module=users/user \
+	--set module=settings/usertemplate \
+	--set tabName="Kopano" \
+	--set tabPosition=7 \
+	--set shortDescription="Auto accept meeting requests" \
+	--set longDescription="Accept meeting request (resource) automatically" \
+	--set translationShortDescription='"de_DE" "Besprechungsanfragen automatisch annehmen"' \
+	--set translationLongDescription='"de_DE" "Besprechungsanfragen automatisch annehmen"' \
+	--set objectClass=kopano-user \
+	--set syntax=boolean \
+	--set mayChange=1 \
+	--set ldapMapping=kopanoMrAccept \
+	--set multivalue=0 || die
+
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=kopano,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="MRDeclineConflictingTimes" \
+	--set module=users/user \
+	--set module=settings/usertemplate \
+	--set tabName="Kopano" \
+	--set tabPosition=9 \
+	--set shortDescription="Auto decline meetings requests with conflicting times" \
+	--set longDescription="Decline meeting requests with conflicting times (resource) automatically" \
+	--set translationShortDescription='"de_DE" "Besprechungsanfragen bei Konflikten automatisch ablehnen"' \
+	--set translationLongDescription='"de_DE" "Besprechungsanfragen bei Konflikten automatisch ablehnen"' \
+	--set objectClass=kopano-user \
+	--set syntax=boolean \
+	--set mayChange=1 \
+	--set ldapMapping=kopanoMrDeclineConflict \
+	--set multivalue=0 || die
+
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=kopano,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="MRDeclineRecurringItems" \
+	--set module=users/user \
+	--set module=settings/usertemplate \
+	--set tabName="Kopano" \
+	--set tabPosition=11 \
+	--set shortDescription="Auto decline recurring meeting requests" \
+	--set longDescription="Decline recurring items (resource) automatically" \
+	--set translationShortDescription='"de_DE" "Wiederkehrende Besprechungsanfragen automatisch ablehnen"' \
+	--set translationLongDescription='"de_DE" "Wiederkehrende Besprechungsanfragen automatisch ablehnen"' \
+	--set objectClass=kopano-user \
+	--set syntax=boolean \
+	--set mayChange=1 \
+	--set ldapMapping=kopanoMrDeclineRecurring \
+	--set multivalue=0 || die
+
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=kopano,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="quotaOverride" \
+	--set module=users/user \
+	--set module=settings/usertemplate \
+	--set tabName="Kopano" \
+	--set shortDescription="Override global quota settings" \
+	--set longDescription="Override global quota settings with users warning, soft and hard quota size" \
+	--set translationShortDescription='"de_DE" "Globale Quota-Einstellungen überschreiben"' \
+	--set translationLongDescription='"de_DE" "Globale Quota-Einstellungen mit den benutzerspezifischen Quota-Einstellungen überschreiben"' \
+	--set objectClass=kopano-user \
+	--set syntax=boolean \
+	--set mayChange=1 \
+	--set ldapMapping=kopanoQuotaOverride \
+	--set multivalue=0 \
+	--set tabPosition=13 \
+	--set default="0" || die
+
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=kopano,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="quotaWarn" \
+	--set module=users/user \
+	--set module=settings/usertemplate \
+	--set tabName="Kopano" \
+	--set shortDescription="Warning quota size in MB" \
+	--set longDescription="Warning quota size in MB" \
+	--set translationShortDescription='"de_DE" "Warnung-Quota Größe in MB"' \
+	--set translationLongDescription='"de_DE" "Warnung-Quota Größe in MB"' \
+	--set objectClass=kopano-user \
+	--set syntax=integer \
+	--set mayChange=1 \
+	--set ldapMapping=kopanoQuotaWarn \
+	--set tabPosition=15 \
+	--set multivalue=0 || die
+
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=kopano,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="quotaSoft" \
+	--set module=users/user \
+	--set module=settings/usertemplate \
+	--set tabName="Kopano" \
+	--set shortDescription="Soft quota size in MB" \
+	--set longDescription="Soft quota size in MB" \
+	--set translationShortDescription='"de_DE" "Soft-Quota Größe in MB"' \
+	--set translationLongDescription='"de_DE" "Soft-Quota Größe in MB"' \
+	--set objectClass=kopano-user \
+	--set syntax=integer \
+	--set mayChange=1 \
+	--set ldapMapping=kopanoQuotaSoft \
+	--set tabPosition=17 \
+	--set multivalue=0 || die
+
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=kopano,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="quotaHard" \
+	--set module=users/user \
+	--set module=settings/usertemplate \
+	--set tabName="Kopano" \
+	--set shortDescription="Hard quota size in MB" \
+	--set longDescription="Hard quota size in MB" \
+	--set translationShortDescription='"de_DE" "Hard-Quota Größe in MB"' \
+	--set translationLongDescription='"de_DE" "Hard-Quota Größe in MB"' \
+	--set objectClass=kopano-user \
+	--set syntax=integer \
+	--set mayChange=1 \
+	--set ldapMapping=kopanoQuotaHard \
+	--set tabPosition=19 \
+	--set multivalue=0 || die
+
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=kopano,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="kopanoEnabledFeature" \
+	--set module=users/user \
+	--set tabName="Kopano" \
+	--set shortDescription="Enable specific features for user" \
+	--set longDescription="Enable specific features for user" \
+	--set translationShortDescription='"de_DE" "Aktiviere spezifische Features für Benutzer"' \
+	--set translationLongDescription='"de_DE" "Aktiviere spezifische Features für Benutzer"' \
+	--set objectClass=kopano-user \
+	--set syntax=kopano4ucsFeature \
+	--set mayChange=1 \
+	--set ldapMapping=kopanoEnabledFeatures \
+	--set multivalue=1 \
+	--set tabPosition=25 || die
+
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=kopano,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="kopanoDisabledFeature" \
+	--set module=users/user \
+	--set tabName="Kopano" \
+	--set shortDescription="Disable specific features for user" \
+	--set longDescription="Disable specific features for user" \
+	--set translationShortDescription='"de_DE" "Deaktiviere spezifische Features für Benutzer"' \
+	--set translationLongDescription='"de_DE" "Deaktiviere spezifische Features für Benutzer"' \
+	--set objectClass=kopano-user \
+	--set syntax=kopano4ucsFeature \
+	--set mayChange=1 \
+	--set ldapMapping=kopanoDisabledFeatures \
+	--set multivalue=1 \
+	--set tabPosition=26 || die
+
+
+
+# Terminate UDM CLI server to force module reload
+stop_udm_cli_server
+
+
+# user template
+univention-directory-manager settings/usertemplate create "$@" --ignore_exists \
+	--position "cn=templates,cn=univention,$ldap_base" \
+	--set name="Kopano Account" \
+	--set mailPrimaryAddress="<username>@$domainname" \
+	--set kopano-role="user" \
+	--set unixhome="/home/<username>" \
+	--set primaryGroup="cn=$(custom_groupname 'Domain Users'),cn=groups,$ldap_base" || die
+
+# create initial mail domain object(s) if missing
+if ! udm mail/domain list "$@" | grep -q "^DN:" ; then
+	# no mail domain object found
+
+	# Default; create new object with $domainname as mail domain
+	# can be overridden by mail/default/domains
+	domain_list="$domainname"
+	if [ "$mail_default_domains" ] ; then
+	    domain_list="$mail_default_domains"
+	fi
+
+	# create required containers
+	udm container/cn create "$@" --ignore_exists --position "$ldap_base" --set name="mail" || die
+	udm container/cn create "$@" --ignore_exists --position "cn=mail,$ldap_base" --set name="domain" || die
+
+	# create new object
+	for domain in $domain_list ; do
+	    udm mail/domain create "$@" --ignore_exists \
+		--position "cn=domain,cn=mail,$ldap_base" \
+		--set name="$domain" || die
+	done
+fi
+
+
 
 joinscript_save_current_version
 

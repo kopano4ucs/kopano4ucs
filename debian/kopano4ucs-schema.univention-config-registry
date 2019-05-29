@@ -1,4 +1,0 @@
-Type: multifile
-Multifile: etc/ldap/slapd.conf
-Variables: server/role
-Variables: ldap/base
