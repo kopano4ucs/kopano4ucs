@@ -1,0 +1,82 @@
+#!/bin/sh
+#
+# kopano4ucs-udm-archiver
+#  join script
+#
+# Copyright 2015-2019 Univention GmbH
+#
+# http://www.univention.de/
+#
+# All rights reserved.
+#
+# The source code of this program is made available
+# under the terms of the GNU Affero General Public License version 3
+# (GNU AGPL V3) as published by the Free Software Foundation.
+#
+# Binary versions of this program provided by Univention to you as
+# well as other copyrighted, protected or trademarked materials like
+# Logos, graphics, fonts, specific documentations and configurations,
+# cryptographic keys etc. are subject to a license agreement between
+# you and Univention and not subject to the GNU AGPL V3.
+#
+# In the case you use this program under the terms of the GNU AGPL V3,
+# the program is provided in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public
+# License with the Debian GNU/Linux or Univention distribution in file
+# /usr/share/common-licenses/AGPL-3; if not, see
+# <http://www.gnu.org/licenses/>.
+
+VERSION=1
+
+. /usr/share/univention-join/joinscripthelper.lib
+. /usr/share/univention-lib/all.sh
+
+joinscript_init
+
+eval "$(univention-config-registry shell)"
+
+
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="k4uArchiveServer" \
+	--set module=users/user \
+	--set tabName="Kopano" \
+	--set translationTabName='"de_DE" "Allgemein"' \
+	--set tabPosition=22 \
+	--set shortDescription="Kopano Archive Server" \
+	--set longDescription="Kopano server the user archive will be hosted on" \
+	--set translationShortDescription='"de_DE" "Kopano Archive Server"' \
+	--set translationLongDescription='"de_DE" "Kopano-Server, auf dem das Benutzer-Archiv gespeichert wird"' \
+	--set objectClass=kopano-user \
+	--set syntax=k4uUserServerSyntaxANDEmptyValue \
+	--set mayChange=1 \
+	--set ldapMapping=kopanoUserArchiveServers \
+	--set multivalue=0 || die
+
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="k4uArchiveServerNonactive" \
+	--set module=kopano/non-active \
+	--set tabName="Kopano" \
+	--set translationTabName='"de_DE" "Allgemein"' \
+	--set tabPosition=22 \
+	--set shortDescription="Kopano Archive Server" \
+	--set longDescription="Kopano server the user archive will be hosted on" \
+	--set translationShortDescription='"de_DE" "Kopano Archive Server"' \
+	--set translationLongDescription='"de_DE" "Kopano-Server, auf dem das Benutzer-Archiv gespeichert wird"' \
+	--set objectClass=kopano-user \
+	--set syntax=k4uUserServerSyntaxANDEmptyValue \
+	--set mayChange=1 \
+	--set ldapMapping=kopanoUserArchiveServers \
+	--set multivalue=0 || die
+
+# restart UDM CLI server
+stop_udm_cli_server
+
+joinscript_save_current_version
+
+exit 0

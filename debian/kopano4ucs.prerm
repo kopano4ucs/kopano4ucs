@@ -33,7 +33,7 @@
 #DEBHELPER#
 
 if [ "$1" = "remove" ]; then
-	cp /usr/lib/univention-uninstall/71kopano4ucs-uninstall.uinst /usr/lib/univention-install/
+	cp /usr/lib/univention-uninstall/71kopano4ucs.uinst /usr/lib/univention-install/
 fi
 
 exit 0

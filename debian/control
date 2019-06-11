@@ -35,8 +35,7 @@ Architecture: all
 Depends: ${misc:Depends},
  ${python:Depends},
  shell-univention-lib,
- kopano4ucs-schema (= ${binary:Version}),
- kopano4ucs-lib
+ kopano4ucs-schema (= ${binary:Version})
 Provides: ${python:Provides}
 Description: UDM extensions for the Kopano4ucs integration
  Univention Directory Manager extensions for the Kopano4ucs integration 
@@ -45,8 +44,10 @@ Package: kopano4ucs
 Architecture: all
 Depends: ${misc:Depends}, 
  ${python:Depends},
+ kopano4ucs-app,
  kopano4ucs-udm (= ${binary:Version}),
  kopano4ucs-schema (= ${binary:Version}),
+ kopano4ucs-lib,
  univention-join (>> 5.0.20-1.436),
  shell-univention-lib (>> 2.0.17-1.125),
  kopano-server-packages,
@@ -77,24 +78,46 @@ Description: Kopano4ucs integration package for Univention Corporate Server
  Integration package for installation and configuration of the Kopano
  groupware solution on Univention Corporate Server.
 
+Package: kopano4ucs-udm-multiserver
+Architecture: all
+Depends: ${misc:Depends}, 
+ ${python:Depends},
+ kopano4ucs-udm (= ${binary:Version}),
+ kopano4ucs-schema (= ${binary:Version}),
+ univention-join (>> 5.0.20-1.436),
+ shell-univention-lib (>> 2.0.17-1.125)
+Description: UDM extensions for Kopano4ucs multiserver integration package
+ Univention Directory Manager extensions for the Kopano4ucs multiserver integration
+
 Package: kopano4ucs-multiserver
 Architecture: all
 Depends: ${misc:Depends}, 
  ${python:Depends},
- kopano4ucs (= ${binary:Version}),
- kopano4ucs-udm (= ${binary:Version}),
- kopano4ucs-schema (= ${binary:Version}),
+ kopano4ucs-udm-multiserver (= ${binary:Version}),
  univention-join (>> 5.0.20-1.436),
  shell-univention-lib (>> 2.0.17-1.125)
 Description: Kopano4ucs multiserver integration package for UCS
  Integration package for installation and configuration of the Kopano
  groupware solution multiserver support on Univention Corporate Server.
 
+Package: kopano4ucs-udm-archiver
+Architecture: all
+Depends: ${misc:Depends}, 
+ ${python:Depends},
+ kopano4ucs-udm (= ${binary:Version}),
+ kopano4ucs-schema (= ${binary:Version}),
+ kopano4ucs-udm-multiserver (= ${binary:Version}), 
+ univention-join (>> 5.0.20-1.436),
+ shell-univention-lib (>> 2.0.17-1.125)
+Description: UDM extensions for Kopano4ucs archiver integration package
+ Univention Directory Manager extensions for the Kopano4ucs archiver integration
+
 Package: kopano4ucs-webapp
 Architecture: all
 Depends: ${misc:Depends},
  kopano-webapp,
  shell-univention-lib,
+ kopano4ucs-app,
  kopano4ucs-lib,
  kopano-webapp-plugin-files,
  kopano-webapp-plugin-filesbackend-owncloud,
@@ -118,6 +141,7 @@ Description: Kopano4ucs kopano-webapp integration package for Univention Corpora
 Package: kopano4ucs-z-push
 Architecture: all
 Depends: ${misc:Depends},
+ kopano4ucs-app,
  z-push-kopano,
  z-push-kopano-gabsync,
  z-push-config-apache
@@ -127,6 +151,11 @@ Replaces: d-push,
  z-push
 Description: Meta package for Z-Push installation
  Meta package to ease installation of Z-Push through the Univention Appcenter.
+
+Package: kopano4ucs-app
+Architecture: all
+Description: Package for UCS app specific logic
+Conflicts: kopano4ucs (< 1.6.0)
 
 Package: zarafa4ucs-z-push
 Architecture: all

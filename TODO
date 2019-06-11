@@ -1,0 +1,17 @@
+Goal is to install the Kopano integration package on UCS, but have Kopano running separately.
+
+- kopano4ucs -> make it a metapackage
+- new package to have app relevant parts of old kopano4ucs - kopano4ucs-app?
+- ~~new package to have non-app relevant parts (when kopano is running separately)~~
+  - users can now install just kopano4ucs-udm to have just the udm integration
+
+- [x] remodel multiserver package
+  - have one package for pure multiserver
+  - have one package for archiver multiserver
+
+- listener needs mechanism to trigger actions on remote server
+  - for user creation/modification
+  - ~~for ucr modification~~
+
+- [x] Rename 71kopano4ucs-uninstall.uinst to 71kopano4ucs.uinst ? 
+  - uninstall is "duplicated"

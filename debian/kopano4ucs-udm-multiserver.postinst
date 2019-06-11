@@ -1,9 +1,9 @@
-#!/bin/sh
+#!/bin/bash
 #
-# kopano4ucs
-#  postrm script
+# kopano4ucs-udm-multiserver
+#  postinst script
 #
-# Copyright 2013-2019 Univention GmbH
+# Copyright 2015-2019 Univention GmbH
 #
 # http://www.univention.de/
 #
@@ -33,11 +33,11 @@
 #DEBHELPER#
 
 . /usr/share/univention-lib/all.sh
-. /usr/share/univention-join/joinscripthelper.lib
 
-if [ "$1" = "remove" ]; then
-	call_unjoinscript 71kopano4ucs.uinst
-	joinscript_remove_script_from_status_file kopano4ucs
-fi
+eval "$(univention-config-registry shell)"
+
+# join script
+stop_udm_cli_server
+call_joinscript 71kopano4ucs-udm-multiserver.inst
 
 exit 0

@@ -95,8 +95,6 @@ chown kopano:kopano /etc/kopano/admin.cfg
 # restart listener
 /etc/init.d/univention-directory-listener crestart
 
-call_joinscript 71kopano4ucs-multiserver.inst
-
 # reload apache
 invoke-rc.d apache2 restart
 

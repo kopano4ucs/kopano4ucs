@@ -1,11 +1,12 @@
 #!/bin/sh
 #
-# kopano4ucs
-#  postrm script
+# kopano2ucs-udm-archiver
+#  unjoin script
 #
-# Copyright 2013-2019 Univention GmbH
+# Copyright 2018-2019 linudata GmbH
+# Copyright 2013-2016 Univention GmbH
 #
-# http://www.univention.de/
+# https://linudata.de
 #
 # All rights reserved.
 #
@@ -30,14 +31,24 @@
 # /usr/share/common-licenses/AGPL-3; if not, see
 # <http://www.gnu.org/licenses/>.
 
-#DEBHELPER#
+VERSION=1
 
-. /usr/share/univention-lib/all.sh
+. /usr/share/univention-lib/base.sh
+. /usr/share/univention-lib/ldap.sh
 . /usr/share/univention-join/joinscripthelper.lib
 
-if [ "$1" = "remove" ]; then
-	call_unjoinscript 71kopano4ucs.uinst
-	joinscript_remove_script_from_status_file kopano4ucs
-fi
+joinscript_init
+
+eval "$(univention-config-registry shell)"
+
+EXTENDED_ATTR_CONTAINER="cn=kopano,cn=custom attributes,cn=univention,$ldap_base"
+
+univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=k4uArchiveServer,$EXTENDED_ATTR_CONTAINER"
+univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=k4uArchiveServerNonactive,$EXTENDED_ATTR_CONTAINER"
+
+stop_udm_cli_server
+
+# Remove old join script from index file otherwise the re-installation will not work
+joinscript_remove_script_from_status_file kopano4ucs-udm-archiver
 
 exit 0

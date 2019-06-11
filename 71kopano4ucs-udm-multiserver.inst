@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# kopano4ucs-multiserver
+# kopano4ucs-udm-multiserver
 #  join script
 #
 # Copyright 2015-2019 Univention GmbH
@@ -34,7 +34,6 @@ VERSION=1
 
 . /usr/share/univention-join/joinscripthelper.lib
 . /usr/share/univention-lib/all.sh
-. /usr/share/univention-lib/kopano4ucs.sh
 
 joinscript_init
 
@@ -76,24 +75,6 @@ univention-directory-manager settings/extended_attribute create "$@" --ignore_ex
 	--set ldapMapping=kopanoUserServer \
 	--set multivalue=0 || die
 
-#archiver related
-univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
-	--position "cn=custom attributes,cn=univention,$ldap_base" \
-	--set name="k4uArchiveServer" \
-	--set module=users/user \
-	--set module=settings/usertemplate \
-	--set tabName="Kopano" \
-	--set tabPosition=22 \
-	--set shortDescription="Kopano Archive Server" \
-	--set longDescription="Kopano server the user archive will be hosted on" \
-	--set translationShortDescription='"de_DE" "Kopano Archive Server"' \
-	--set translationLongDescription='"de_DE" "Kopano-Server, auf dem das Benutzer-Archiv gespeichert wird"' \
-	--set objectClass=kopano-user \
-	--set syntax=k4uUserServerSyntaxANDEmptyValue \
-	--set mayChange=1 \
-	--set ldapMapping=kopanoUserArchiveServers \
-	--set multivalue=0 || die
-
 univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
 	--position "cn=custom attributes,cn=univention,$ldap_base" \
 	--set name="k4uContainsPublic" \
@@ -110,7 +91,7 @@ univention-directory-manager settings/extended_attribute create "$@" --ignore_ex
 	--set syntax=boolean \
 	--set mayChange=1 \
 	--set ldapMapping=kopanoContainsPublic \
-	--set tabPosition=1 \
+	--set tabPosition=9 \
 	--set multivalue=0 || die
 
 univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
@@ -198,7 +179,7 @@ univention-directory-manager settings/extended_attribute create "$@" --ignore_ex
 	--set syntax=string \
 	--set mayChange=1 \
 	--set ldapMapping=kopano4ucsFqdn \
-	--set tabPosition=2 \
+	--set tabPosition=1 \
 	--set multivalue=0 \
 	--set default="" || die
 
@@ -210,7 +191,7 @@ univention-directory-manager settings/extended_attribute create "$@" --ignore_ex
 	--position "cn=custom attributes,cn=univention,$ldap_base" \
 	--set name="k4uUserServerNonactive" \
 	--set module=kopano/non-active \
-	--set tabName="General" \
+	--set tabName="Kopano" \
 	--set translationTabName='"de_DE" "Allgemein"' \
 	--set tabPosition=21 \
 	--set shortDescription="Kopano Home Server" \
@@ -223,33 +204,18 @@ univention-directory-manager settings/extended_attribute create "$@" --ignore_ex
 	--set ldapMapping=kopanoUserServer \
 	--set multivalue=0 || die
 
-univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
-	--position "cn=custom attributes,cn=univention,$ldap_base" \
-	--set name="k4uArchiveServerNonactive" \
-	--set module=kopano/non-active \
-	--set tabName="General" \
-	--set translationTabName='"de_DE" "Allgemein"' \
-	--set tabPosition=22 \
-	--set shortDescription="Kopano Archive Server" \
-	--set longDescription="Kopano server the user archive will be hosted on" \
-	--set translationShortDescription='"de_DE" "Kopano Archive Server"' \
-	--set translationLongDescription='"de_DE" "Kopano-Server, auf dem das Benutzer-Archiv gespeichert wird"' \
-	--set objectClass=kopano-user \
-	--set syntax=k4uUserServerSyntaxANDEmptyValue \
-	--set mayChange=1 \
-	--set ldapMapping=kopanoUserArchiveServers \
-	--set multivalue=0 || die
+# add kopano service as option for host advanced settings
+univention-directory-manager container/cn create "$@" --ignore_exists \
+	--position="cn=univention,$ldap_base" \
+	--set name="services" 
+
+univention-directory-manager settings/service create "$@" --ignore_exists \
+	--position="cn=services,cn=univention,$ldap_base" \
+	--set name="Kopano" 
+
 
 # restart UDM CLI server
 stop_udm_cli_server
-
-# kopano-server was just restarted in server_password_change.d/70kopano postchange (Bug #31709, #34011)
-wait_for_kopano_server_startup
-
-# give kopano server some time to settle
-sleep 3
-# create public store if missing
-kopano-admin -s
 
 joinscript_save_current_version
 

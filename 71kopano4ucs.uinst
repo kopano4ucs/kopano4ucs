@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 # kopano4ucs
-#  postrm script
+#  unjoin script
 #
 # Copyright 2013-2019 Univention GmbH
 #
@@ -30,14 +30,21 @@
 # /usr/share/common-licenses/AGPL-3; if not, see
 # <http://www.gnu.org/licenses/>.
 
-#DEBHELPER#
+VERSION=1
 
-. /usr/share/univention-lib/all.sh
+. /usr/share/univention-lib/base.sh
+. /usr/share/univention-lib/ldap.sh
 . /usr/share/univention-join/joinscripthelper.lib
 
-if [ "$1" = "remove" ]; then
-	call_unjoinscript 71kopano4ucs.uinst
-	joinscript_remove_script_from_status_file kopano4ucs
-fi
+joinscript_init
+
+eval "$(univention-config-registry shell)"
+
+SERVICE="Kopano"
+
+ucs_removeServiceFromLocalhost "${SERVICE}" "$@"
+
+# Remove old join script from index file otherwise the re-installation will not work
+joinscript_remove_script_from_status_file kopano4ucs
 
 exit 0

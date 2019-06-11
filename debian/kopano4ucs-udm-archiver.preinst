@@ -1,11 +1,11 @@
-#!/bin/sh
+#! /bin/sh
 #
-# kopano4ucs
-#  postrm script
+# kopano4ucs-udm-archiver
+#  preinst script
 #
-# Copyright 2013-2019 Univention GmbH
+# Copyright 2013-2016 Univention GmbH
 #
-# http://www.univention.de/
+# https://linudata.de
 #
 # All rights reserved.
 #
@@ -33,11 +33,9 @@
 #DEBHELPER#
 
 . /usr/share/univention-lib/all.sh
-. /usr/share/univention-join/joinscripthelper.lib
 
-if [ "$1" = "remove" ]; then
-	call_unjoinscript 71kopano4ucs.uinst
-	joinscript_remove_script_from_status_file kopano4ucs
+if [ "$1" = "install" ]; then
+   test -e /usr/lib/univention-install/72kopano4ucs-udm-archiver.uinst && rm /usr/lib/univention-install/72kopano4ucs-udm-archiver.uinst
 fi
 
 exit 0
