@@ -51,7 +51,6 @@ fi
 # add "en_US.UTF-8" to locale list if missing
 if ! ucr get locale | grep -qF "en_US.UTF-8" ; then
 	ucr set locale="$(ucr get locale) en_US.UTF-8:UTF-8"
-	locale-gen
 fi
 
 # copy example config during first package installation
