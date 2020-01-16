@@ -118,7 +118,7 @@ sed \
 	-i /etc/kopano/ical.cfg
 
 echo "removing obsolete options from kopano-dagent configuration"
-univention-config-regitry unset \
+univention-config-registry unset \
 	kopano/cfg/dagent/lmtp_port
 
 sed \
