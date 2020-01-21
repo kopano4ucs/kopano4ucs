@@ -35,7 +35,7 @@
 . /usr/share/univention-lib/all.sh
 
 eval "$(ucr shell server/role)"
-if [ "$server_role" = "domaincontroller_master" -o "$server_role" = "domaincontroller_backup" ]; then
+if [ "$server_role" = "domaincontroller_master" ] || [ "$server_role" = "domaincontroller_backup" ]; then
 	ucs_registerLDAPExtension --schema /usr/share/kopano4ucs-schema/kopano4ucs.schema
 fi
 
