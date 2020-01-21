@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/sh
 #
 # kopano4ucs
 #  postinst script
@@ -34,7 +34,10 @@
 
 . /usr/share/univention-lib/all.sh
 
-ucs_registerLDAPSchema /usr/share/kopano4ucs-schema/kopano4ucs.schema
+eval "$(ucr shell server/role)"
+if [ "$server_role" = "domaincontroller_master" -o "$server_role" = "domaincontroller_backup" ]; then
+	ucs_registerLDAPExtension --schema /usr/share/kopano4ucs-schema/kopano4ucs.schema
+fi
 
 # from univention-ldap-server.postinst
 merge_csv_unique_sorted() {
