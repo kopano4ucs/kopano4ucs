@@ -55,7 +55,7 @@ univention-directory-manager settings/syntax create "$@" --ignore_exists \
 	--set filter="(&(objectClass=kopano-server)(univentionService=Kopano))" \
 	--set ldapattribute="cn" \
 	--set ldapvalue="cn" \
-	--set addEmptyValue=True \
+	--set addEmptyValue=TRUE \
 	--set viewonly=FALSE || die
 
 univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
