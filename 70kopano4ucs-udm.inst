@@ -30,7 +30,7 @@
 # /usr/share/common-licenses/AGPL-3; if not, see
 # <http://www.gnu.org/licenses/>.
 
-VERSION=2
+VERSION=3
 
 . /usr/share/univention-join/joinscripthelper.lib
 . /usr/share/univention-lib/all.sh
@@ -354,6 +354,38 @@ univention-directory-manager settings/extended_attribute create "$@" --ignore_ex
 	--set ldapMapping=kopanoDisabledFeatures \
 	--set multivalue=1 \
 	--set tabPosition=26 || die
+
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=kopano,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="Resource" \
+	--set module=users/user \
+	--set tabName="Kopano" \
+	--set shortDescription="Set resource type for shared stores" \
+	--set longDescription="Mark a shared store as either a room or equipment" \
+	--set translationShortDescription='"de_DE" "Den Resourcentyp für diesen inaktiven Nutzer festlegen"' \
+	--set translationLongDescription='"de_DE" "Einen inaktiven Nutzer entweder als Raum oder Gerät kennzeichnen"' \
+	--set objectClass=kopano-user \
+	--set syntax=kopano4ucsResource \
+	--set mayChange=1 \
+	--set ldapMapping=kopanoResourceType \
+	--set multivalue=0 \
+	--set tabPosition=30 || die
+
+univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
+	--position "cn=kopano,cn=custom attributes,cn=univention,$ldap_base" \
+	--set name="ResourceCapacity" \
+	--set module=users/user \
+	--set tabName="Kopano" \
+	--set shortDescription="Number of rooms or equipment available" \
+	--set longDescription="Defines how often a resource can be booked at the same time" \
+	--set translationShortDescription='"de_DE" "Anzahl an verfügbaren Räumen/Geräten"' \
+	--set translationLongDescription='"de_DE" "Definiert wie häufig eine Resource zur selben Zeit gebucht werden kann"' \
+	--set objectClass=kopano-user \
+	--set syntax=integer \
+	--set mayChange=1 \
+	--set ldapMapping=kopanoResourceCapacity \
+	--set multivalue=0 \
+	--set tabPosition=31 || die
 
 # restart UDM CLI server
 stop_udm_cli_server
