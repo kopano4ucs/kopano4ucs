@@ -55,8 +55,8 @@ univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=qu
 univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=quotaWarn,$EXTENDED_ATTR_CONTAINER"
 univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=quotaSoft,$EXTENDED_ATTR_CONTAINER"
 univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=quotaHard,$EXTENDED_ATTR_CONTAINER"
-univention-directory-manager settings/extended_attribute remove "$@" --dn "cn= kopano4ucsResource,$EXTENDED_ATTR_CONTAINER"
-univention-directory-manager settings/extended_attribute remove "$@" --dn "cn= kopano4ucsResourceCapacity,$EXTENDED_ATTR_CONTAINER"
+univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=Resource,$EXTENDED_ATTR_CONTAINER"
+univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=ResourceCapacity,$EXTENDED_ATTR_CONTAINER"
 
 # usertemplate is also unneeded
 univention-directory-manager settings/usertemplate remove "$@" --dn "cn=Kopano Account,cn=templates,cn=univention,$ldap_base"

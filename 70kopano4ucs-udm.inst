@@ -357,7 +357,7 @@ univention-directory-manager settings/extended_attribute create "$@" --ignore_ex
 
 univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
 	--position "cn=kopano,cn=custom attributes,cn=univention,$ldap_base" \
-	--set name="kopano4ucsResource" \
+	--set name="Resource" \
 	--set module=users/user \
 	--set tabName="Kopano" \
 	--set shortDescription="Set resource type for shared stores" \
@@ -373,7 +373,7 @@ univention-directory-manager settings/extended_attribute create "$@" --ignore_ex
 
 univention-directory-manager settings/extended_attribute create "$@" --ignore_exists \
 	--position "cn=kopano,cn=custom attributes,cn=univention,$ldap_base" \
-	--set name="kopano4ucsResourceCapacity" \
+	--set name="ResourceCapacity" \
 	--set module=users/user \
 	--set tabName="Kopano" \
 	--set shortDescription="Number of rooms or equipment available" \
