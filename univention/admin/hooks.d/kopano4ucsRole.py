@@ -63,6 +63,9 @@ class kopano4ucsRole(simpleHook):
 			elif module["kopano-role"] == "admin":
 				kopanoAccount = 1
 				kopanoAdmin = 1
+			elif module["kopano-role"] == "super":
+				kopanoAccount = 1
+				kopanoAdmin = 2
 			elif module["kopano-role"] == "store":
 				kopanoSharedStoreOnly = 1
 				kopanoAccount = 1

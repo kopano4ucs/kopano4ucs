@@ -39,6 +39,7 @@ class kopano4ucsRole(select):
 		('none', _('None')),
 		('user', _('Kopano User')),
 		('admin', _('Kopano Admin')),
+		('super', _('Kopano Super Admin')),
 		('store', _('Kopano Shared Store/Non-active')),
 		('contact', _('Kopano Contact')),
 	]
