@@ -5,11 +5,11 @@ if configRegistry.is_true('kopano/repo/kopano-core'):
         username = configRegistry.get('kopano/repo/username', 'serial')
         password = configRegistry.get('kopano/repo/password', 'your-kopano-subscription-key')
         if configRegistry.get('version/version') == "4.2":
-                print 'deb https://%s:%s@download.kopano.io/supported/core:/final/Univention_4.2/ /' % (username,password)
-                print 'deb https://%s:%s@download.kopano.io/supported/archiver:/final/Univention_4.2/ /' % (username,password)
+                print 'deb https://%s:%s@download.kopano.io/supported/core:/8.7/Univention_4.2/ /' % (username,password)
+                print 'deb https://%s:%s@download.kopano.io/supported/archiver:/8.7/Univention_4.2/ /' % (username,password)
         elif configRegistry.get('version/version') == "4.3" or configRegistry.get('version/version') == "4.4":
-                print 'deb https://%s:%s@download.kopano.io/supported/core:/final/Univention_4.3/ /' % (username,password)
-                print 'deb https://%s:%s@download.kopano.io/supported/archiver:/final/Univention_4.3/ /' % (username,password)
+                print 'deb https://%s:%s@download.kopano.io/supported/core:/8.7/Univention_4.3/ /' % (username,password)
+                print 'deb https://%s:%s@download.kopano.io/supported/archiver:/8.7/Univention_4.3/ /' % (username,password)
         else:
                 print '# unsupported version'
 
