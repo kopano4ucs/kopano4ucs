@@ -49,7 +49,12 @@ merge_csv_unique_sorted() {
 	echo "$old,$2" | tr ',' '\n' | sort -u | tr '\n' ',' | sed -re 's/^,|(,){2,}|,$/\1/g'
 }
 
+# exit the postinst if the kopano attributes are already in the index variable
+if ucr get ldap/index/eq | grep -qF "kopano" ; then
+	exit 0
+fi
 
+# this only needs to be run once
 if is_ucr_true "ldap/index/autorebuild" ; then
 	# register kopano attributes
 	kopano_attributes="kopanoAccount,kopanoAliases,kopanoViewPrivilege"
