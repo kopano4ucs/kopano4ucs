@@ -1,9 +1,21 @@
 @%@UCRWARNING=# @%@
 
 @!@
+import base64
+import json
+
 if configRegistry.is_true('kopano/repo/kopano-core'):
         username = configRegistry.get('kopano/repo/username', 'serial')
         password = configRegistry.get('kopano/repo/password', 'your-kopano-subscription-key')
+	if password[0] != 'Z':
+		base64_arr   = password.split('.')
+		base64_str   = base64_arr[1]
+		base64_bytes = base64_str.encode('ascii')
+		json_bytes   = base64.b64decode(base64_bytes)
+		json_str     = json_bytes.decode('ascii')
+		license      = json.loads(json_str)
+		username     = license['sub']
+		password     = license['sin']
         if configRegistry.get('version/version') == "4.2":
                 print 'deb https://%s:%s@download.kopano.io/supported/core:/8.7/Univention_4.2/ /' % (username,password)
                 print 'deb https://%s:%s@download.kopano.io/supported/archiver:/8.7/Univention_4.2/ /' % (username,password)
