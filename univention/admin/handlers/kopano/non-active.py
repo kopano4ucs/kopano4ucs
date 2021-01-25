@@ -36,7 +36,7 @@ import univention.admin.password
 
 import univention.password
 
-translation = univention.admin.localization.translation('kopano4ucs')
+translation = univention.admin.localization.translation('univention-admin-handlers-kopano-contact')
 _ = translation.translate
 
 module = 'kopano/non-active'

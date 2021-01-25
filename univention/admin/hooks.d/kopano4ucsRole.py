@@ -35,7 +35,7 @@ from univention.admin.localization import translation
 from univention.config_registry import ConfigRegistry
 ucr = ConfigRegistry()
 
-translation = translation('kopano4ucs')
+translation = translation('univention-admin-handlers-kopano-contact')
 _ = translation.translate
 
 

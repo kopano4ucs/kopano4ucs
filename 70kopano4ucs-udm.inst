@@ -30,13 +30,66 @@
 # /usr/share/common-licenses/AGPL-3; if not, see
 # <http://www.gnu.org/licenses/>.
 
-VERSION=3
+## joinscript api: bindpwdfile
+
+VERSION=4
 
 . /usr/share/univention-join/joinscripthelper.lib
 . /usr/share/univention-lib/all.sh
+
 joinscript_init
 
 eval "$(univention-config-registry shell)"
+
+# register extensions
+ucs_registerLDAPExtension "$@" \
+	--schema /usr/share/kopano4ucs/schema/kopano4ucs.schema || die
+
+ucs_registerLDAPExtension "$@" \
+	--udm_syntax /usr/share/kopano4ucs/admin/syntax/kopano4ucs.py || die
+
+ucs_registerLDAPExtension "$@" \
+	--udm_hook /usr/share/kopano4ucs/admin/hooks/kopano4ucsRole.py || die
+
+ucs_registerLDAPExtension "$@" \
+	--udm_module /usr/share/kopano4ucs/admin/handlers/contact.py \
+	--messagecatalog /usr/share/kopano4ucs/admin/de.mo \
+	--umcregistration /usr/share/kopano4ucs/umc/kopano.xml \
+	--icon /usr/share/kopano4ucs/umc/icons/16x16/udm-kopano-contact.png \
+	--icon /usr/share/kopano4ucs/umc/icons/50x50/udm-kopano-contact.png \
+	--icon /usr/share/kopano4ucs/umc/icons/scalable/udm-kopano-contact.svg || die
+
+ucs_registerLDAPExtension "$@" \
+	--udm_module /usr/share/kopano4ucs/admin/handlers/non-active.py \
+	--icon /usr/share/kopano4ucs/umc/icons/50x50/udm-kopano-non-active.png \
+	--icon /usr/share/kopano4ucs/umc/icons/16x16/udm-kopano-non-active.png \
+	--icon /usr/share/kopano4ucs/umc/icons/scalable/udm-kopano-non-active.svg || die
+
+#TODO, register UMC message catalog
+#/usr/share/kopano4ucs/umc/i18n/de/udm-kopano.mo
+
+# ldap index
+kopano_attributes="kopanoAccount kopanoAliases kopanoViewPrivilege"
+if [ -x /etc/init.d/slapd ] &&
+	[ -x /usr/share/univention-ldap/ldap_setup_index ]; then
+	changes=""
+	for i in $kopano_attributes; do
+		ucr get ldap/index/eq | tr , '\n' | grep -qFx "$i" && continue
+		! univention-ldapsearch -LLL -o ldif-wrap=no -b cn=Subschema -s base attributeTypes | grep -qF "NAME '$i'" && continue
+		changes="${changes}--add-eq ${i} "
+	done
+	if [ -n "$changes" ]; then
+		if pidof slapd >/dev/null 2>/dev/null; then
+			service slapd stop
+			/usr/share/univention-ldap/ldap_setup_index $changes
+			service slapd start
+		else
+			/usr/share/univention-ldap/ldap_setup_index $changes
+		fi
+	fi
+fi
+
+stop_udm_cli_server
 
 # folder
 univention-directory-manager container/ou create "$@" --ignore_exists \

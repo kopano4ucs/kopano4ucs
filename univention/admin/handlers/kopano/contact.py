@@ -33,7 +33,7 @@ import univention.admin.filter
 import univention.admin.handlers
 import univention.admin.syntax
 
-translation = univention.admin.localization.translation('kopano4ucs')
+translation = univention.admin.localization.translation('univention-admin-handlers-kopano-contact')
 _ = translation.translate
 
 module = 'kopano/contact'

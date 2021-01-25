@@ -37,6 +37,10 @@
 
 eval "$(univention-config-registry shell)"
 
+stop_udm_cli_server
+call_joinscript 70kopano4ucs-udm.inst
+stop_udm_cli_server
+
 # configure system only on package installation
 if [ "$1" = "configure" -a -z "$2" ] ; then
 	# configure postfix:

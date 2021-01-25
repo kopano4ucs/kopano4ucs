@@ -5,3 +5,9 @@
 0004-12: conffiles/etc/apt/sources.list.d/kopano-core.list
 0004-12: conffiles/etc/apt/sources.list.d/kopano-webapp.list
 0004-12: conffiles/etc/apt/sources.list.d/z-push.list
+0010-2: debian/kopano4ucs-z-push.postinst
+0010-2: scripts/kopano4ucs-migrate-files.sh
+0010-2: scripts/kopano4ucs-migrate.sh
+0010-2: scripts/kopano4ucs-migrate-ldap.sh
+0010-2: scripts/kopano4ucs-migrate-ucr.sh
+0010-2: scripts/kopano4ucs-update-settings870.sh
