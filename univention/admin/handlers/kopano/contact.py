@@ -38,8 +38,8 @@ _ = translation.translate
 
 module = 'kopano/contact'
 childs = 0
-short_description = _(u'Kopano Contact')
-long_description = _(u'Management of Kopano Contact accounts.')
+short_description = _('Kopano Contact')
+long_description = _('Management of Kopano Contact accounts.')
 operations = ['add', 'edit', 'remove', 'search', 'move']
 default_containers = ["cn=contacts,cn=kopano"]
 
@@ -47,8 +47,8 @@ options = {}
 
 property_descriptions = {
 	'kopanoAccount': univention.admin.property(
-		short_description=_(u'Recognized by Kopano'),
-		long_description=_(u'If set to 1, the account is recognized by kopano'),
+		short_description=_('Recognized by Kopano'),
+		long_description=_('If set to 1, the account is recognized by kopano'),
 		syntax=univention.admin.syntax.string,
 		required=True,
 		default='1',
@@ -144,7 +144,7 @@ property_descriptions = {
 }
 
 layout = [
-	Tab(_(u'General'), _(u'Kopano Contact'), layout=[
+	Tab(_('General'), _('Kopano Contact'), layout=[
 		Group(_('General Contact information'), layout=[
 			['kopanoHidden', ],
 			['title', 'firstname', 'lastname'],
@@ -204,7 +204,7 @@ def lookup(co, lo, filter_s, base='', superordinate=None, scope='sub', unique=0,
 		searchfilter.expressions.append(filter_p)
 
 	res = []
-	for dn in lo.searchDn(unicode(searchfilter), base, scope, unique, required, timeout, sizelimit):
+	for dn in lo.searchDn(str(searchfilter), base, scope, unique, required, timeout, sizelimit):
 		res.append(object(co, lo, None, dn))
 	return res
 
