@@ -36,7 +36,7 @@
 
 eval "$(ucr shell server/role)"
 if [ "$server_role" = "domaincontroller_master" ] || [ "$server_role" = "domaincontroller_backup" ]; then
-	ucs_registerLDAPExtension --schema /usr/share/kopano4ucs-schema/kopano4ucs.schema
+	ucs_registerLDAPExtension --schema /usr/share/kopano4ucs/schema/kopano4ucs.schema
 fi
 
 # from univention-ldap-server.postinst
