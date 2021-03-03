@@ -72,7 +72,8 @@ Conflicts: univention-mail-server,
  cyrus-imapd-2.4,
  cyrus-imapd-2.2,
  cyrus-common-2.2,
- cyrus-common-2.4,
+ cyrus-common-2.4
+Replaces: kopano4ucs-udm
 Description: Kopano4ucs integration package for Univention Corporate Server
  Integration package for installation and configuration of the Kopano
  groupware solution on Univention Corporate Server.
