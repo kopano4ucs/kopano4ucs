@@ -12,7 +12,7 @@ repo_component_name = None
 if configRegistry.get('version/version', 'invalid') in map_ucsversion_kopano_repo:
 	repo_component_name = map_ucsversion_kopano_repo['%s' % configRegistry.get('version/version')]
 else:
-	print "# UCS Version %s is incompatible with any available kopano repository, exiting" % configRegistry.get('version/version')
+	print("# UCS Version %s is incompatible with any available kopano repository, exiting" % configRegistry.get('version/version'))
 	exit()
 
 username = configRegistry.get('kopano/repo/username', 'serial')
@@ -34,22 +34,22 @@ for component in components:
 	releasetype = configRegistry.get('kopano/repo/%s-releasetype' % component, 'final')
 
 	if is_component_repo_activated:
-		print ''
+		print('')
 
 		path_name = component.replace('kopano-', '')
 
 		if releasetype == "final":
-	                print 'deb https://%s:%s@download.kopano.io/supported/%s:/final/%s/ /' % (username, password, path_name, repo_component_name)
+	                print('deb https://%s:%s@download.kopano.io/supported/%s:/final/%s/ /' % (username, password, path_name, repo_component_name))
 		elif releasetype == "pre-final":
-	                print 'deb https://%s:%s@download.kopano.io/supported/%s:/final/%s/ /' % (username, password, path_name, repo_component_name)
-	                print 'deb https://%s:%s@download.kopano.io/supported/%s:/pre-final/%s/ /' % (username, password, path_name, repo_component_name)
+	                print('deb https://%s:%s@download.kopano.io/supported/%s:/final/%s/ /' % (username, password, path_name, repo_component_name))
+	                print('deb https://%s:%s@download.kopano.io/supported/%s:/pre-final/%s/ /' % (username, password, path_name, repo_component_name))
 		elif releasetype == "master":
-	                print 'deb https://%s:%s@download.kopano.io/supported/%s:/final/%s/ /' % (username, password, path_name, repo_component_name)
-	                print 'deb https://%s:%s@download.kopano.io/supported/%s:/pre-final/%s/ /' % (username, password, path_name, repo_component_name)
-	                print 'deb https://%s:%s@download.kopano.io/supported/%s:/master/%s/ /' % (username, password, path_name, repo_component_name)
+	                print('deb https://%s:%s@download.kopano.io/supported/%s:/final/%s/ /' % (username, password, path_name, repo_component_name))
+	                print('deb https://%s:%s@download.kopano.io/supported/%s:/pre-final/%s/ /' % (username, password, path_name, repo_component_name))
+	                print('deb https://%s:%s@download.kopano.io/supported/%s:/master/%s/ /' % (username, password, path_name, repo_component_name))
 	else:
-		print ''
-		print '# This component feature is disabled and can be enabled with:'
-		print '#   univention-config-registry set kopano/repo/%s=true' % component
-		print '# Read more at: https://wiki.z-hub.io/display/K4U/Updating+Kopano+packages+directly+from+the+Kopano+download+server'
+		print('')
+		print('# This component feature is disabled and can be enabled with:')
+		print('#   univention-config-registry set kopano/repo/%s=true' % component)
+		print('# Read more at: https://wiki.z-hub.io/display/K4U/Updating+Kopano+packages+directly+from+the+Kopano+download+server')
 @!@
