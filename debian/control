@@ -45,7 +45,6 @@ Architecture: all
 Depends: ${misc:Depends}, 
  ${python:Depends},
  kopano4ucs-app,
- kopano4ucs-udm (= ${binary:Version}),
  kopano4ucs-schema (= ${binary:Version}),
  kopano4ucs-lib,
  univention-join (>> 5.0.20-1.436),
