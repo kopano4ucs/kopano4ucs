@@ -4,9 +4,14 @@
 import base64
 import json
 
-map_ucsversion_kopano_repo = {'4.4': 'Univention_4.3',
-							  '4.3': 'Univention_4.3',
-							  '4.2': 'Univention_4.2'}
+import requests
+from requests.auth import HTTPBasicAuth
+
+map_ucsversion_kopano_repo = {
+	'4.4': 'Univention_4.3',
+	'4.3': 'Univention_4.3',
+	'4.2': 'Univention_4.2'
+}
 
 repo_component_name = None
 if configRegistry.get('version/version', 'invalid') in map_ucsversion_kopano_repo:
@@ -17,15 +22,32 @@ else:
 
 username = configRegistry.get('kopano/repo/username', 'serial')
 password = configRegistry.get('kopano/repo/password', 'your-kopano-subscription-key')
-if password[0] != 'Z':
+
+if "." in password:
 	base64_arr   = password.split('.')
 	base64_str   = base64_arr[1]
-	base64_bytes = base64_str.encode('ascii')
-	json_bytes   = base64.b64decode(base64_bytes)
-	json_str     = json_bytes.decode('ascii')
-	license      = json.loads(json_str)
-	username     = license['sub']
-	password     = license['sin']
+	try:
+		base64_bytes = base64_str.encode('ascii')
+		json_bytes   = base64.b64decode(base64_bytes)
+		json_str     = json_bytes.decode('ascii')
+		license      = json.loads(json_str)
+		username     = license['sub']
+		password     = license['sin']
+	except:
+		pass
+
+try:
+	resp = requests.get(
+		"https://download.kopano.io/supported",
+		auth=HTTPBasicAuth(username, password)
+	)
+	is_license_valid = resp.status_code == 200
+except Exception, e:
+	is_license_valid = False
+
+if not is_license_valid:
+	print("# repo deactivated, subscription could not be validated")
+	exit()
 
 components = ['kopano-webapp', 'kopano-files', 'kopano-mdm', 'kopano-smime']
 
