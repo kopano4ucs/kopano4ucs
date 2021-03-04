@@ -3,6 +3,7 @@
 @!@
 import base64
 import json
+import re
 
 import requests
 from requests.auth import HTTPBasicAuth
@@ -11,7 +12,7 @@ if configRegistry.is_true('kopano/repo/kopano-core'):
         username = configRegistry.get('kopano/repo/username', 'serial')
         password = configRegistry.get('kopano/repo/password', 'your-kopano-subscription-key')
 
-	if "." in password:
+	if re.match("^\w+\.\w+\.\w+\.\w+$", password):
 		base64_arr   = password.split('.')
 		base64_str   = base64_arr[1]
 		try:
