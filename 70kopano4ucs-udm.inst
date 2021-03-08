@@ -43,15 +43,19 @@ eval "$(univention-config-registry shell)"
 
 # register extensions
 ucs_registerLDAPExtension "$@" \
+	--ucsversionstart "4.4-0" --ucsversionend "5.0-99" \
 	--schema /usr/share/kopano4ucs/schema/kopano4ucs.schema || die
 
 ucs_registerLDAPExtension "$@" \
+	--ucsversionstart "4.4-0" --ucsversionend "5.0-99" \
 	--udm_syntax /usr/share/kopano4ucs/admin/syntax/kopano4ucs.py || die
 
 ucs_registerLDAPExtension "$@" \
+	--ucsversionstart "4.4-0" --ucsversionend "5.0-99" \
 	--udm_hook /usr/share/kopano4ucs/admin/hooks/kopano4ucsRole.py || die
 
 ucs_registerLDAPExtension "$@" \
+	--ucsversionstart "4.4-0" --ucsversionend "5.0-99" \
 	--udm_module /usr/share/kopano4ucs/admin/handlers/contact.py \
 	--messagecatalog /usr/share/kopano4ucs/admin/de.mo \
 	--umcregistration /usr/share/kopano4ucs/umc/kopano.xml \
@@ -60,6 +64,7 @@ ucs_registerLDAPExtension "$@" \
 	--icon /usr/share/kopano4ucs/umc/icons/scalable/udm-kopano-contact.svg || die
 
 ucs_registerLDAPExtension "$@" \
+	--ucsversionstart "4.4-0" --ucsversionend "5.0-99" \
 	--udm_module /usr/share/kopano4ucs/admin/handlers/non-active.py \
 	--icon /usr/share/kopano4ucs/umc/icons/50x50/udm-kopano-non-active.png \
 	--icon /usr/share/kopano4ucs/umc/icons/16x16/udm-kopano-non-active.png \
