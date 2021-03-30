@@ -36,7 +36,7 @@ ifeq ($(shell grep -q stretch /etc/os-release && echo yes),yes)
 endif
 
 override_dh_auto_install:
-	msgfmt -o locale/kopano4ucs.mo locale/kopano4ucs.po
+	msgfmt -o locale/de.mo locale/de.po
 	msgfmt -o umc/udm-kopano.mo umc/kopano.po
 	univention-install-config-registry
 	dh_auto_install

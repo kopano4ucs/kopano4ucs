@@ -27,8 +27,8 @@ Depends: ${misc:Depends},
  ${python:Depends},
  shell-univention-lib (>> 2.0.17-1.125)
 Breaks: univention-ldap-server (<< 9.0.20-1.580.201303211526)
-Description: LDAP schema for the Kopano4ucs integration
- OpenLDAP schema extension for the Kopano4ucs integration
+Description: transitional package
+ This is a transitional package. It can safely be removed.
 
 Package: kopano4ucs-udm
 Architecture: all
@@ -37,16 +37,14 @@ Depends: ${misc:Depends},
  shell-univention-lib,
  kopano4ucs-schema (= ${binary:Version})
 Provides: ${python:Provides}
-Description: UDM extensions for the Kopano4ucs integration
- Univention Directory Manager extensions for the Kopano4ucs integration 
+Description: transitional package
+ This is a transitional package. It can safely be removed.
 
 Package: kopano4ucs
 Architecture: all
 Depends: ${misc:Depends}, 
  ${python:Depends},
  kopano4ucs-app,
- kopano4ucs-udm (= ${binary:Version}),
- kopano4ucs-schema (= ${binary:Version}),
  kopano4ucs-lib,
  univention-join (>> 5.0.20-1.436),
  shell-univention-lib (>> 2.0.17-1.125),
@@ -72,7 +70,8 @@ Conflicts: univention-mail-server,
  cyrus-imapd-2.4,
  cyrus-imapd-2.2,
  cyrus-common-2.2,
- cyrus-common-2.4,
+ cyrus-common-2.4
+Replaces: kopano4ucs-udm, kopano4ucs-schema
 Description: Kopano4ucs integration package for Univention Corporate Server
  Integration package for installation and configuration of the Kopano
  groupware solution on Univention Corporate Server.

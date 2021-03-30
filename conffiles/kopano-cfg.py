@@ -115,7 +115,7 @@ def handle_files_etc_kopano(configRegistry, changes, OPTIONS):
 		matches = RE_UCRVAR.findall(configRegistry.get(key))
 		# if key is in list of changed UCR variables or
 		# the UCR variable value contains a UCR placeholder that is listed in changed UCR variables list then...
-		if key in changes or filter(lambda x: x in changes, matches):
+		if key in changes or [x for x in matches if x in changes]:
 			# ...prepare UCR variable and remember filename, key and value
 			items = key.split('/')
 			if len(items) == 4:
@@ -155,7 +155,7 @@ def handle_files_etc_default(configRegistry, changes):
 		matches = RE_UCRVAR.findall(configRegistry.get(key))
 		# if key is in list of changed UCR variables or
 		# the UCR variable value contains a UCR placeholder that is listed in changed UCR variables list then...
-		if key in changes or filter(lambda x: x in changes, matches):
+		if key in changes or [x for x in matches if x in changes]:
 			# ...prepare UCR variable and remember filename, key and value
 			items = key.split('/')
 			if len(items) == 3:
@@ -192,7 +192,7 @@ def handle_files(configRegistry, changed_options, lineformat, RE_CFGOPTION):
 		# read content of file; on error, print msg and ignore file
 		try:
 			lines = open(fn, 'r').readlines()
-		except IOError, e:
+		except IOError as e:
 			subprocess.call(['/usr/bin/logger', '-t', 'UCR', 'module kopano-cfg.py: cannot read %s: %s' % (fn, e)])
 			continue
 
@@ -236,7 +236,7 @@ def handle_files(configRegistry, changed_options, lineformat, RE_CFGOPTION):
 						lines.insert(php_closing_tag_line - 1, MSG_WARNING % (cfgitem, changed_options[fn][cfgitem][KEY]))
 						lines.insert(php_closing_tag_line - 1, '\n')
 					else:
-						print "Error: no closing php tag found in %s, ucr option not added" % fn
+						print("Error: no closing php tag found in %s, ucr option not added" % fn)
 				else:
 					file_changed = True
 					lines.extend([
@@ -259,5 +259,5 @@ def handle_files(configRegistry, changed_options, lineformat, RE_CFGOPTION):
 				fd.close()
 				os.rename(new_fn, fn)
 			# except IOError, e:
-			except Exception, e:
+			except Exception as e:
 				subprocess.call(['/usr/bin/logger', '-t', 'UCR', 'module kopano-cfg.py: cannot write %s: %s' % (fn, e)])

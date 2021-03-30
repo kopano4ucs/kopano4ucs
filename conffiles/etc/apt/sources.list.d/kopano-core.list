@@ -3,30 +3,49 @@
 @!@
 import base64
 import json
+import re
+
+import requests
+from requests.auth import HTTPBasicAuth
 
 if configRegistry.is_true('kopano/repo/kopano-core'):
         username = configRegistry.get('kopano/repo/username', 'serial')
         password = configRegistry.get('kopano/repo/password', 'your-kopano-subscription-key')
-	if password[0] != 'Z':
+
+	if re.match("^\w+\.\w+\.\w+\.\w+$", password):
 		base64_arr   = password.split('.')
 		base64_str   = base64_arr[1]
-		base64_bytes = base64_str.encode('ascii')
-		json_bytes   = base64.b64decode(base64_bytes)
-		json_str     = json_bytes.decode('ascii')
-		license      = json.loads(json_str)
-		username     = license['sub']
-		password     = license['sin']
-        if configRegistry.get('version/version') == "4.2":
-                print 'deb https://%s:%s@download.kopano.io/supported/core:/8.7/Univention_4.2/ /' % (username,password)
-                print 'deb https://%s:%s@download.kopano.io/supported/archiver:/8.7/Univention_4.2/ /' % (username,password)
+		try:
+			base64_bytes = base64_str.encode('ascii')
+			json_bytes   = base64.b64decode(base64_bytes)
+			json_str     = json_bytes.decode('ascii')
+			license      = json.loads(json_str)
+			username     = license['sub']
+			password     = license['sin']
+		except:
+			pass
+	try:
+		resp = requests.get(
+			"https://download.kopano.io/supported",
+			auth=HTTPBasicAuth(username, password)
+		)
+		is_license_valid = resp.status_code == 200
+	except Exception, e:
+		is_license_valid = False
+
+	if not is_license_valid:
+		print("# repo deactivated, subscription could not be validated")
+        elif configRegistry.get('version/version') == "4.2":
+                print('deb https://%s:%s@download.kopano.io/supported/core:/8.7/Univention_4.2/ /' % (username,password))
+                print('deb https://%s:%s@download.kopano.io/supported/archiver:/8.7/Univention_4.2/ /' % (username,password))
         elif configRegistry.get('version/version') == "4.3" or configRegistry.get('version/version') == "4.4":
-                print 'deb https://%s:%s@download.kopano.io/supported/core:/8.7/Univention_4.3/ /' % (username,password)
-                print 'deb https://%s:%s@download.kopano.io/supported/archiver:/8.7/Univention_4.3/ /' % (username,password)
+                print('deb https://%s:%s@download.kopano.io/supported/core:/8.7/Univention_4.3/ /' % (username,password))
+                print('deb https://%s:%s@download.kopano.io/supported/archiver:/8.7/Univention_4.3/ /' % (username,password))
         else:
-                print '# unsupported version'
+                print('# unsupported version')
 
 else:
-        print '# This feature is disabled and can be enabled with:'
-        print '#   univention-config-registry set kopano/repo/kopano-core=true'
-	print '# Read more at: https://wiki.z-hub.io/display/K4U/Updating+Kopano+packages+directly+from+the+Kopano+download+server'
+        print('# This feature is disabled and can be enabled with:')
+        print('#   univention-config-registry set kopano/repo/kopano-core=true')
+	print('# Read more at: https://wiki.z-hub.io/display/K4U/Updating+Kopano+packages+directly+from+the+Kopano+download+server')
 @!@

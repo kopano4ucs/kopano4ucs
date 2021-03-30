@@ -3,29 +3,52 @@
 @!@
 import base64
 import json
+import re
 
-map_ucsversion_kopano_repo = {'4.4': 'Univention_4.3',
-							  '4.3': 'Univention_4.3',
-							  '4.2': 'Univention_4.2'}
+import requests
+from requests.auth import HTTPBasicAuth
+
+map_ucsversion_kopano_repo = {
+	'4.4': 'Univention_4.3',
+	'4.3': 'Univention_4.3',
+	'4.2': 'Univention_4.2'
+}
 
 repo_component_name = None
 if configRegistry.get('version/version', 'invalid') in map_ucsversion_kopano_repo:
 	repo_component_name = map_ucsversion_kopano_repo['%s' % configRegistry.get('version/version')]
 else:
-	print "# UCS Version %s is incompatible with any available kopano repository, exiting" % configRegistry.get('version/version')
+	print("# UCS Version %s is incompatible with any available kopano repository, exiting" % configRegistry.get('version/version'))
 	exit()
 
 username = configRegistry.get('kopano/repo/username', 'serial')
 password = configRegistry.get('kopano/repo/password', 'your-kopano-subscription-key')
-if password[0] != 'Z':
+
+if re.match("^\w+\.\w+\.\w+\.\w+$", password):
 	base64_arr   = password.split('.')
 	base64_str   = base64_arr[1]
-	base64_bytes = base64_str.encode('ascii')
-	json_bytes   = base64.b64decode(base64_bytes)
-	json_str     = json_bytes.decode('ascii')
-	license      = json.loads(json_str)
-	username     = license['sub']
-	password     = license['sin']
+	try:
+		base64_bytes = base64_str.encode('ascii')
+		json_bytes   = base64.b64decode(base64_bytes)
+		json_str     = json_bytes.decode('ascii')
+		license      = json.loads(json_str)
+		username     = license['sub']
+		password     = license['sin']
+	except:
+		pass
+
+try:
+	resp = requests.get(
+		"https://download.kopano.io/supported",
+		auth=HTTPBasicAuth(username, password)
+	)
+	is_license_valid = resp.status_code == 200
+except Exception, e:
+	is_license_valid = False
+
+if not is_license_valid:
+	print("# repo deactivated, subscription could not be validated")
+	exit()
 
 components = ['kopano-webapp', 'kopano-files', 'kopano-mdm', 'kopano-smime']
 
@@ -34,22 +57,22 @@ for component in components:
 	releasetype = configRegistry.get('kopano/repo/%s-releasetype' % component, 'final')
 
 	if is_component_repo_activated:
-		print ''
+		print('')
 
 		path_name = component.replace('kopano-', '')
 
 		if releasetype == "final":
-	                print 'deb https://%s:%s@download.kopano.io/supported/%s:/final/%s/ /' % (username, password, path_name, repo_component_name)
+	                print('deb https://%s:%s@download.kopano.io/supported/%s:/final/%s/ /' % (username, password, path_name, repo_component_name))
 		elif releasetype == "pre-final":
-	                print 'deb https://%s:%s@download.kopano.io/supported/%s:/final/%s/ /' % (username, password, path_name, repo_component_name)
-	                print 'deb https://%s:%s@download.kopano.io/supported/%s:/pre-final/%s/ /' % (username, password, path_name, repo_component_name)
+	                print('deb https://%s:%s@download.kopano.io/supported/%s:/final/%s/ /' % (username, password, path_name, repo_component_name))
+	                print('deb https://%s:%s@download.kopano.io/supported/%s:/pre-final/%s/ /' % (username, password, path_name, repo_component_name))
 		elif releasetype == "master":
-	                print 'deb https://%s:%s@download.kopano.io/supported/%s:/final/%s/ /' % (username, password, path_name, repo_component_name)
-	                print 'deb https://%s:%s@download.kopano.io/supported/%s:/pre-final/%s/ /' % (username, password, path_name, repo_component_name)
-	                print 'deb https://%s:%s@download.kopano.io/supported/%s:/master/%s/ /' % (username, password, path_name, repo_component_name)
+	                print('deb https://%s:%s@download.kopano.io/supported/%s:/final/%s/ /' % (username, password, path_name, repo_component_name))
+	                print('deb https://%s:%s@download.kopano.io/supported/%s:/pre-final/%s/ /' % (username, password, path_name, repo_component_name))
+	                print('deb https://%s:%s@download.kopano.io/supported/%s:/master/%s/ /' % (username, password, path_name, repo_component_name))
 	else:
-		print ''
-		print '# This component feature is disabled and can be enabled with:'
-		print '#   univention-config-registry set kopano/repo/%s=true' % component
-		print '# Read more at: https://wiki.z-hub.io/display/K4U/Updating+Kopano+packages+directly+from+the+Kopano+download+server'
+		print('')
+		print('# This component feature is disabled and can be enabled with:')
+		print('#   univention-config-registry set kopano/repo/%s=true' % component)
+		print('# Read more at: https://wiki.z-hub.io/display/K4U/Updating+Kopano+packages+directly+from+the+Kopano+download+server')
 @!@

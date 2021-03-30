@@ -35,7 +35,7 @@ from univention.admin.localization import translation
 from univention.config_registry import ConfigRegistry
 ucr = ConfigRegistry()
 
-translation = translation('kopano4ucs')
+translation = translation('univention-admin-handlers-kopano-contact')
 _ = translation.translate
 
 
@@ -122,7 +122,7 @@ class kopano4ucsRole(simpleHook):
 	def hook_ldap_pre_modify(self, module):
 		# kopano-role not 'none' and no mailPrimaryAddress specified
 		if "mailPrimaryAddress" in module and not module.get("mailPrimaryAddress") and module["kopano-role"] and not module["kopano-role"] in ["none", "contact"]:
-			raise univention.admin.uexceptions.valueError, _("Kopano users must have a primary e-mail address specified.")
+			raise univention.admin.uexceptions.valueError(_("Kopano users must have a primary e-mail address specified."))
 
 	def hook_ldap_modlist(self, module, ml=[]):
 		ucr.load()

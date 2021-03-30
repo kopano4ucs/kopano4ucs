@@ -8,3 +8,16 @@ scripts/kopano4ucs-update-configs usr/share/kopano4ucs
 scripts/kopano4ucs-update-settings870.sh usr/share/kopano4ucs
 lib/*.sh usr/share/univention-lib/
 
+univention/admin/handlers/kopano/*.py usr/share/kopano4ucs/admin/handlers/
+univention/admin/syntax.d/kopano4ucs.py usr/share/kopano4ucs/admin/syntax/
+univention/admin/hooks.d/kopano4ucsRole.py usr/share/kopano4ucs/admin/hooks/
+70kopano4ucs-udm.inst usr/lib/univention-install/
+71kopano4ucs-udm.uinst usr/lib/univention-uninstall/
+locale/de.mo usr/share/kopano4ucs/admin/
+umc/udm-kopano.mo usr/share/kopano4ucs/umc/i18n/de
+umc/*xml usr/share/kopano4ucs/umc/
+umc/icons/scalable/* usr/share/kopano4ucs/umc/icons/scalable
+umc/icons/50x50/* usr/share/kopano4ucs/umc/icons/50x50
+umc/icons/16x16/* usr/share/kopano4ucs/umc/icons/16x16
+
+schema/kopano4ucs.schema usr/share/kopano4ucs/schema/

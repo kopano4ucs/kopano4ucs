@@ -30,6 +30,8 @@
 # /usr/share/common-licenses/AGPL-3; if not, see
 # <http://www.gnu.org/licenses/>.
 
+## joinscript api: bindpwdfile
+
 VERSION=1
 
 . /usr/share/univention-lib/base.sh
@@ -62,6 +64,18 @@ univention-directory-manager settings/extended_attribute remove "$@" --dn "cn=Re
 univention-directory-manager settings/usertemplate remove "$@" --dn "cn=Kopano Account,cn=templates,cn=univention,$ldap_base"
 
 stop_udm_cli_server
+
+unregisterExtensions () {
+	ucs_unregisterLDAPExtension "$@" --udm_module kopano/contact || die
+	ucs_unregisterLDAPExtension "$@" --udm_module kopano/non-active || die
+	ucs_unregisterLDAPExtension "$@" --udm_hook kopano4ucsRole --udm_syntax kopano4ucs || die
+}
+
+SERVICE="Kopano"
+ucs_removeServiceFromLocalhost "${SERVICE}" "$@"
+if ucs_isServiceUnused "${SERVICE}" "$@"; then
+	unregisterExtensions "$@"
+fi
 
 # Remove old join script from index file otherwise the re-installation will not work
 joinscript_remove_script_from_status_file kopano4ucs-udm

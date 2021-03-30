@@ -30,7 +30,7 @@
 import univention.admin.localization
 from univention.admin.syntax import select, UDM_Objects
 
-translation = univention.admin.localization.translation('kopano4ucs')
+translation = univention.admin.localization.translation('univention-admin-handlers-kopano-contact')
 _ = translation.translate
 
 

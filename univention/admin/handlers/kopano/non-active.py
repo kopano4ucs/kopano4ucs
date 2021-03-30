@@ -36,13 +36,13 @@ import univention.admin.password
 
 import univention.password
 
-translation = univention.admin.localization.translation('kopano4ucs')
+translation = univention.admin.localization.translation('univention-admin-handlers-kopano-contact')
 _ = translation.translate
 
 module = 'kopano/non-active'
 childs = 0
-short_description = _(u'Kopano non-active and shared store account')
-long_description = _(u'Management of Kopano non-active user accounts, shared stores and resources.')
+short_description = _('Kopano non-active and shared store account')
+long_description = _('Management of Kopano non-active user accounts, shared stores and resources.')
 operations = ['add', 'edit', 'remove', 'search', 'move']
 default_containers = ["cn=non-active,cn=kopano"]
 
@@ -50,8 +50,8 @@ options = {}
 
 property_descriptions = {
 	'kopanoAccount': univention.admin.property(
-		short_description=_(u'Recognized by Kopano'),
-		long_description=_(u'If set to 1, the account is synced to Kopano'),
+		short_description=_('Recognized by Kopano'),
+		long_description=_('If set to 1, the account is synced to Kopano'),
 		syntax=univention.admin.syntax.string,
 		required=True,
 		default='1',
@@ -219,7 +219,7 @@ property_descriptions = {
 }
 
 layout = [
-	Tab(_(u'General'), _(u'Kopano non-active account'), layout=[
+	Tab(_('General'), _('Kopano non-active account'), layout=[
 		Group(_('Kopano account settings'), layout=[
 			['logindenied', ],
 			['username', 'mailPrimaryAddress', ],
@@ -235,7 +235,7 @@ layout = [
 			['quotaHard', ],
 		]),
 	]),
-	Tab(_(u'Contact information'), _(u'Kopano non-active account'), layout=[
+	Tab(_('Contact information'), _('Kopano non-active account'), layout=[
 		Group(_('General Contact information'), layout=[
 			['kopanoHidden', ],
 			['title', 'firstname', 'lastname'],
@@ -405,7 +405,11 @@ def lookup(co, lo, filter_s, base='', superordinate=None, scope='sub', unique=0,
 		searchfilter.expressions.append(filter_p)
 
 	res = []
-	for dn in lo.searchDn(unicode(searchfilter), base, scope, unique, required, timeout, sizelimit):
+	try:
+		search_filter = unicode(searchfilter)
+	except NameError:
+		search_filter = str(searchfilter)
+	for dn in lo.searchDn(search_filter, base, scope, unique, required, timeout, sizelimit):
 		res.append(object(co, lo, None, dn))
 	return res
 
