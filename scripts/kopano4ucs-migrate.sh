@@ -2,7 +2,7 @@
 
 . /usr/share/univention-lib/all.sh
 
-echo "Please make sure that you have entirely read https://wiki.z-hub.io/x/OIAo and"
+echo "Please make sure that you have entirely read https://kb.kopano.io/x/D4VJAw and"
 echo "that all modification you made to your Zarafa configuration files are stored in the Univention Configuration Registry."
 read -p 'Do you want to continue? (y/n) ' -n 1 confirmation
 echo

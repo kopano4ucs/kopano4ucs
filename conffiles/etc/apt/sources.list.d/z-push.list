@@ -23,15 +23,15 @@ for component in components:
 		print('')
 
 		if releasetype == "final":
-	                print('deb http://repo.z-hub.io/z-push:/final/%s /' % (repo_component_name))
+	                print('deb https://download.kopano.io/zhub/z-push:/final/%s /' % (repo_component_name))
 		elif releasetype == "pre-final":
-	                print('deb http://repo.z-hub.io/z-push:/pre-final/%s /' % (repo_component_name))
+	                print('deb https://download.kopano.io/zhub/z-push:/pre-final/%s /' % (repo_component_name))
 		elif releasetype == "master":
-	                print('deb http://repo.z-hub.io/z-push:/develop/%s /' % (repo_component_name))
+	                print('deb https://download.kopano.io/zhub/z-push:/develop/%s /' % (repo_component_name))
 
 	else:
 		print('')
 		print('# This component feature is disabled and can be enabled with:')
 		print('#   univention-config-registry set kopano/repo/%s=true' % component)
-		print('# Read more at: https://wiki.z-hub.io/display/K4U/Updating+Kopano+packages+directly+from+the+Kopano+download+server')
+		print('# Read more at: https://kb.kopano.io/display/K4U/Updating+Kopano+packages+directly+from+the+Kopano+download+server')
 @!@

@@ -47,5 +47,5 @@ if configRegistry.is_true('kopano/repo/kopano-core'):
 else:
         print('# This feature is disabled and can be enabled with:')
         print('#   univention-config-registry set kopano/repo/kopano-core=true')
-	print('# Read more at: https://wiki.z-hub.io/display/K4U/Updating+Kopano+packages+directly+from+the+Kopano+download+server')
+	print('# Read more at: https://kb.kopano.io/display/K4U/Updating+Kopano+packages+directly+from+the+Kopano+download+server')
 @!@
