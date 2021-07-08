@@ -80,7 +80,7 @@ Package: kopano4ucs-udm-multiserver
 Architecture: all
 Depends: ${misc:Depends}, 
  ${python:Depends},
- kopano4ucs-udm (= ${binary:Version}),
+ kopano4ucs (= ${binary:Version}),
  kopano4ucs-schema (= ${binary:Version}),
  univention-join (>> 5.0.20-1.436),
  shell-univention-lib (>> 2.0.17-1.125)
@@ -102,7 +102,7 @@ Package: kopano4ucs-udm-archiver
 Architecture: all
 Depends: ${misc:Depends}, 
  ${python:Depends},
- kopano4ucs-udm (= ${binary:Version}),
+ kopano4ucs (= ${binary:Version}),
  kopano4ucs-schema (= ${binary:Version}),
  kopano4ucs-udm-multiserver (= ${binary:Version}), 
  univention-join (>> 5.0.20-1.436),
