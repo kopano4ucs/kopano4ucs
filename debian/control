@@ -8,9 +8,13 @@ Build-Depends: debhelper (>= 7.0.50),
  python-support,
  univention-config-dev,
  python-all,
- python-support (>= 0.90),
  gettext,
- gnupg2
+ gnupg2,
+ dh-python,
+ python-debian,
+ python3-debian,
+ python3-all,
+ univention-management-console-dev (>= 11.0.4-37)
 XS-Python-Version: 2.6, 2.7
 
 Package: kopano4ucs-lib
