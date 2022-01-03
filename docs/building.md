@@ -4,6 +4,6 @@ To have access to the UCS linter these packages should be build on directly on a
 
 The following command performs a local build through the osc command line client and puts the resulting packages into the current directory:
 
-```
-$ osc build Univention_4.3 kopano4ucs.dsc -k .
+```bash
+$ osc build Univention_4.4 kopano4ucs.dsc -k .
 ```
