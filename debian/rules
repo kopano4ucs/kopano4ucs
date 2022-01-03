@@ -48,4 +48,4 @@ override_dh_gencontrol:
 	dh_gencontrol -- $(SUBSTVARS)
 
 %:
-	dh $@ --with python_support
+	dh $@ --with python2

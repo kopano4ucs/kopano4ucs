@@ -7,3 +7,9 @@ The following command performs a local build through the osc command line client
 ```bash
 $ osc build Univention_4.4 kopano4ucs.dsc -k .
 ```
+
+## Copy local state to https://build.opensuse.org/
+
+```bash
+osc copypac -t https://api.opensuse.org kopano4ucs kopano4ucs home:zfbartels kopano4ucs
+```
