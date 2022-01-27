@@ -55,7 +55,7 @@ else
 fi
 
 # reload kopano
-invoke-rc.d kopano-server reload
+systemctl reload kopano-server
 wait_for_kopano_server_startup
 
 joinscript_save_current_version
