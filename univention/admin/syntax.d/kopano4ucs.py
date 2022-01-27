@@ -44,12 +44,14 @@ class kopano4ucsRole(select):
 		('contact', _('Kopano Contact')),
 	]
 
+
 class kopano4ucsResource(select):
-     choices= [
-         ('none', _('None')),
-         ('room', _('Kopano Room')),
-         ('equipment', _('Kopano Equipment')),
-     ]
+	choices = [
+		('none', _('None')),
+		('room', _('Kopano Room')),
+		('equipment', _('Kopano Equipment')),
+	]
+
 
 class kopano4ucsSendAsPrivilege(UDM_Objects):
 	udm_modules = ('users/user', )
