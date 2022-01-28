@@ -11,3 +11,5 @@
 0010-2: scripts/kopano4ucs-migrate-ldap.sh
 0010-2: scripts/kopano4ucs-migrate-ucr.sh
 0010-2: scripts/kopano4ucs-update-settings870.sh
+0009-3: univention/admin/handlers/kopano/contact.py
+0009-3: univention/admin/handlers/kopano/non-active.py
