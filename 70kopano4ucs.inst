@@ -101,7 +101,7 @@ wait_for_kopano_server_startup
 # make sure kopano services are enabled in systemd
 for component in kopano-server kopano-dagent kopano-gateway kopano-ical kopano-monitor kopano-search kopano-spooler; do
 	systemctl enable "$component"
-	service "$component" start
+	systemctl start "$component"
 done
 
 # give kopano server some time to settle

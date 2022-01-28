@@ -47,7 +47,7 @@ event_counter = 0
 
 
 def handler(dn, new, old, command):
-	global changed_objects, event_counter
+	global event_counter
 
 	# ignore modrdn changes
 	if command == "r":
@@ -64,7 +64,7 @@ def handler(dn, new, old, command):
 
 	# add object to list if it is a kopano user object
 	if new and new.get('uid') and 'kopano-contact' not in new.get('objectClass'):
-		if new.get('kopanoAccount', [''])[0] == '1' and 'kopano-group' not in new.get('objectClass'):
+		if new.get('kopanoAccount', [b''])[0] == b'1' and b'kopano-group' not in new.get('objectClass'):
 			changed_objects[dn] = new
 			event_counter += 1
 
@@ -75,7 +75,7 @@ def postrun():
 	set kopano options 15 seconds after last sync in a bulk action
 	"""
 
-	global changed_objects, event_counter
+	global event_counter
 
 	univention.debug.debug(univention.debug.LISTENER, univention.debug.PROCESS, 'kopano: initiating sync')
 
@@ -93,13 +93,11 @@ def postrun():
 				('kopanoMrAcceptConflict', '--mr-accept-conflict'),
 				('kopanoMrAcceptRecurring', '--mr-accept-recurring'),
 			]:
-				value = 'no'
-				if new.get(attr) and ('1' in new.get(attr)):
-					value = 'yes'
-				cmd = ['/usr/sbin/kopano-cli', '-u', new['uid'][0], option, value]
-				univention.debug.debug(univention.debug.LISTENER, univention.debug.INFO, 'kopano: calling %s' % str(cmd))
+				value = 'yes' if b'1' in new.get(attr, []) else 'no'
+				cmd = ['/usr/sbin/kopano-cli', '-u', new['uid'][0].decode('UTF-8'), option, value]
+				univention.debug.debug(univention.debug.LISTENER, univention.debug.INFO, 'kopano: calling %s' % (cmd,))
 				subprocess.call(cmd)
 	finally:
 		listener.unsetuid()
-		changed_objects = {}
+		changed_objects.clear()
 		event_counter = 0

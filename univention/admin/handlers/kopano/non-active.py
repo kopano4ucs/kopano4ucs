@@ -1,4 +1,4 @@
-#!/usr/bin/python2.7
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # Copyright 2013-2019 Univention GmbH
@@ -40,13 +40,19 @@ translation = univention.admin.localization.translation('univention-admin-handle
 _ = translation.translate
 
 module = 'kopano/non-active'
-childs = 0
+childs = False
 short_description = _('Kopano non-active and shared store account')
 long_description = _('Management of Kopano non-active user accounts, shared stores and resources.')
 operations = ['add', 'edit', 'remove', 'search', 'move']
 default_containers = ["cn=non-active,cn=kopano"]
 
-options = {}
+options = {
+	'default': univention.admin.option(
+		short_description=short_description,
+		default=True,
+		objectClasses=['top', 'kopano-user', 'person', 'inetOrgPerson', 'univentionObject', 'kopano4ucsObject', 'univentionMail'],
+	),
+}
 
 property_descriptions = {
 	'kopanoAccount': univention.admin.property(
@@ -310,13 +316,8 @@ class object(univention.admin.handlers.simpleLdap):
 				univention.admin.allocators.request(self.lo, self.position, 'uid', value=self['username'])
 			except univention.admin.uexceptions.noLock:
 				username = self['username']
-				del(self.info['username'])
-				self.oldinfo = {}
-				self.dn = None
-				self._exists = 0
-				self.old_username = username
 				univention.admin.allocators.release(self.lo, self.position, 'uid', username)
-				raise univention.admin.uexceptions.uidAlreadyUsed(': %s' % username)
+				raise univention.admin.uexceptions.uidAlreadyUsed(username)
 
 	def _ldap_post_modify(self):
 		if self.hasChanged('mailPrimaryAddress'):
@@ -339,15 +340,10 @@ class object(univention.admin.handlers.simpleLdap):
 			self.allocation_locks.append(('uid', uid))
 		except univention.admin.uexceptions.noLock:
 			username = self['username']
-			del(self.info['username'])
-			self.oldinfo = {}
-			self.dn = None
-			self._exists = 0
-			self.old_username = username
 			univention.admin.allocators.release(self.lo, self.position, 'uid', username)
 			raise univention.admin.uexceptions.uidAlreadyUsed(': %s' % username)
 
-		al = [('uid', [uid])]
+		al = [('uid', [uid.encode("UTF-8")])]
 
 		# check if mailprimaryaddress is not in use
 		if self['mailPrimaryAddress']:
@@ -358,11 +354,7 @@ class object(univention.admin.handlers.simpleLdap):
 				self.cancel()
 				raise univention.admin.uexceptions.mailAddressUsed
 
-		al.append(('univentionObjectFlag', ['functional']))
-
-		ocs = ('objectClass', ['top', 'kopano-user', 'person', 'inetOrgPerson', 'univentionObject', 'kopano4ucsObject', 'univentionMail'])
-		al.insert(0, ocs)
-
+		al.append(('univentionObjectFlag', [b'functional']))
 		return al
 
 	def _ldap_modlist(self):
@@ -371,12 +363,12 @@ class object(univention.admin.handlers.simpleLdap):
 			pwdCheck = univention.password.Check(self.lo)
 			pwdCheck.enableQualityCheck = True
 			try:
-				pwdCheck.check(self['password'])
-			except ValueError as e:
-				raise univention.admin.uexceptions.pwQuality(str(e).replace('W?rterbucheintrag', 'Wörterbucheintrag').replace('enth?lt', 'enthält'))
+				pwdCheck.check(self['password'], username=self['username'], displayname=self['displayName'])
+			except getattr(univention.password, 'CheckFailed', ValueError) as exc:  # ValueError: UCS 4.4
+				raise univention.admin.uexceptions.pwQuality(str(exc))
 
 			password_crypt = "{crypt}%s" % univention.admin.password.crypt(self['password'])
-			ml.append(('userPassword', self.oldattr.get('userPassword', [''])[0], password_crypt))
+			ml.append(('userPassword', self.oldattr.get('userPassword', [b''])[0], password_crypt.encode('ASCII')))
 
 		if self.hasChanged('mailPrimaryAddress') and self['mailPrimaryAddress']:
 			for type, value in self.allocation_locks:
@@ -392,27 +384,19 @@ class object(univention.admin.handlers.simpleLdap):
 
 		return ml
 
-
-def lookup(co, lo, filter_s, base='', superordinate=None, scope='sub', unique=0, required=0, timeout=-1, sizelimit=0):
-	searchfilter = univention.admin.filter.conjunction('&', [
-		univention.admin.filter.expression('objectClass', 'kopano-user'),
-		univention.admin.filter.expression('objectClass', 'kopano4ucsObject'),
-	])
-
-	if filter_s:
-		filter_p = univention.admin.filter.parse(filter_s)
-		univention.admin.filter.walk(filter_p, univention.admin.mapping.mapRewrite, arg=mapping)
-		searchfilter.expressions.append(filter_p)
-
-	res = []
-	try:
-		search_filter = unicode(searchfilter)
-	except NameError:
-		search_filter = str(searchfilter)
-	for dn in lo.searchDn(search_filter, base, scope, unique, required, timeout, sizelimit):
-		res.append(object(co, lo, None, dn))
-	return res
+	@classmethod
+	def unmapped_lookup_filter(cls):  # type: () -> univention.admin.filter.conjunction
+		return univention.admin.filter.conjunction('&', [
+			univention.admin.filter.expression('objectClass', 'kopano-user'),
+			univention.admin.filter.expression('objectClass', 'kopano4ucsObject'),
+		])
 
 
-def identify(distinguished_name, attributes, canonical=False):
-	return 'kopano-user' in attributes.get('objectClass', []) and 'kopano4ucsObject' in attributes.get('objectClass', [])
+lookup = object.lookup
+lookup_filter = object.lookup_filter
+
+
+# TODO: could also be `identify = object.identify` if all object classes from the `default` option are ensured?
+def identify(dn, attr, canonical=False):
+	required_ocs = {b'kopano-user', b'kopano4ucsObject'}
+	return set(attr.get('objectClass', [])) & required_ocs == required_ocs

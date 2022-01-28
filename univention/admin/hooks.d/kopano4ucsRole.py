@@ -33,6 +33,7 @@ import univention.admin.uexceptions
 from univention.admin.hook import simpleHook
 from univention.admin.localization import translation
 from univention.config_registry import ConfigRegistry
+
 ucr = ConfigRegistry()
 
 translation = translation('univention-admin-handlers-kopano-contact')
@@ -49,9 +50,9 @@ class kopano4ucsRole(simpleHook):
 	def __kopanoRoles(self, module, ml):
 		# if role has changed and module is not "settings/usertemplate"
 		if self.__isUsersUser(module) and module.hasChanged("kopano-role"):
-			ud.debug(ud.ADMIN, ud.INFO, 'kopano4ucsRole: role has changed %s' % module["kopano-role"])
-			ud.debug(ud.ADMIN, ud.INFO, 'kopano4ucsRole: original modlist %s' % ml)  # FIXME: this logs password hashes!
-			ud.debug(ud.ADMIN, ud.INFO, 'kopano4ucsRole: oldattr %s' % module.oldattr)  # FIXME: this logs password hashes!
+			ud.debug(ud.ADMIN, ud.INFO, 'kopano4ucsRole: role has changed %r' % (module["kopano-role"],))
+			ud.debug(ud.ADMIN, ud.INFO, 'kopano4ucsRole: original modlist %r' % (ml,))  # FIXME: this logs password hashes!
+			ud.debug(ud.ADMIN, ud.INFO, 'kopano4ucsRole: oldattr %r' % (module.oldattr,))  # FIXME: this logs password hashes!
 
 			kopanoAccount = 0
 			kopanoAdmin = 0
@@ -76,34 +77,28 @@ class kopano4ucsRole(simpleHook):
 			# add/remove kopano role
 			ml.append((
 				"kopanoAccount",
-				module.oldattr.get("kopanoAccount", [""])[0],
-				"%s" % kopanoAccount))
+				module.oldattr.get("kopanoAccount", [b""])[0],
+				b"%d" % kopanoAccount))
 			ml.append((
 				"kopanoAdmin",
-				module.oldattr.get("kopanoAdmin", [""])[0],
-				"%s" % kopanoAdmin))
+				module.oldattr.get("kopanoAdmin", [b""])[0],
+				b"%d" % kopanoAdmin))
 			ml.append((
 				"kopanoSharedStoreOnly",
-				module.oldattr.get("kopanoSharedStoreOnly", [""])[0],
-				"%s" % kopanoSharedStoreOnly))
+				module.oldattr.get("kopanoSharedStoreOnly", [b""])[0],
+				b"%d" % kopanoSharedStoreOnly))
 
 			# add/remove objectClass kopano-contact
 			if kopanoContact:
 				if "kopano-contact" not in module.oldattr.get("objectClass", []):
-					ml.append(("objectClass", "", "kopano-contact"))
+					ml.append(("objectClass", b"", b"kopano-contact"))
 			else:
 				if "kopano-contact" in module.oldattr.get("objectClass", []):
-					ml.append(("objectClass", "kopano-contact", ""))
+					ml.append(("objectClass", b"kopano-contact", b""))
 
-			ud.debug(ud.ADMIN, ud.INFO, 'kopano4ucsRole: changed modlist %s' % ml)  # FIXME: this logs password hashes
+			ud.debug(ud.ADMIN, ud.INFO, 'kopano4ucsRole: changed modlist %r' % (ml,))  # FIXME: this logs password hashes
 
 		return ml
-
-	#def hook_ldap_post_modify(self, module):
-	#	pass
-
-	#def hook_open(self, module):
-	#	pass
 
 	def hook_ldap_pre_create(self, module):
 		if "mailPrimaryAddress" in module and not module.get("mailPrimaryAddress"):
@@ -116,31 +111,22 @@ class kopano4ucsRole(simpleHook):
 		al = self.__kopanoRoles(module, al)
 		return al
 
-	#def hook_ldap_post_create(self, module):
-	#	pass
-
 	def hook_ldap_pre_modify(self, module):
 		# kopano-role not 'none' and no mailPrimaryAddress specified
-		if "mailPrimaryAddress" in module and not module.get("mailPrimaryAddress") and module["kopano-role"] and not module["kopano-role"] in ["none", "contact"]:
+		if "mailPrimaryAddress" in module and not module.get("mailPrimaryAddress") and module["kopano-role"] and module["kopano-role"] not in ("none", "contact"):
 			raise univention.admin.uexceptions.valueError(_("Kopano users must have a primary e-mail address specified."))
 
 	def hook_ldap_modlist(self, module, ml=[]):
 		ucr.load()
-		ud.debug(ud.ADMIN, ud.INFO, "hook_ldap_modlist: ml: %s" % ml)
+		ud.debug(ud.ADMIN, ud.INFO, "hook_ldap_modlist: ml: %r" % (ml,))  # FIXME: logs password hashes
 
 		# email address added, but kopano-role unchanged and "none": user probably wants that user to be a kopano-user
-		if module.hasChanged('mailPrimaryAddress') and not module.oldattr.get("mailPrimaryAddress", [""])[0] and not module.hasChanged('kopano-role') and module.get("kopano-role") == "none" and ucr.is_true('kopano/createkopanouserswithvalidemail', True):
+		if module.hasChanged('mailPrimaryAddress') and not module.oldattr.get("mailPrimaryAddress", [b""])[0] and not module.hasChanged('kopano-role') and module.get("kopano-role") == "none" and ucr.is_true('kopano/createkopanouserswithvalidemail', True):
 			module["kopano-role"] = "user"
-			ml.append(("kopano4ucsRole", "none", "user"))
+			ml.append(("kopano4ucsRole", b"none", b"user"))
 
 		# set kopano role flags
 		ml = self.__kopanoRoles(module, ml)
 
-		ud.debug(ud.ADMIN, ud.INFO, "hook_ldap_modlist: ml after modification: %s" % ml)
+		ud.debug(ud.ADMIN, ud.INFO, "hook_ldap_modlist: ml after modification: %s" % (ml,))  # FIXME: logs password hashes
 		return ml
-
-	#def hook_ldap_pre_remove(self, module):
-	#	pass
-
-	#def hook_ldap_post_remove(self, module):
-	#	pass

@@ -1,4 +1,4 @@
-#!/usr/bin/python2.7
+#!/usr/bin/python3
 # -*- coding: utf-8 -*-
 #
 # Copyright 2013-2019 Univention GmbH
@@ -37,13 +37,19 @@ translation = univention.admin.localization.translation('univention-admin-handle
 _ = translation.translate
 
 module = 'kopano/contact'
-childs = 0
+childs = False
 short_description = _('Kopano Contact')
 long_description = _('Management of Kopano Contact accounts.')
 operations = ['add', 'edit', 'remove', 'search', 'move']
 default_containers = ["cn=contacts,cn=kopano"]
 
-options = {}
+options = {
+	'default': univention.admin.option(
+		short_description=short_description,
+		default=True,
+		objectClasses=['top', 'kopano-contact', 'person', 'inetOrgPerson', 'univentionObject', 'kopano4ucsObject'],
+	),
+}
 
 property_descriptions = {
 	'kopanoAccount': univention.admin.property(
@@ -189,25 +195,19 @@ class object(univention.admin.handlers.simpleLdap):
 		pass  # TODO: is there a reason why this doesn't do the inherited things?
 
 	def _ldap_addlist(self):
-		return [('objectClass', ['top', 'kopano-contact', 'person', 'inetOrgPerson', 'univentionObject', 'kopano4ucsObject']), ('univentionObjectFlag', ['functional'])]
+		return super(object, self)._ldap_addlist() + [('univentionObjectFlag', [b'functional'])]
+
+	@classmethod
+	def unmapped_lookup_filter(cls):  # type: () -> univention.admin.filter.conjunction
+		return univention.admin.filter.conjunction('&', [
+			univention.admin.filter.expression('objectClass', 'kopano-contact'),
+			univention.admin.filter.expression('univentionObjectFlag', 'functional')
+		])
 
 
-def lookup(co, lo, filter_s, base='', superordinate=None, scope='sub', unique=0, required=0, timeout=-1, sizelimit=0):
-	searchfilter = univention.admin.filter.conjunction('&', [
-		univention.admin.filter.expression('objectClass', 'kopano-contact'),
-		univention.admin.filter.expression('univentionObjectFlag', 'functional')
-	])
-
-	if filter_s:
-		filter_p = univention.admin.filter.parse(filter_s)
-		univention.admin.filter.walk(filter_p, univention.admin.mapping.mapRewrite, arg=mapping)
-		searchfilter.expressions.append(filter_p)
-
-	res = []
-	for dn in lo.searchDn(str(searchfilter), base, scope, unique, required, timeout, sizelimit):
-		res.append(object(co, lo, None, dn))
-	return res
+lookup = object.lookup
+lookup_filter = object.lookup_filter
 
 
 def identify(distinguished_name, attributes, canonical=False):
-	return 'kopano-contact' in attributes.get('objectClass', []) and 'functional' in attributes.get('univentionObjectFlag', [])
+	return b'kopano-contact' in attributes.get('objectClass', []) and b'functional' in attributes.get('univentionObjectFlag', [])

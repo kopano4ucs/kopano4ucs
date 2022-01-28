@@ -85,9 +85,9 @@ if [ -x /etc/init.d/slapd ] &&
 	done
 	if [ -n "$changes" ]; then
 		if pidof slapd >/dev/null 2>/dev/null; then
-			service slapd stop
+			systemctl stop slapd
 			/usr/share/univention-ldap/ldap_setup_index $changes
-			service slapd start
+			systemctl start slapd
 		else
 			/usr/share/univention-ldap/ldap_setup_index $changes
 		fi
