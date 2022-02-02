@@ -293,69 +293,37 @@ mapping.register('quotaHard', 'kopanoQuotaHard', None, univention.admin.mapping.
 class object(univention.admin.handlers.simpleLdap):
 	module = module
 
-	def __init__(self, co, lo, position, dn='', superordinate=None, attributes=None):
-		univention.admin.handlers.simpleLdap.__init__(self, co, lo, position, dn, superordinate, attributes=attributes)
-		self.allocation_locks = []
+	def _ldap_pre_ready(self):
+		super(object, self)._ldap_pre_ready()
 
-	def cancel(self):
-		for type, value in self.allocation_locks:
-			univention.admin.allocators.release(self.lo, self.position, type, value)
+		# get lock for username
+		if not self.exists() or self.hasChanged('username'):
+			if self['username'] and self['username'].lower() != self.oldinfo.get('username', '').lower():
+				try:
+					self.request_lock('uid', self['username'])
+				except univention.admin.uexceptions.noLock:
+					raise univention.admin.uexceptions.uidAlreadyUsed(self['username'])
 
-	def _ldap_post_create(self):
-		if self['mailPrimaryAddress']:
-			univention.admin.allocators.confirm(self.lo, self.position, 'mailPrimaryAddress', self['mailPrimaryAddress'])
-		univention.admin.allocators.confirm(self.lo, self.position, 'uid', self['username'])
+		# get lock for mailPrimaryAddress
+		if not self.exists() or self.hasChanged('mailPrimaryAddress'):
+			# ignore case in change of mailPrimaryAddress, we only store the lowercase address anyway
+			if self['mailPrimaryAddress'] and self['mailPrimaryAddress'].lower() != (self.oldinfo.get('mailPrimaryAddress', None) or '').lower():
+				try:
+					self.request_lock('mailPrimaryAddress', self['mailPrimaryAddress'])
+				except univention.admin.uexceptions.noLock:
+					raise univention.admin.uexceptions.mailAddressUsed(self['mailPrimaryAddress'])
 
 	def _ldap_pre_modify(self):
 		if self.hasChanged('mailPrimaryAddress'):
 			if self['mailPrimaryAddress']:
 				self['mailPrimaryAddress'] = self['mailPrimaryAddress'].lower()
-
-		if self.hasChanged('username'):
-			try:
-				univention.admin.allocators.request(self.lo, self.position, 'uid', value=self['username'])
-			except univention.admin.uexceptions.noLock:
-				username = self['username']
-				univention.admin.allocators.release(self.lo, self.position, 'uid', username)
-				raise univention.admin.uexceptions.uidAlreadyUsed(username)
-
-	def _ldap_post_modify(self):
-		if self.hasChanged('mailPrimaryAddress'):
-			if self['mailPrimaryAddress']:
-				univention.admin.allocators.confirm(self.lo, self.position, 'mailPrimaryAddress', self['mailPrimaryAddress'])
-			else:
-				univention.admin.allocators.release(self.lo, self.position, 'mailPrimaryAddress', self.oldinfo['mailPrimaryAddress'])
-
-	def _ldap_post_remove(self):
-		univention.admin.allocators.release(self.lo, self.position, 'mailPrimaryAddress', self['mailPrimaryAddress'])
-		univention.admin.allocators.release(self.lo, self.position, 'uid', self['username'])
+		super(object, self)._ldap_pre_modify()
 
 	def _update_policies(self):
 		pass  # TODO: is there a reason why this doesn't do the inherited things?
 
 	def _ldap_addlist(self):
-		# Try to set username
-		try:
-			uid = univention.admin.allocators.request(self.lo, self.position, 'uid', value=self['username'])
-			self.allocation_locks.append(('uid', uid))
-		except univention.admin.uexceptions.noLock:
-			username = self['username']
-			univention.admin.allocators.release(self.lo, self.position, 'uid', username)
-			raise univention.admin.uexceptions.uidAlreadyUsed(': %s' % username)
-
-		al = [('uid', [uid.encode("UTF-8")])]
-
-		# check if mailprimaryaddress is not in use
-		if self['mailPrimaryAddress']:
-			try:
-				univention.admin.allocators.request(self.lo, self.position, 'mailPrimaryAddress', value=self['mailPrimaryAddress'])
-				self.allocation_locks.append(('mailPrimaryAddress', self['mailPrimaryAddress']))
-			except univention.admin.uexceptions.noLock:
-				self.cancel()
-				raise univention.admin.uexceptions.mailAddressUsed
-
-		al.append(('univentionObjectFlag', [b'functional']))
-		return al
+		return super(object, self)._ldap_addlist() + [('univentionObjectFlag', [b'functional'])]
 
 	def _ldap_modlist(self):
 		ml = univention.admin.handlers.simpleLdap._ldap_modlist(self)
@@ -369,18 +337,6 @@ class object(univention.admin.handlers.simpleLdap):
 
 			password_crypt = "{crypt}%s" % univention.admin.password.crypt(self['password'])
 			ml.append(('userPassword', self.oldattr.get('userPassword', [b''])[0], password_crypt.encode('ASCII')))
-
-		if self.hasChanged('mailPrimaryAddress') and self['mailPrimaryAddress']:
-			for type, value in self.allocation_locks:
-				if type == 'mailPrimaryAddress':
-					break
-			else:
-				try:
-					univention.admin.allocators.request(self.lo, self.position, 'mailPrimaryAddress', value=self['mailPrimaryAddress'])
-					self.allocation_locks.append(('mailPrimaryAddress', self['mailPrimaryAddress']))
-				except univention.admin.uexceptions.noLock:
-					self.cancel()
-					raise univention.admin.uexceptions.mailAddressUsed
 
 		return ml
 
