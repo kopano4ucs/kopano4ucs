@@ -94,8 +94,6 @@ class kopano4ucsRole(simpleHook):
 				if "kopano-contact" in module.oldattr.get("objectClass", []):
 					ml.append(("objectClass", b"kopano-contact", b""))
 
-			ud.debug(ud.ADMIN, ud.INFO, 'kopano4ucsRole: changed modlist %r' % (ml,))  # FIXME: this logs password hashes
-
 		return ml
 
 	def hook_ldap_pre_create(self, module):
@@ -116,7 +114,6 @@ class kopano4ucsRole(simpleHook):
 
 	def hook_ldap_modlist(self, module, ml=[]):
 		ucr.load()
-		ud.debug(ud.ADMIN, ud.INFO, "hook_ldap_modlist: ml: %r" % (ml,))  # FIXME: logs password hashes
 
 		# email address added, but kopano-role unchanged and "none": user probably wants that user to be a kopano-user
 		if module.hasChanged('mailPrimaryAddress') and not module.oldattr.get("mailPrimaryAddress", [b""])[0] and not module.hasChanged('kopano-role') and module.get("kopano-role") == "none" and ucr.is_true('kopano/createkopanouserswithvalidemail', True):
@@ -126,5 +123,4 @@ class kopano4ucsRole(simpleHook):
 		# set kopano role flags
 		ml = self.__kopanoRoles(module, ml)
 
-		ud.debug(ud.ADMIN, ud.INFO, "hook_ldap_modlist: ml after modification: %s" % (ml,))  # FIXME: logs password hashes
 		return ml
