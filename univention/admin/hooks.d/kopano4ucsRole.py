@@ -51,8 +51,6 @@ class kopano4ucsRole(simpleHook):
 		# if role has changed and module is not "settings/usertemplate"
 		if self.__isUsersUser(module) and module.hasChanged("kopano-role"):
 			ud.debug(ud.ADMIN, ud.INFO, 'kopano4ucsRole: role has changed %r' % (module["kopano-role"],))
-			ud.debug(ud.ADMIN, ud.INFO, 'kopano4ucsRole: original modlist %r' % (ml,))  # FIXME: this logs password hashes!
-			ud.debug(ud.ADMIN, ud.INFO, 'kopano4ucsRole: oldattr %r' % (module.oldattr,))  # FIXME: this logs password hashes!
 
 			kopanoAccount = 0
 			kopanoAdmin = 0
