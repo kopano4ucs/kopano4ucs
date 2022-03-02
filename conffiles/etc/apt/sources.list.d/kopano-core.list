@@ -30,7 +30,7 @@ if configRegistry.is_true('kopano/repo/kopano-core'):
 			auth=HTTPBasicAuth(username, password)
 		)
 		is_license_valid = resp.status_code == 200
-	except Exception, e:
+	except Exception as e:
 		is_license_valid = False
 
 	if not is_license_valid:
@@ -41,6 +41,9 @@ if configRegistry.is_true('kopano/repo/kopano-core'):
 	elif configRegistry.get('version/version') == "4.3" or configRegistry.get('version/version') == "4.4":
 		print('deb https://%s:%s@download.kopano.io/supported/core:/8.7/Univention_4.3/ /' % (username,password))
 		print('deb https://%s:%s@download.kopano.io/supported/archiver:/8.7/Univention_4.3/ /' % (username,password))
+	elif configRegistry.get('version/version') == "5.0":
+		print('deb https://%s:%s@download.kopano.io/supported/core:/8.7/Univention_5.0/ /' % (username,password))
+		print('deb https://%s:%s@download.kopano.io/supported/archiver:/8.7/Univention_5.0/ /' % (username,password))
 	else:
 		print('# unsupported version')
 
