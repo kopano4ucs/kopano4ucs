@@ -9,6 +9,7 @@ import requests
 from requests.auth import HTTPBasicAuth
 
 map_ucsversion_kopano_repo = {
+	'5.0': 'Univention_5.0',
 	'4.4': 'Univention_4.3',
 	'4.3': 'Univention_4.3',
 	'4.2': 'Univention_4.2'
@@ -43,7 +44,7 @@ try:
 		auth=HTTPBasicAuth(username, password)
 	)
 	is_license_valid = resp.status_code == 200
-except Exception, e:
+except Exception as e:
 	is_license_valid = False
 
 if not is_license_valid:

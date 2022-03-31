@@ -71,6 +71,7 @@ Conflicts: univention-mail-server,
  cyrus-common-2.2,
  cyrus-common-2.4
 Replaces: kopano4ucs-udm, kopano4ucs-schema
+Breaks: kopano4ucs-udm
 Description: Kopano4ucs integration package for Univention Corporate Server
  Integration package for installation and configuration of the Kopano
  groupware solution on Univention Corporate Server.
@@ -123,7 +124,7 @@ Depends: ${misc:Depends},
  kopano-webapp-plugin-intranet,
  kopano-webapp-plugin-mdm,
  kopano-webapp-plugin-smime,
- ${dist:Depends}
+ libapache2-mod-php7.3 | libapache2-mod-php7.0
 Description: Kopano4ucs kopano-webapp integration package for Univention Corporate Server
  Integration package for installation and configuration of the Kopano
  groupware solution WebApp interface on Univention Corporate Server.

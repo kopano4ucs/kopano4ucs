@@ -31,9 +31,9 @@
 # <http://www.gnu.org/licenses/>.
 
 # explicitly depend on php7-mapi for ucs 4.3
-ifeq ($(shell grep -q stretch /etc/os-release && echo yes),yes)
-	SUBSTVARS = -Vdist:Depends="libapache2-mod-php7.0, php7-mapi, php7.0-curl, php7.0-bcmath, php-smbclient, php-enchant"
-endif
+#ifeq ($(shell grep -q stretch /etc/os-release && echo yes),yes)
+#	SUBSTVARS = -Vdist:Depends="libapache2-mod-php7.0, php7-mapi, php7.0-curl, php7.0-bcmath, php-smbclient, php-enchant"
+#endif
 
 override_dh_auto_install:
 	msgfmt -o locale/de.mo locale/de.po
@@ -44,8 +44,8 @@ override_dh_auto_install:
 override_dh_auto_test:
 	ucslint
 
-override_dh_gencontrol:
-	dh_gencontrol -- $(SUBSTVARS)
+#override_dh_gencontrol:
+#	dh_gencontrol -- $(SUBSTVARS)
 
 %:
 	dh $@ --with python2
