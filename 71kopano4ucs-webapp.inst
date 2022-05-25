@@ -32,7 +32,7 @@
 
 ## joinscript api: bindpwdfile
 
-VERSION=5
+VERSION=6
 
 . /usr/share/univention-join/joinscripthelper.lib
 . /usr/share/univention-lib/all.sh
@@ -77,6 +77,13 @@ if [ $(echo "$ucsversion >= 4.3" | bc -l) -eq 1 ]; then
 	phpenmod kopano_smime
 	php5dismod kopano
 	php5dismod kopano_smime
+	# restart apache to apply changes
+	systemctl restart apache2.service
+fi
+if [ $(echo "$ucsversion >= 5.0" | bc -l) -eq 1 ]; then
+	# since ucs does not properly configure the usage of new php during sys upgrade we have to do it
+	a2dismod php7.0
+	a2enmod php7.3
 	# restart apache to apply changes
 	systemctl restart apache2.service
 fi
