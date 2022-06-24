@@ -47,8 +47,7 @@ ucs_addServiceToLocalhost "Kopano-WebApp" "$@"
 # Find and configure kopano mailserver.
 # Assumption: Since kopano-multiserver has to be configured manually anyway,
 # we can take the first kopano server in the domain and use that
-find_first_kopano_server ()
-{
+find_first_kopano_server() {
 	univention-ldapsearch -LLL univentionService=Kopano cn | grep "^cn: " | sed s/"^cn: "// | head -n1
 }
 
@@ -66,9 +65,15 @@ udm dns/forward_zone modify "$@" \
 	--dn zoneName="$domainname",cn=dns,"$ldap_base" \
 	--append txt="kdiscover https://$hostname.$domainname/webapp/" || die
 
-# make sure that php7 is used on UCS 4.3
-ucsversion=$(ucr get version/version)
-if [ $(echo "$ucsversion >= 4.3" | bc -l) -eq 1 ]; then
+# detect latest php version to make sure all components use the latest version even after upgrade
+if [ -d /etc/php/7.3 ]; then
+	# added for the upgrade to ucs 5.0
+	a2dismod php7.0
+	a2enmod php7.3
+	# restart apache to apply changes
+	systemctl restart apache2.service
+elif [ -d /etc/php/7.0 ]; then
+	# added for the upgrade to ucs 4.3
 	# disable php5 module on apache, enable the php7 one instead
 	a2dismod php5
 	a2enmod php7.0
@@ -79,19 +84,14 @@ if [ $(echo "$ucsversion >= 4.3" | bc -l) -eq 1 ]; then
 	php5dismod kopano_smime
 	# restart apache to apply changes
 	systemctl restart apache2.service
-fi
-if [ $(echo "$ucsversion >= 5.0" | bc -l) -eq 1 ]; then
-	# since ucs does not properly configure the usage of new php during sys upgrade we have to do it
-	a2dismod php7.0
-	a2enmod php7.3
-	# restart apache to apply changes
-	systemctl restart apache2.service
+else
+	echo "Could not determine base php version, exiting..."
+	exit 1
 fi
 
 # Up-to-date webapp versions are by default only available via https. Update the portal_entry and remove http links:
 if [ "$(ucr get kopano/webapp/modify-portal-in-joinscript)" != "no" ]; then
-	for link in $(udm settings/portal_entry list "$@" --filter=cn=kopano-webapp | grep "link: http://" | cut -d" " -f 4);
-	do
+	for link in $(udm settings/portal_entry list "$@" --filter=cn=kopano-webapp | grep "link: http://" | cut -d" " -f 4); do
 		udm settings/portal_entry modify "$@" --dn=cn=kopano-webapp,cn=portal,cn=univention,$(ucr get ldap/base) --remove=link="$link"
 	done
 fi
