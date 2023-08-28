@@ -186,8 +186,8 @@ univention-directory-manager settings/extended_attribute create "$@" --ignore_ex
 	--set tabPosition=1 \
 	--set shortDescription="Kopano Role (Warning: 'None' will delete Kopano user data)" \
 	--set longDescription="Select the Kopano role for this user. Warning: by changing the role to 'None' all kopano-related user data will get deleted." \
-	--set translationShortDescription='"de_DE" "Kopano-Rolle (Warnung: '"'Keine'"' löscht Kopano-Benutzerdaten)"' \
-	--set translationLongDescription='"de_DE" "Kopano-Rolle für dieses Benutzerobjekt wählen. Warnung: Beim Wechsel auf die Rolle '"'Keine'"' werden alle kopanospezifischen Daten des Benutzers gelöscht.' \
+	--set translationShortDescription='"de_DE" "Kopano-Rolle (Warnung: \"Keine\" löscht Kopano-Benutzerdaten)"' \
+	--set translationLongDescription='"de_DE" "Kopano-Rolle für dieses Benutzerobjekt wählen. Warnung: Beim Wechsel auf die Rolle \"Keine\" werden alle kopanospezifischen Daten des Benutzers gelöscht."' \
 	--set objectClass="kopano-user" \
 	--set syntax="kopano4ucsRole" \
 	--set mayChange=1 \
